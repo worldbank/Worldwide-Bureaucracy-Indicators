@@ -1,7 +1,7 @@
 ---
 title: Bureaucracy Profile
 output: html_document
-
+css: "C:/Users/WB501238/Documents/GitHub/Worldwide-Bureaucracy-Indicators/Dashboard/styles.css"
 params:
   selected_country: "Ethiopia"
 ---
@@ -10,6 +10,10 @@ params:
 # Never print codes or warnings
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(fig.width=10)
+knitr::opts_chunk$set(fig.height=5)
+knitr::opts_chunk$set(fig.show='hold')
+knitr::opts_chunk$set(fig.align='center')
 ```
 
 ```{r, include = F}
@@ -63,10 +67,10 @@ knitr::opts_chunk$set(warning = FALSE)
 ```
 
 <!-- 3 Create actual document ------------------------------------------------------>
-    
-`r if(wagebill){"# Wage bill"}`
-    
-```{r,echo=FALSE, eval = wagebill, fig.width=10, fig.height=5,fig.show='hold',fig.align='center', warning = F}
+
+`r paste0("##",params$selected_country)`    
+`r if(wagebill){"### Wage bill"}`    
+```{r, eval = wagebill}
 # Add graphs for wage bill section
 
   # Create GDP graph (if we have that information)  
@@ -123,13 +127,11 @@ knitr::opts_chunk$set(warning = FALSE)
 
   # Print graphs to report -- only print if the variables exist
   if (wb_gdp & wb_exp) {
-    print(params$selected_country)
     grid.arrange(wb_gdp_plot, wb_exp_plot, ncol=2)
   } else if (wb_gdp & !wb_exp) {
     wb_gdp_plot
   } else if (!wb_gdp & wb_exp) {
     wb_exp_plot
   }
-
 ```
   

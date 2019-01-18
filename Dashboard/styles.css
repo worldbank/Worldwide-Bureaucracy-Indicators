@@ -1,0 +1,28 @@
+h1{
+	text-align: LEFT;
+	background-color: #5296A5;
+	color: #fff;
+	padding: 20px 30px;
+	font: 26px Verdana, sans-serif;
+	border-bottom: 1px solid #d7d7d7;
+	font-weight: bold;
+	margin: 0px 0px;
+}
+h2{
+	text-align: LEFT;
+	background-color: #5296A5;
+	color: #FDECD9;
+	padding: 20px 30px;
+	font: 26px Verdana, sans-serif;
+	border-bottom: 1px solid #d7d7d7;
+	font-weight: bold;
+	margin: 0px 0px;
+}
+h3{
+	text-align: center;
+	font: 22px Verdana, sans-serif;
+	color: #2D525A;
+	background-color: #CDB39B;
+	padding: 15px 0px;
+	margin: 10px 0;
+}
