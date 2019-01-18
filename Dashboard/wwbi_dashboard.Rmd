@@ -1,0 +1,121 @@
+```{r, echo = F, include = F}
+# 1 Set Initial configs ===============================================================
+
+  # 1.1 Load packages --------------------------------------------------------------
+  library(ggplot2)
+  library(ggrepel)
+  library(viridis)
+  library(plotly)
+  library(gridExtra)
+
+  # 1.2 Create theme that will be used for graphs -----------------------------------
+  my_theme <- theme_classic() +
+    theme(legend.position = "bottom",
+          legend.title = (element_blank()),
+          plot.title = element_text(hjust = .5))
+
+  # 1.3 Load the data ---------------------------------------------------------------
+  
+  FolderPath <- file.path("C:/Users/WB501238/Downloads")  
+  
+  # Load full data set
+  wwbi <- read.csv(file.path(FolderPath,"wwbi1109.csv"), header = T,
+                   stringsAsFactors = F)
+  
+  # If the country selected is not Thailand, we will not consider it for plot 7,
+  # It is an outlier and distorts the graph
+  plot7_data <- subset(wwbi, ccode!="THA")
+  
+  
+# 2 Calculate section switches ======================================================
+# Some countries will have missing variables. We need to know what variables we have
+# so no empty sections will be displayed, and figures are correctly aligned
+# ================================================================================= #
+  
+  # 2.1 Test if Wage bill section will be displayed and save that in an object ------
+  
+    # 2.1.1 Is the first plot going to be created? -----------------------------------
+    wb_gdp <- !is.na(wwbi$wage_gdp[wwbi$countryname == "Ethiopia"])
+    
+    # 2.1.2 Is the second plot going to be created? ----------------------------------
+    wb_exp <- !is.na(wwbi$wage_x[wwbi$countryname == "Ethiopia"])
+      
+    # 2.1.3 If any plots exist, create section ---------------------------------------
+    wagebill <- (wb_gdp | wb_exp)
+  
+  # 2.2 Test if section 2 will be displayed and save that in an object -------
+  
+  # 2.3 Test if section 2 will be displayed and save that in an object -------
+```
+
+<!-- 3 Create actual document ------------------------------------------------------>
+    
+`r if(wagebill){"# Wage bill"}`
+    
+```{r,echo=FALSE, eval = wagebill, fig.width=10, fig.height=5,fig.show='hold',fig.align='center', warning = F}
+# Add graphs for wage bill section
+
+  # Create GDP graph (if we have that information)  
+  if (wb_gdp) {
+    wb_gdp_plot <- 
+      ggplot() +
+        geom_smooth(data = wwbi,
+                    aes(x = lngdppc ,
+                        y = wage_gdp), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+        geom_point(data = wwbi,
+                   aes(x = lngdppc ,
+                       y = wage_gdp,
+                       color = region)) +
+        geom_point(data = wwbi[wwbi$countryname == "Ethiopia", ],
+                   aes(x = lngdppc ,
+                       y = wage_gdp),
+                   color = "red", size=3) +
+        geom_label_repel(data = wwbi[wwbi$countryname == "Ethiopia", ],
+                         aes(x = lngdppc ,
+                             y = wage_gdp, 
+                             label=paste0(countryname,":", round(wage_gdp, 0), "% ")),
+                         color = "red") +
+        ylab("Wage bill(%)") + xlab("Log of GDP per capita") +
+        ggtitle("Wage bill as % of GDP") +
+        scale_color_viridis(discrete=TRUE)+
+        my_theme
+  }
+  
+  # Create Expenditure graph (if we have that information)  
+  if (wb_exp) {
+    wb_exp_plot <- 
+      ggplot() +
+        geom_smooth(data = wwbi,
+                    aes(x = lngdppc ,
+                        y = wage_x), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+        geom_point(data = wwbi,
+                   aes(x = lngdppc ,
+                       y = wage_x,
+                       color = region)) +
+        geom_point(data = wwbi[wwbi$countryname == "Ethiopia", ],
+                   aes(x = lngdppc ,
+                       y = wage_x),
+                   color = "red", size=3) +
+        geom_label_repel(data = wwbi[wwbi$countryname == "Ethiopia", ],
+                         aes(x = lngdppc ,
+                             y = wage_x, 
+                             label=paste0(countryname,":", round(wage_x, 0), "% ")),
+                         color = "red") +
+        ylab("Wage bill(%)") + xlab("Log of GDP per capita") +
+        ggtitle("Wage bill as % of expenditures") +
+        scale_color_viridis(discrete=TRUE)+
+        my_theme
+  }
+
+  # Print graphs to report -- only print if the variables exist
+  if (wb_gdp & wb_exp) {
+    print(params$selected_country)
+    grid.arrange(wb_gdp_plot, wb_exp_plot, ncol=2)
+  } else if (wb_gdp & !wb_exp) {
+    wb_gdp_plot
+  } else if (!wb_gdp & wb_exp) {
+    wb_exp_plot
+  }
+
+```
+  
