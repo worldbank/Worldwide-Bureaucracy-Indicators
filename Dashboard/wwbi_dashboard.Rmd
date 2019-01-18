@@ -1,4 +1,18 @@
-```{r, echo = F, include = F}
+---
+title: Bureaucracy Profile
+output: html_document
+
+params:
+  selected_country: "Ethiopia"
+---
+
+```{r setup, include=FALSE}
+# Never print codes or warnings
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+```{r, include = F}
 # 1 Set Initial configs ===============================================================
 
   # 1.1 Load packages --------------------------------------------------------------
