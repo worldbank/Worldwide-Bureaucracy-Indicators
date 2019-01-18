@@ -1,0 +1,25 @@
+---
+title: Bureaucracy Profile
+output: 
+  html_document:
+    self_contained: no
+css: styles.css
+params:
+  selected_country: NA
+---
+
+```{r setup, include=FALSE}
+# Never print codes or warnings
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(fig.width=10)
+knitr::opts_chunk$set(fig.height=5)
+knitr::opts_chunk$set(fig.show='hold')
+knitr::opts_chunk$set(fig.align='center')
+```
+
+```{r, include = F}
+# 1 Set Initial configs ===============================================================
+```
+
+`r paste0("##",params$selected_country)`    

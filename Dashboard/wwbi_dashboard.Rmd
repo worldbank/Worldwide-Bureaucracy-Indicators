@@ -3,7 +3,7 @@ title: Bureaucracy Profile
 output: html_document
 css: styles.css
 params:
-  selected_country: "Ethiopia"
+  selected_country: NA
 ---
 
 ```{r setup, include=FALSE}
