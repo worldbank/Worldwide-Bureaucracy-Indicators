@@ -12,7 +12,7 @@ server = function(input, output, session) {
   
   output$report <- downloadHandler(
     # For PDF output, change this to "report.pdf"
-    filename = "report.html",
+    filename = "report.pdf",
     
     content = function(file) {
       # Copy the report file to a temporary directory before processing it, in
