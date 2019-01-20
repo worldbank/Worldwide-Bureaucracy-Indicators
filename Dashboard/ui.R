@@ -9,7 +9,7 @@ ui <- navbarPage("Worldwide Bureaucracy Indicators",
                  
 # Community level #######################################################################################
   
-  tabPanel("Report",
+  tabPanel("Country Profile",
       dashboardPage(
         
         header <- dashboardHeader(disable = T
@@ -19,17 +19,28 @@ ui <- navbarPage("Worldwide Bureaucracy Indicators",
         
         dashboardSidebar(
           sidebarMenu(
-            
-            
-            selectInput("selected_country", "Select country:",
-                        choices = c(as.character(wwbi$countryname)))
-            
-          )
+            column(12,
+                   fluidRow(
+                     selectInput("selected_country",
+                                 "Select country:",
+                                 choices = c("", as.character(wwbi$countryname)))
+                   ),
+                   fluidRow(align = "center",
+                     conditionalPanel(
+                       condition = "output.display_report",
+                       downloadButton("report",
+                                      "Download report"))
+                   )
+              )
+            )
         ),
         
         # Results ==========================================================================================
         body <- dashboardBody(
-          downloadButton("report", "Generate report")
+          conditionalPanel(
+            condition = "output.display_report",
+            includeHTML("C:/Users/WB501238/Documents/GitHub/Worldwide-Bureaucracy-Indicators/Dashboard/report.html")
+          )
         )
     )
   )

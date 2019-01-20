@@ -4,6 +4,9 @@ output:
   pdf_document:
     includes:
       in_header: "C:/Users/WB501238/Documents/GitHub/Worldwide-Bureaucracy-Indicators/Dashboard/header.tex"
+  html_document:
+    self_contained: FALSE
+css: "C:/Users/WB501238/Documents/GitHub/Worldwide-Bureaucracy-Indicators/Dashboard/styles.css"
 params:
   selected_country: NA
 ---
