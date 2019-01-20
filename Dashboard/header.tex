@@ -1,0 +1,24 @@
+\usepackage{xcolor,sectsty}
+\usepackage[framemethod=tikz]{mdframed}
+
+\definecolor{titlecolor}{RGB}{82,150,165}
+
+
+\newmdenv[innerlinewidth=0.5pt, linecolor=titlecolor,innerleftmargin=6pt, innerrightmargin=6pt,innertopmargin=6pt,innerbottommargin=6pt, backgroundcolor=titlecolor]{mybox}
+
+\makeatletter
+\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}
+\begin{flushleft}
+\begin{mybox}
+ \huge
+ \color{white}
+  \textbf{\@title}
+  \@author
+\end{mybox}
+\end{flushleft}\egroup
+}
+\makeatother
+
+\subsectionfont{\color{titlecolor}}
+
+\makeatletter
