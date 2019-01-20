@@ -1,7 +1,9 @@
 ---
 title: Bureaucracy Profile
 output: 
-  pdf_document
+  pdf_document:
+    includes:
+      in_header: "C:/Users/WB501238/Documents/GitHub/Worldwide-Bureaucracy-Indicators/Dashboard/header.tex"
 params:
   selected_country: NA
 ---
@@ -60,8 +62,8 @@ knitr::opts_chunk$set(fig.align='center')
     wagebill <- (wb_gdp | wb_exp)
 ```
 
-`r paste0("##",params$selected_country)` 
-`r if(wagebill){"### Wage bill"}`    
+`r paste0("#",params$selected_country)` 
+`r if(wagebill){"## Wage bill"}`    
 
 ```{r, eval = wagebill}
 # Add graphs for wage bill section
