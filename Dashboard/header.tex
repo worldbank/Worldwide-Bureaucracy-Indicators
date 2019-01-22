@@ -1,21 +1,53 @@
+\documentclass{article}
+
 \usepackage{xcolor,sectsty}
 \usepackage[framemethod=tikz]{mdframed}
 
+\renewcommand{\familydefault}{\sfdefault}
+
 \definecolor{titlecolor}{RGB}{82,150,165}
+\definecolor{countrynamecolor}{RGB}{253,236,217}
+\definecolor{sectionbox}{RGB}{205,179,155}
+\definecolor{sectiontitle}{RGB}{45,82,90}
 
+\newmdenv[
+	linecolor		 	= titlecolor,
+	innerleftmargin	 	= 10pt,
+	innerrightmargin	= 10pt,
+	innertopmargin	 	= 15pt,
+	innerbottommargin	= 5pt,
+	backgroundcolor		= titlecolor
+]{titlebox}
 
-\newmdenv[innerlinewidth=0.5pt, linecolor=titlecolor,innerleftmargin=6pt, innerrightmargin=6pt,innertopmargin=6pt,innerbottommargin=6pt, backgroundcolor=titlecolor]{mybox}
+\newmdenv[
+	linecolor		 	= titlecolor,
+	innerleftmargin	 	= 10pt,
+	innerrightmargin	= 10pt,
+	innertopmargin	 	= 7pt,
+	innerbottommargin	= 10pt,
+	backgroundcolor		= titlecolor
+]{countrynamebox}
+
+\newmdenv[
+	linecolor			= sectionbox,
+	innerleftmargin		= 0pt, 
+	innerrightmargin	= 10pt,
+	innertopmargin		= 10pt,
+	innerbottommargin	= 10pt, 
+	backgroundcolor		= sectionbox
+]{sectionbox}
 
 \makeatletter
 \renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}
-\begin{flushleft}
-\begin{mybox}
- \huge
- \color{white}
-  \textbf{\@title}
-  \@author
-\end{mybox}
-\end{flushleft}\egroup
+	\begin{flushleft}
+		\begin{titlebox}
+			\Huge
+			\color{white}
+			\textbf{\@title}
+			\@author
+		\end{titlebox}
+	\end{flushleft}\egroup
+\vspace*{-\baselineskip}
 }
 \makeatother
 
