@@ -62,8 +62,8 @@ knitr::opts_chunk$set(fig.align='center')
     wagebill <- (wb_gdp | wb_exp)
 ```
 
-`r paste0("\vspace*{-\baselineskip}\begin{countrynamebox}\flushleft\huge\color{countrynamecolor}",params$selected_country,"\end{countrynamebox}")`    
-`r if(wagebill){"\begin{sectionbox}\center\Large\color{sectiontitle}\textbf{Wage bill}\end{sectionbox}"}`
+`r paste0("\\begin{countrynamebox}\\flushleft\\huge\\color{countrynamecolor}",params$selected_country,"\\end{countrynamebox}")`    
+`r if(wagebill){"\\vspace{15pt}\\begin{sectionbox}\\center\\Large\\color{sectiontitle}\\textbf{Wage bill}\\end{sectionbox}"}`
 
 ```{r, eval = wagebill}
 # Add graphs for wage bill section

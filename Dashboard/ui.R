@@ -39,7 +39,7 @@ ui <- navbarPage("Worldwide Bureaucracy Indicators",
         body <- dashboardBody(
           conditionalPanel(
             condition = "output.display_report",
-            includeHTML("C:/Users/WB501238/Documents/GitHub/Worldwide-Bureaucracy-Indicators/Dashboard/report.html")
+            textOutput("include graphs here")
           )
         )
     )
