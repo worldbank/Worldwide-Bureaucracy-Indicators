@@ -3,7 +3,7 @@ title: Bureaucracy Profile
 output: 
   pdf_document:
     includes:
-      in_header: header.tex"
+      in_header: header.tex
 params:
   selected_country: NA
 ---

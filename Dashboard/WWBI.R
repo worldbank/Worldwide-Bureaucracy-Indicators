@@ -1,6 +1,11 @@
-library(shiny)
+
+require(shiny)
 
 setwd("C:/Users/WB501238/Documents/GitHub/Worldwide-Bureaucracy-Indicators/Dashboard")
-shinyAppDir(getwd())
+runApp()
+
+rsconnect::deployApp()
+
+
 
 

@@ -1,8 +1,10 @@
 
 library(markdown)
 library(ggplot2)
+library(ggrepel)
 library(viridis)
 library(plotly)
+library(gridExtra)
 library(knitr)
 
 wwbi <- read.csv("data.csv", header = T,stringsAsFactors = F)
