@@ -1,4 +1,4 @@
-h1{
+header{
 	text-align: LEFT;
 	background-color: #5296A5;
 	color: #fff;
@@ -8,7 +8,7 @@ h1{
 	font-weight: bold;
 	margin: 0px 0px;
 }
-h2{
+h1{
 	text-align: LEFT;
 	background-color: #5296A5;
 	color: #FDECD9;
@@ -18,7 +18,7 @@ h2{
 	font-weight: bold;
 	margin: 0px 0px;
 }
-h3{
+h2{
 	text-align: center;
 	font: 22px Verdana, sans-serif;
 	color: #2D525A;
