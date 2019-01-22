@@ -1,5 +1,6 @@
 require(shinydashboard)
 require(shiny)
+require(plotly)
 
 wwbi <- read.csv("data.csv", header = T,stringsAsFactors = F)
 
@@ -39,7 +40,12 @@ ui <- navbarPage("Worldwide Bureaucracy Indicators",
         body <- dashboardBody(
           conditionalPanel(
             condition = "output.display_report",
-            textOutput("include graphs here")
+            tabsetPanel(type = "tabs",
+                        tabPanel("Wage bill",
+                                 plotlyOutput("wagebill1"),
+                                 plotlyOutput("wagebill2")
+                        )
+            )
           )
         )
     )
