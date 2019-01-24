@@ -37,54 +37,312 @@ server = function(input, output, session) {
   
   output$wagebill1 <- 
       renderPlotly({
-        wb_gdp_plot <- ggplot() +
+        if (input$selected_country == "") {
+          wb_gdp_plot <- ggplot() +
+            geom_smooth(data = wwbi,
+                        aes(x = lngdppc ,
+                            y = wage_gdp), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+            geom_point(data = wwbi,
+                       aes(x = lngdppc ,
+                           y = wage_gdp,
+                           color = region,
+                           text = paste0(" Country: ", wwbi$countryname,
+                                        "<br> GDP (log): ", round(wwbi$lngdppc,2),
+                                        "<br> Wage bill: ", round(wwbi$wage_gdp,2), "%"))) +
+            ylab("Wage bill (%)") + xlab("Log of GDP per capita") +
+            scale_color_viridis(discrete=TRUE)+
+            my_theme
+        } else {
+          wb_gdp_plot <- ggplot() +
+            geom_smooth(data = wwbi,
+                        aes(x = lngdppc ,
+                            y = wage_gdp), 
+                        method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+            geom_point(data = wwbi,
+                       aes(x = lngdppc ,
+                           y = wage_gdp,
+                           color = region,
+                           text = paste0(" Country: ", wwbi$countryname,
+                                        "<br> GDP (log): ", round(wwbi$lngdppc,2),
+                                        "<br> Wage bill: ", round(wwbi$wage_gdp,2), "%"))) +
+            geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                       aes(x = lngdppc ,
+                           y = wage_gdp),
+                       color = "red", size=3) +
+            ylab("Wage bill (%)") + xlab("Log of GDP per capita") +
+            scale_color_viridis(discrete=TRUE)+
+            my_theme
+          }
+        
+        ggplotly(wb_gdp_plot,
+                 tooltip = "text")
+    })
+
+    
+  output$wagebill2 <-
+    renderPlotly({
+      if (input$selected_country == "") {
+        wb_exp_plot <-
+          ggplot() +
           geom_smooth(data = wwbi,
                       aes(x = lngdppc ,
-                          y = wage_gdp), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+                          y = wage_x), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
           geom_point(data = wwbi,
                      aes(x = lngdppc ,
-                         y = wage_gdp,
+                         y = wage_x,
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> Expenditure (log): ", round(wwbi$wage_x,2),
+                                       "<br> Wage bill: ", round(wwbi$lngdppc,2), "%"))) +
+          ylab("Wage bill (%)") + xlab("Expenditure (log)") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      } else {
+        wb_exp_plot <-
+          ggplot() +
+          geom_smooth(data = wwbi,
+                      aes(x = lngdppc ,
+                          y = wage_x), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+          geom_point(data = wwbi,
+                     aes(x = lngdppc ,
+                         y = wage_x,
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> Expenditure (log): ", round(wwbi$wage_x,2),
+                                       "<br> Wage bill: ", round(wwbi$lngdppc,2), "%"))) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = lngdppc,
+                         y = wage_x),
+                     color = "red", size=3) +
+          ylab("Wage bill (%)") + xlab("Expenditure (log)") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      }
+      
+      ggplotly(wb_exp_plot,
+               tooltip = "text")
+      
+    })
+  
+  output$publicemp1 <- 
+    renderPlotly({
+
+      if (input$selected_country == "") {
+        wb_emp_plot <-
+          ggplot() +
+          geom_smooth(data = wwbi,
+                      aes(x = lngdppc ,
+                          y = ps1*100), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+          geom_point(data = wwbi,
+                     aes(x = lngdppc ,
+                         y = ps1*100,
+                         color = region)) +
+          ylab("Public employment (%)") + xlab("Log of GDP per capita") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      } else {
+        wb_emp_plot <- 
+          ggplot() +
+          geom_smooth(data = wwbi,
+                      aes(x = lngdppc ,
+                          y = ps1*100), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+          geom_point(data = wwbi,
+                     aes(x = lngdppc ,
+                         y = ps1*100,
                          color = region)) +
           geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
                      aes(x = lngdppc ,
-                         y = wage_gdp),
+                         y = ps1*100),
                      color = "red", size=3) +
-          ylab("Wage bill(%)") + xlab("Log of GDP per capita") +
-          ggtitle("Wage bill as % of GDP") +
+          ylab("Public employment (%)") + xlab("Log of GDP per capita") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
-        
-        ggplotly(wb_gdp_plot)
       }
-    )
-  
-  output$wagebill2 <-
+      
+      ggplotly(wb_emp_plot)
+      
+    })
+
+  output$publicemp2 <- 
     renderPlotly({
-      wb_exp_plot <-
-        ggplot() +
-        geom_smooth(data = wwbi,
-                    aes(x = lngdppc ,
-                        y = wage_x), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
-        geom_point(data = wwbi,
-                   aes(x = lngdppc ,
-                       y = wage_x,
-                       color = region)) +
-        geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
-                   aes(x = lngdppc ,
-                       y = wage_x),
-                   color = "red", size=3) +
-        ylab("Wage bill(%)") + xlab("Log of GDP per capita") +
-        ggtitle("Wage bill as % of expenditures") +
-        scale_color_viridis(discrete=TRUE)+
-        my_theme
-
-      ggplotly(wb_exp_plot)
-    }
-    )
-
+      
+      if (input$selected_country == "") {
+        wb_age_plot <- 
+          ggplot() +
+          geom_abline(color="grey", linetype="dashed")  +
+          geom_point(data = wwbi,
+                     aes(x = age_mean_1 ,
+                         y = age_mean_0,
+                         color = region)) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = age_mean_1 ,
+                         y = age_mean_0),
+                     color = "red", size=3) +
+          ylab("Private sector") + xlab("Public sector") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      } else {
+        wb_age_plot <- 
+          ggplot() +
+          geom_abline(color="grey", linetype="dashed")  +
+          geom_point(data = wwbi,
+                     aes(x = age_mean_1 ,
+                         y = age_mean_0,
+                         color = region)) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = age_mean_1 ,
+                         y = age_mean_0),
+                     color = "red", size=3) +
+          geom_label_repel(data = wwbi[wwbi$countryname == input$selected_country, ],
+                           aes(x = age_mean_1 ,
+                               y = age_mean_0, 
+                               label=paste0(countryname, "(",round(age_mean_1, 0), "," ,round(age_mean_0, 0),")")),
+                           color = "red") +
+          ylab("Private sector") + xlab("Public sector") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      }
+      
+      ggplotly(wb_age_plot)
+      
+    })
   
-  
+  output$publicemp3 <- 
+    renderPlotly({
+      
+      if (input$selected_country == "") {
+        wb_gender_plot<-ggplot() +
+          geom_abline(color="grey", linetype="dashed")  +
+          geom_point(data = wwbi,
+                     aes(x = female_1*100 ,
+                         y = female_0*100,
+                         color = region)) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = female_1*100 ,
+                         y = female_0*100),
+                     color = "red", size=3) +
+                   ylab("Private sector") + xlab("Public sector") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      } else {
+        wb_gender_plot<-ggplot() +
+          geom_abline(color="grey", linetype="dashed")  +
+          geom_point(data = wwbi,
+                     aes(x = female_1*100 ,
+                         y = female_0*100,
+                         color = region)) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = female_1*100 ,
+                         y = female_0*100),
+                     color = "red", size=3) +
+          geom_label_repel(data = wwbi[wwbi$countryname == input$selected_country, ],
+                           aes(x = female_1*100 ,
+                               y = female_0*100, 
+                               label=paste0(countryname, "(",round(female_1*100, 0), "," ,round(female_0*100, 0),")")),
+                           color = "red") +
+          ylab("Private sector") + xlab("Public sector") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
 
+      }
+      
+      ggplotly(wb_gender_plot)
+      
+    })
+  
+  output$publicemp4 <- 
+    renderPlotly({
+      
+      if (input$selected_country == "") {
+        wb_edu_plot<-ggplot() +
+          geom_abline(color="grey", linetype="dashed")  +
+          geom_point(data = wwbi,
+                     aes(x = ed3_1*100 ,
+                         y = ed3_0*100,
+                         color = region)) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = ed3_1*100 ,
+                         y = ed3_0*100),
+                     color = "red", size=3) +
+          ylab("Private sector") + xlab("Public sector") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      } else {
+        wb_edu_plot<-ggplot() +
+          geom_abline(color="grey", linetype="dashed")  +
+          geom_point(data = wwbi,
+                     aes(x = ed3_1*100 ,
+                         y = ed3_0*100,
+                         color = region)) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = ed3_1*100 ,
+                         y = ed3_0*100),
+                     color = "red", size=3) +
+          geom_label_repel(data = wwbi[wwbi$countryname == input$selected_country, ],
+                           aes(x = ed3_1*100 ,
+                               y = ed3_0*100, 
+                               label=paste0(countryname, "(",round(ed3_1*100, 0), "," ,round(ed3_0*100, 0),")")),
+                           color = "red") +
+          ylab("Private sector") + xlab("Public sector") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      }
+      
+      ggplotly(wb_edu_plot)
+      
+    })
+  
+  output$wage <- 
+    renderPlotly({
+      data <- wwbi[wwbi$countryname != "Thailand", ]
+      
+      if (input$selected_country == "") {
+        wb_premium_plot<- ggplot() +
+          geom_smooth(data = data,
+                      aes(x = lngdppc ,
+                          y = coefreg), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+          geom_hline(yintercept =0) +
+          geom_point(data = data,
+                     aes(x = lngdppc ,
+                         y = coefreg,
+                         color = region)) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = lngdppc,
+                         y = coefreg),
+                     color = "red", size=3) +
+          ylab("Wage premium (%)") + xlab("Log of GDP per capita") +
+          ggtitle("Public sector wage premium") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      } else {
+        wb_premium_plot<- ggplot() +
+          geom_smooth(data = data,
+                      aes(x = lngdppc ,
+                          y = coefreg), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+          geom_hline(yintercept =0) +
+          geom_point(data = data,
+                     aes(x = lngdppc ,
+                         y = coefreg,
+                         color = region)) +
+          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
+                     aes(x = lngdppc,
+                         y = coefreg),
+                     color = "red", size=3) +
+          geom_label_repel(data = wwbi[wwbi$countryname == input$selected_country, ],
+                           aes(x = lngdppc ,
+                               y = coefreg, 
+                               label=paste0(countryname, ":",round(coefreg, 2))),
+                           color = "red") +
+          ylab("Wage premium") + xlab("Log of GDP per capita") +
+          ggtitle("Public sector wage premium") +
+          scale_color_viridis(discrete=TRUE)+
+          my_theme
+      }
+      
+      ggplotly(wb_premium_plot)
+      
+    })
+  
 
   output$report <- downloadHandler(
     # For PDF output, change this to "report.pdf"
@@ -114,4 +372,5 @@ server = function(input, output, session) {
   outputOptions(output, "display_report", suspendWhenHidden = FALSE)
   outputOptions(output, "display_wagebill", suspendWhenHidden = FALSE)
   outputOptions(output, "display_publicemp", suspendWhenHidden = FALSE)
+  
 }

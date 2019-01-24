@@ -1,9 +1,23 @@
 ---
 title: Bureaucracy Profile
 output: 
-  pdf_document:
-    includes:
-      in_header: header.tex
+  pdf_document
+header-includes:
+      - \usepackage{xcolor,sectsty}
+      - \usepackage[framemethod=tikz]{mdframed}
+      - \pagestyle{empty}
+      - \renewcommand{\familydefault}{\sfdefault}
+      - \definecolor{titlecolor}{RGB}{82,150,165}
+      - \definecolor{countrynamecolor}{RGB}{253,236,217}
+      - \definecolor{sectionbox}{RGB}{205,179,155}
+      - \definecolor{sectiontitle}{RGB}{45,82,90}
+      - \newmdenv[	linecolor= titlecolor,	innerleftmargin= 10pt,innerrightmargin	= 10pt, innertopmargin = 15pt,	innerbottommargin	= 5pt,	backgroundcolor = titlecolor]{titlebox}
+      - \newmdenv[linecolor = titlecolor,innerleftmargin = 10pt,innerrightmargin	= 10pt,innertopmargin	 	= 7pt,innerbottommargin	= 10pt,backgroundcolor		= titlecolor]{countrynamebox}
+      - \newmdenv[linecolor			= sectionbox,innerleftmargin		= 0pt, innerrightmargin	= 10pt,innertopmargin		= 10pt,innerbottommargin	= 10pt, backgroundcolor		= sectionbox]{sectionbox}
+      - \makeatletter\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}\begin{flushleft}\begin{titlebox}\Huge\color{white}\textbf{\@title}\@author\end{titlebox}\end{flushleft}\egroup}
+      - \makeatother
+      - \subsectionfont{\color{titlecolor}}
+      - \makeatletter
 params:
   selected_country: NA
 ---
@@ -62,7 +76,7 @@ knitr::opts_chunk$set(fig.align='center')
     wagebill <- (wb_gdp | wb_exp)
 ```
 
-`r paste0("\\begin{countrynamebox}\\flushleft\\huge\\color{countrynamecolor}",params$selected_country,"\\end{countrynamebox}")`    
+`r paste0("\\begin{countrynamebox}\\flushleft\\huge\\color{countrynamecolor}",params$selected_country,"\\end{countrynamebox}")`
 `r if(wagebill){"\\vspace{15pt}\\begin{sectionbox}\\center\\Large\\color{sectiontitle}\\textbf{Wage bill}\\end{sectionbox}"}`
 
 ```{r, eval = wagebill}
