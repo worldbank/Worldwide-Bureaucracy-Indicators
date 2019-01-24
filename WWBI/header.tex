@@ -1,0 +1,38 @@
+
+
+\newmdenv[	linecolor= titlecolor,	innerleftmargin= 10pt,innerrightmargin	= 10pt, innertopmargin = 15pt,	innerbottommargin	= 5pt,	backgroundcolor = titlecolor]{titlebox}
+
+\newmdenv[
+	linecolor		 	= titlecolor,
+	innerleftmargin	 	= 10pt,
+	innerrightmargin	= 10pt,
+	innertopmargin	 	= 7pt,
+	innerbottommargin	= 10pt,
+	backgroundcolor		= titlecolor
+]{countrynamebox}
+
+\newmdenv[
+	linecolor			= sectionbox,
+	innerleftmargin		= 0pt, 
+	innerrightmargin	= 10pt,
+	innertopmargin		= 10pt,
+	innerbottommargin	= 10pt, 
+	backgroundcolor		= sectionbox
+]{sectionbox}
+
+\makeatletter
+\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}
+	\begin{flushleft}
+		\begin{titlebox}
+			\Huge
+			\color{white}
+			\textbf{\@title}
+			\@author
+		\end{titlebox}
+	\end{flushleft}\egroup
+}
+\makeatother
+
+\subsectionfont{\color{titlecolor}}
+
+\makeatletter

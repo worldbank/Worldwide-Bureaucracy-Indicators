@@ -155,7 +155,7 @@ knitr::opts_chunk$set(fig.align='center')
 # Create employment graph (if we have that information)  
 
 if(wb_emp){
-  wb_emp_plot<-ggplot() +
+  wb_emp_plot <- ggplot() +
     geom_smooth(data = wwbi,
                 aes(x = lngdppc ,
                     y = ps1*100), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
