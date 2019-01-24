@@ -136,7 +136,10 @@ server = function(input, output, session) {
           geom_point(data = wwbi,
                      aes(x = lngdppc ,
                          y = ps1*100,
-                         color = region)) +
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> GDP per capita (log): ", round(wwbi$lngdppc,2),
+                                       "<br> Public employment: ", round(wwbi$ps1*100,2), "%"))) +
           ylab("Public employment (%)") + xlab("Log of GDP per capita") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
@@ -149,7 +152,10 @@ server = function(input, output, session) {
           geom_point(data = wwbi,
                      aes(x = lngdppc ,
                          y = ps1*100,
-                         color = region)) +
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> GDP per capita (log): ", round(wwbi$lngdppc,2),
+                                       "<br> Public employment: ", round(wwbi$ps1*100,2), "%"))) +
           geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
                      aes(x = lngdppc ,
                          y = ps1*100),
@@ -159,7 +165,8 @@ server = function(input, output, session) {
           my_theme
       }
       
-      ggplotly(wb_emp_plot)
+      ggplotly(wb_emp_plot,
+               tooltip = "text")
       
     })
 
@@ -173,7 +180,10 @@ server = function(input, output, session) {
           geom_point(data = wwbi,
                      aes(x = age_mean_1 ,
                          y = age_mean_0,
-                         color = region)) +
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> Public sector: ", round(wwbi$age_mean_1,2),
+                                       "<br> Private sector: ", round(wwbi$age_mean_0,2)))) +
           geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
                      aes(x = age_mean_1 ,
                          y = age_mean_0),
@@ -191,19 +201,18 @@ server = function(input, output, session) {
                          color = region)) +
           geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
                      aes(x = age_mean_1 ,
-                         y = age_mean_0),
+                         y = age_mean_0,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> Public sector: ", round(wwbi$age_mean_1,2),
+                                       "<br> Private sector: ", round(wwbi$age_mean_0,2))),
                      color = "red", size=3) +
-          geom_label_repel(data = wwbi[wwbi$countryname == input$selected_country, ],
-                           aes(x = age_mean_1 ,
-                               y = age_mean_0, 
-                               label=paste0(countryname, "(",round(age_mean_1, 0), "," ,round(age_mean_0, 0),")")),
-                           color = "red") +
           ylab("Private sector") + xlab("Public sector") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
       }
       
-      ggplotly(wb_age_plot)
+      ggplotly(wb_age_plot,
+               tooltip = "text")
       
     })
   
@@ -216,11 +225,10 @@ server = function(input, output, session) {
           geom_point(data = wwbi,
                      aes(x = female_1*100 ,
                          y = female_0*100,
-                         color = region)) +
-          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
-                     aes(x = female_1*100 ,
-                         y = female_0*100),
-                     color = "red", size=3) +
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> Public sector: ", round(wwbi$female_1*100,2), "%",
+                                       "<br> Private sector: ", round(wwbi$female_0*100,2), "%"))) +
                    ylab("Private sector") + xlab("Public sector") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
@@ -230,23 +238,22 @@ server = function(input, output, session) {
           geom_point(data = wwbi,
                      aes(x = female_1*100 ,
                          y = female_0*100,
-                         color = region)) +
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> Public sector: ", round(wwbi$female_1*100,2), "%",
+                                       "<br> Private sector: ", round(wwbi$female_0*100,2), "%"))) +
           geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
                      aes(x = female_1*100 ,
                          y = female_0*100),
                      color = "red", size=3) +
-          geom_label_repel(data = wwbi[wwbi$countryname == input$selected_country, ],
-                           aes(x = female_1*100 ,
-                               y = female_0*100, 
-                               label=paste0(countryname, "(",round(female_1*100, 0), "," ,round(female_0*100, 0),")")),
-                           color = "red") +
           ylab("Private sector") + xlab("Public sector") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
 
       }
       
-      ggplotly(wb_gender_plot)
+      ggplotly(wb_gender_plot,
+               tooltip = "text")
       
     })
   
@@ -259,11 +266,10 @@ server = function(input, output, session) {
           geom_point(data = wwbi,
                      aes(x = ed3_1*100 ,
                          y = ed3_0*100,
-                         color = region)) +
-          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
-                     aes(x = ed3_1*100 ,
-                         y = ed3_0*100),
-                     color = "red", size=3) +
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> Public sector: ", round(wwbi$ed3_1*100,2), "%",
+                                       "<br> Private sector: ", round(wwbi$ed3_0*100,2), "%"))) +
           ylab("Private sector") + xlab("Public sector") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
@@ -273,22 +279,21 @@ server = function(input, output, session) {
           geom_point(data = wwbi,
                      aes(x = ed3_1*100 ,
                          y = ed3_0*100,
-                         color = region)) +
+                         color = region,
+                         text = paste0(" Country: ", wwbi$countryname,
+                                       "<br> Public sector: ", round(wwbi$ed3_1*100,2), "%",
+                                       "<br> Private sector: ", round(wwbi$ed3_0*100,2), "%"))) +
           geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
                      aes(x = ed3_1*100 ,
                          y = ed3_0*100),
                      color = "red", size=3) +
-          geom_label_repel(data = wwbi[wwbi$countryname == input$selected_country, ],
-                           aes(x = ed3_1*100 ,
-                               y = ed3_0*100, 
-                               label=paste0(countryname, "(",round(ed3_1*100, 0), "," ,round(ed3_0*100, 0),")")),
-                           color = "red") +
           ylab("Private sector") + xlab("Public sector") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
       }
       
-      ggplotly(wb_edu_plot)
+      ggplotly(wb_edu_plot,
+               tooltip = "text")
       
     })
   
@@ -300,18 +305,17 @@ server = function(input, output, session) {
         wb_premium_plot<- ggplot() +
           geom_smooth(data = data,
                       aes(x = lngdppc ,
-                          y = coefreg), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
-          geom_hline(yintercept =0) +
+                          y = coefreg), method='lm', formula=y~x, se=FALSE, color="grey", linetype="dashed") +
+          geom_hline(yintercept = 0,
+                     linetype ="dotted") +
           geom_point(data = data,
                      aes(x = lngdppc ,
                          y = coefreg,
-                         color = region)) +
-          geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
-                     aes(x = lngdppc,
-                         y = coefreg),
-                     color = "red", size=3) +
+                         color = region,
+                         text = paste0(" Country: ", data$countryname,
+                                       "<br> Wage premium: ", round(coefreg,2), "%",
+                                       "<br> GDP per capita (log): ", round(data$lngdppc,2)))) +
           ylab("Wage premium (%)") + xlab("Log of GDP per capita") +
-          ggtitle("Public sector wage premium") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
       } else {
@@ -323,23 +327,21 @@ server = function(input, output, session) {
           geom_point(data = data,
                      aes(x = lngdppc ,
                          y = coefreg,
-                         color = region)) +
+                         color = region,
+                         text = paste0(" Country: ", data$countryname,
+                                       "<br> Wage premium: ", round(coefreg,2), "%",
+                                       "<br> GDP per capita (log): ", round(data$lngdppc,2)))) +
           geom_point(data = wwbi[wwbi$countryname == input$selected_country, ],
                      aes(x = lngdppc,
                          y = coefreg),
                      color = "red", size=3) +
-          geom_label_repel(data = wwbi[wwbi$countryname == input$selected_country, ],
-                           aes(x = lngdppc ,
-                               y = coefreg, 
-                               label=paste0(countryname, ":",round(coefreg, 2))),
-                           color = "red") +
           ylab("Wage premium") + xlab("Log of GDP per capita") +
-          ggtitle("Public sector wage premium") +
           scale_color_viridis(discrete=TRUE)+
           my_theme
       }
       
-      ggplotly(wb_premium_plot)
+      ggplotly(wb_premium_plot,
+               tooltip = "text")
       
     })
   

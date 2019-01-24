@@ -36,7 +36,6 @@ ui <- dashboardPage(
     tabItems(
       # First tab content
       tabItem(tabName = "wagebill",
-              h3("Wage bill"),
               fluidRow(
                 box(title = "Wage bill as share of GDP",
                     status = "primary",
@@ -51,7 +50,6 @@ ui <- dashboardPage(
       
       # Second tab content
       tabItem(tabName = "publicemp",
-              h3("Public employment"),
               fluidRow(
                 box(title = "Public employment as share of wage employment (%)",
                     status = "primary",
@@ -67,7 +65,7 @@ ui <- dashboardPage(
                     status = "primary",
                     solidHeader = TRUE,
                     plotlyOutput("publicemp3")),
-                box(title = "Share of employess of tertiary education (%)",
+                box(title = "Share of employees of tertiary education (%)",
                     status = "primary",
                     solidHeader = TRUE,
                     plotlyOutput("publicemp4"))
@@ -76,8 +74,7 @@ ui <- dashboardPage(
     
       # Third tab content
       tabItem(tabName = "wage",
-              h3("Wage premium"),
-              box(title = "Wage bill as share of GDP",
+              box(title = "Public sector wage premium",
                   status = "primary",
                   solidHeader = TRUE,
                   width = "50%", 
