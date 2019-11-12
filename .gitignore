@@ -41,7 +41,7 @@
 # located unless you explicitly ignore that folder
 
 # Stata
-# !/**/*.do
+##### !/**/*.do
 !/**/*.ado
 
 # R
