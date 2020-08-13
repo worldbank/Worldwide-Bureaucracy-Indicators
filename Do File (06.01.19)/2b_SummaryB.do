@@ -1,19 +1,32 @@
-***************************************
-*PUBLIC SECTOR EMPLOYMENT
-*Summary Table by country
-*Created by: Camilo Bohorquez-Penuela &Rong Shi
+***********************************
+*WORLD WIDE BUREAUCRACY INDICATORS VERSION 1.1, 2000-2018
+*2b_SummaryB
+*Called by 0_master.do
+*Created by: Camilo Bohorquez-Penuela&Rong Shi(based on Pablo Suarez's do-files)
+*Last Edit by: Faisal Baig
 *First version: December 2016
-*Latest version: June 2019
-**************************************
-*Called from Master.do
-capture log close
+*Latest version: June 2020
+********************************************************************************
+
+cap log close
 set more 1
+
+*Creates wage premium indicators by running wage regressions in sequence and storing main coefficients and other summary statistics of interest. Regressions include:
+
+*	(1) public sector wage premium without any controls (compared to private paid employees)	[not included in WWBI]
+*	(2) public sector wage premium with controls 		(compared to private paid employees)
+*	(3) public sector wage premium by income quantiles	(compared to private paid employees)
+*	(4) public sector wage premium with controls 		(compared to formal employees)
+*	(5) public sector wage premium by oocupation 		(compared to formal employees)
+*	(6) public sector wage premium by education	 		(compared to formal employees)
+*	(7) public sector wage premium by gender	 		(compared to private paid employees)
+
 
 /**********************************************************************************
 Wage related indicator
 **********************************************************************************/
 
-*Create another dataset when constructing wage related indicators:
+
 *Exclude top 0.1%  wage per week in local currenycy (wpw_lcu) by sample from our analysis
 *Keep only surveys that passed all filter when calculating wage premium
 
@@ -22,6 +35,7 @@ foreach var of global bases {
 use "${Data}LatestI2D2_`var'.dta", clear
 winsor2 wpw_lcu, cuts(0 99.9)suffix(_win) by(sample1) /*winsorizing wpw_lcu at top 0.1% by sample*/
 gen wpw_lcu_touse=wpw_lcu==wpw_lcu_win  
+
 * Mark observations if wpe_lcu is less than 99.9% in wage distribution within each sample, 
 *exclude top 0.1% wage from our analysis to eliminate possible biase caused by extreme outliers 
 drop if filter!=0
@@ -35,9 +49,11 @@ save"${Data}LatestI2D2_outlier_`var'.dta",replace
 
 set more 1
 
+
+
 foreach var of global bases {
 
-log using "${Logs}\summaryB_partI_`var'.log", replace
+log using "${Logs}summaryB_partI_`var'.log", replace
 
 
 ********************************************************************************
@@ -125,7 +141,7 @@ drop if sample1 == .
 
 sort sample1
 
-save "${Datatemp}\inc21.dta", replace
+save "${Temp}inc21_`var'.dta", replace
 
 
 ********************************************************************************
@@ -211,7 +227,7 @@ drop if sample1 == .
 
 sort sample1
 
-save "${Datatemp}\inc22.dta", replace
+save "${Temp}inc22_`var'.dta", replace
 
 
 ********************************************************************************
@@ -296,7 +312,7 @@ drop if sample1 == .
 
 sort sample1
 
-save "${Datatemp}\quantile`x'.dta", replace
+save "${Temp}quantile`x'_`var'.dta", replace
  }
 
 
@@ -386,7 +402,7 @@ drop if sample1 == .
 
 sort sample1
 
-save "${Datatemp}\inc24.dta", replace
+save "${Temp}inc24_`var'.dta", replace
 
 ********************************************************************************
 *Wage Premium compared to formal employees by oocupation
@@ -510,7 +526,7 @@ drop if sample1 == .
 
 sort sample1
 
-save "${Datatemp}\occupationwp_`var'.dta", replace
+save "${Temp}occupationwp_`var'.dta", replace
 
 ********************************************************************************
 *Wage Premium compared to formal employees by education
@@ -575,7 +591,7 @@ foreach s of local sels {
 			mat A[1,5]=C[1,2]+C[1,14]
 			mat A[1,6]=`o1'
 			mat A[1,7]=`r2'
-			mat A[1,7]=`p'
+			mat A[1,8]=`p'
 			mat list A
 		}
     /*if lwagewk or ps3 have only missing value then replace with missing*/
@@ -604,10 +620,11 @@ drop if sample1 == .
 
 sort sample1
 
-save "${Datatemp}\educationwp_`var'.dta", replace
+save "${Temp}educationwp_`var'.dta", replace
 
 
-******Wage Premium compared to private employees by gender****
+********************************************************************************
+*Wage Premium compared to private employees by gender****
 
 set more 1
 use "${Data}LatestI2D2_outlier_`var'.dta", clear
@@ -691,7 +708,7 @@ drop if sample1 == .
 
 sort sample1
 
-save "${Datatemp}\genderwp_`var'.dta", replace
+save "${Temp}genderwp_`var'.dta", replace
 
 
 ********************************************************************************
@@ -741,30 +758,32 @@ forvalues x = 0(1)1 {
 	diff_mean_`x' diff_median_`x' diff_p10_`x' diff_p25_`x' diff_p75_`x' diff_p90_`x' nm_wagewk_`x'    ///
 	nm_wagewkmal_`x' nm_wagewkfem_`x' obs_wagewk_`x'  obs_wagewkmal_`x' obs_wagewkfem_`x'
 	sort sample1
-	save "${Datatemp}\inc23`x'.dta", replace
+	save "${Temp}inc23`x'_`var'.dta", replace
 	
 	restore
 }
 *******************************************
 **Merge all data file into one*************
 *******************************************
-use "${Datatemp}\inc21.dta", clear
-merge 1:1 sample1 using "${Datatemp}\inc22.dta", assert(3) nogen
-merge 1:1 sample1 using "${Datatemp}\inc230.dta", assert(3) nogen
-merge 1:1 sample1 using "${Datatemp}\inc231.dta", assert(3) nogen
-merge 1:1 sample1 using "${Datatemp}\inc24.dta", assert(3) nogen
-merge 1:1 sample1 using  "${Datatemp}\educationwp_`var'.dta", assert(3) nogen
-merge 1:1 sample1 using "${Datatemp}\occupationwp_`var'.dta", assert(3) nogen
-merge 1:1 sample1 using "${Datatemp}\genderwp_`var'.dta", assert(3) nogen
+
+
+use 					"${Temp}inc21_`var'.dta", clear
+merge 1:1 sample1 using "${Temp}inc22_`var'.dta", nogen
+merge 1:1 sample1 using "${Temp}inc230_`var'.dta", nogen
+merge 1:1 sample1 using "${Temp}inc231_`var'.dta", nogen
+merge 1:1 sample1 using "${Temp}inc24_`var'.dta", nogen
+merge 1:1 sample1 using "${Temp}educationwp_`var'.dta", nogen
+merge 1:1 sample1 using "${Temp}occupationwp_`var'.dta", nogen
+merge 1:1 sample1 using "${Temp}genderwp_`var'.dta", nogen
 
 local quan 0.1 0.25 0.5 0.75 0.9
 foreach x of local quan  {
-merge 1:1 sample1 using "${Datatemp}\quantile`x'.dta", assert(3) nogen
+merge 1:1 sample1 using "${Temp}quantile`x'_`var'.dta", nogen
 
 }
 order sample sample1
 sort sample1
-save "${Datatemp}\summaryB_`var'.dta", replace
+save "${Temp}summaryB_`var'.dta", replace
 
 log close
 

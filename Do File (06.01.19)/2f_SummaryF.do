@@ -1,33 +1,32 @@
-*PUBLIC SECTOR EMPLOYMENT
-*Summary Table by country
-*Created by: Rong Shi
-*First version: September 2016
-*Latest version: June 2019
-*************************************
-*Called from Master.do
+***********************************
+*WORLD WIDE BUREAUCRACY INDICATORS VERSION 1.1, 2000-2018
+*2d_SummaryD
+*Called by 0_master.do
+*Created by: Camilo Bohorquez-Penuela&Rong Shi(based on Pablo Suarez's do-files)
+*Last Edit by: Faisal Baig
+*First version: December 2016
+*Latest version: June 2020
+********************************************************************************
 
 **************************************************************************************
 *Relative wage and Percentage of tetiary education holder work in public sector
 **************************************************************************************
+
+
 	
-***** Percentage of tetiary education holder work in public sector*****
-
-
+**** Percentage of tetiary education holder work in public sector*****
 foreach var of global bases {
-set more 1
+	set more 1
 	
+	use "${Data}LatestI2D2_outlier_`var'.dta", clear
 
-use "${Data}LatestI2D2_outlier_`var'.dta", clear
+	keep if ps2~=.&edulevel3 == 4
+	gen psedu3=ps2 if ps2~=.&edulevel3 == 4
+	gen nm_psedu3=psedu3~=. if ps2~=.&edulevel3 == 4
 
-keep if ps2~=.&edulevel3 == 4
-gen psedu3=ps2 if ps2~=.&edulevel3 == 4
-gen nm_psedu3=psedu3~=. if ps2~=.&edulevel3 == 4
-
-collapse (mean) psedu3 nm_psedu3  (rawsum)obs_psedu3=nm_psedu3 [pw=wgt], by(ccode year sample sample1)
-sort sample1
-save "${Datatemp}\ps_`var'.dta", replace
-	
-
+	collapse (mean) psedu3 nm_psedu3  (rawsum)obs_psedu3=nm_psedu3 [pw=wgt], by(ccode year sample sample1)
+	sort sample1
+save "${Temp}ps_`var'.dta", replace
 }
 
 
@@ -64,27 +63,27 @@ gen nm_wage_occup`n'=wage_occup`n'~=.  if ps1 == `x'& occup == `n'
 	keep sample1 rwoccup_`x'_1 rwoccup_`x'_2 rwoccup_`x'_3 rwoccup_`x'_5 rwoccup_`x'_6 ///
 	obs_wage`x'_occup1 obs_wage`x'_occup2  obs_wage`x'_occup3 obs_wage`x'_occup4 obs_wage`x'_occup5  obs_wage`x'_occup6
 	sort sample1
-	save "${Datatemp}\relativewage`x'.dta", replace
+	save "${Temp}relativewage`x'.dta", replace
 restore
 
 }
 
-use "${Datatemp}\relativewage0.dta", clear
-    merge 1:1 sample1 using "${Datatemp}\relativewage1.dta"
+use "${Temp}relativewage0.dta", clear
+    merge 1:1 sample1 using "${Temp}relativewage1.dta"
     tab _m
     drop _m
-save "${Datatemp}\relativewage_`var'.dta", replace
+save "${Temp}relativewage_`var'.dta", replace
 }
 
 ********Merge file****************************************
 
-global bases "EAP ECA HI-NON_OECD HI-OECD LAC MENA SAR SSA"
+
 foreach var of global bases {
-    use "${Datatemp}\ps_`var'.dta", clear
-    merge 1:1 sample1 using "${Datatemp}\relativewage_`var'.dta"
+    use "${Temp}ps_`var'.dta", clear
+    merge 1:1 sample1 using "${Temp}relativewage_`var'.dta"
     tab _m
     drop _m
     order sample sample1
     sort sample1
-    save "${Datatemp}\summaryF_`var'.dta", replace
+    save "${Temp}summaryF_`var'.dta", replace
 	}

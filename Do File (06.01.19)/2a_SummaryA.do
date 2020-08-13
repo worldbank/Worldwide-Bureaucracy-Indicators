@@ -1,18 +1,21 @@
-*************************************************************************
-*PUBLIC SECTOR EMPLOYMENT:
-*Summary Table by country
-*Created by: Camilo Bohorquez-Penuela&Rong (Based on Pablo Suarez's do-files)
+***********************************
+*WORLD WIDE BUREAUCRACY INDICATORS VERSION 1.1, 2000-2018
+*2a_SummaryA
+*Called by 0_master.do
+*Created by: Camilo Bohorquez-Penuela&Rong Shi(based on Pablo Suarez's do-files)
+*Last Edit by: Faisal Baig
 *First version: December 2016
-*Latest version: June 2019
-*************************************************************************
-*Called from Master.do
-
+*Latest version: June 2020
+********************************************************************************
 
 /**********************************************************************************
 Share of public sector over paid and total employees, total and by age, sex, and location 
 **********************************************************************************/
 
 set more 1
+cap log close
+
+* Creates indicators for sub slassificaitons of public sector employment (as a sahre of total, paid and formal employment) by genders, urban/rural split
 
 foreach var of global bases {
 	use "${Data}LatestI2D2_`var'.dta", clear
@@ -117,7 +120,7 @@ merge 1:1 sample1 using "${sA3}", assert(3) nogen
 ***merge with filter info*****
 ***replace disaggregated indicator with missing value if they didn't pass age/gender/urban filter*
 
- merge 1:1 sample1 using "${Datatemp}\filters_data_`var'.dta", keepusing(filter) assert(2 3) keep(3) nogen
+ merge 1:1 sample1 using "${Temp}filters_data_`var'.dta", keepusing(filter) assert(2 3) keep(3) nogen
  
  local ps  ps1_1524 ps1_1524_se ps1_2564 ps1_2564_se ps1_65p ps1_65p_se ps1_mal ps1_mal_se ps1_fem ps1_fem_se ps1_urb ps1_urb_se ps1_rur  ///
  ps1_rur_se nm_ps1_1524 nm_ps1_2564 nm_ps1_65p nm_ps1_mal nm_ps1_fem nm_ps1_urb nm_ps1_rur obs_ps1_1524 obs_ps1_2564 obs_ps1_65p obs_ps1_mal ///
@@ -130,7 +133,7 @@ replace `n'=. if filter==3
  }
  
 
-save "${Datatemp}\summaryA_`var'.dta", replace
+save "${Temp}summaryA_`var'.dta", replace
 
 }
 

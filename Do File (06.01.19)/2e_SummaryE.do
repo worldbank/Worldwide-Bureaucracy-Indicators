@@ -1,11 +1,12 @@
-***************************************
-*PUBLIC SECTOR EMPLOYMENT
-*Summary Table by country
-*Created by: Rong Shi
+***********************************
+*WORLD WIDE BUREAUCRACY INDICATORS VERSION 1.1, 2000-2018
+*2d_SummaryE
+*Called by 0_master.do
+*Created by: Camilo Bohorquez-Penuela&Rong Shi(based on Pablo Suarez's do-files)
+*Last Edit by: Faisal Baig
 *First version: December 2016
-*Latest version: June 2019
-*************************************
-*Called from Master.do
+*Latest version: June 2020
+********************************************************************************
 
 /************************************************************************
 Employment stats and gender distribution by occupation and wage quantile
@@ -78,8 +79,6 @@ forvalues x = 1(1)5 {
 }
 	gen nm_wagewk=wpw_lcu~=.
 	
-
-
 foreach var of local sample1 {
         sum nm_wagewk if sample1 == `var'
 		
@@ -120,6 +119,6 @@ collapse (mean) lfp_r nm_lfp_r emp_r nm_emp_r paidemp_r nm_paidemp_r lfp_r_1524 
 
 
 sort sample1
-save "${Datatemp}\summaryE_`var2'.dta", replace
+save "${Temp}summaryE_`var2'.dta", replace
 
 }
