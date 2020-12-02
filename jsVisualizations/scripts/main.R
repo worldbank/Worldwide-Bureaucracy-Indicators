@@ -8,6 +8,7 @@ library(tidyverse)
 library(plotly)
 library(rmarkdown)
 library(assertthat)
+library(knitr)
 
 
 
@@ -25,9 +26,10 @@ user <- 1
 # for Tom
 if (user == 1) {
 # scripts
-repo <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators/jsVisualizations" 
+code_top <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators"
+repo <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators/jsVisualizations/scripts"
 # data 
-wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi/output"
 }
 
 # for ??
@@ -44,19 +46,34 @@ if (user == 2) {
 
 tidy    = 1
 graphs  = 1
+knit    = 1
 
 
 
 
     # run scripts #
+
+# tidyr 
 if (tidy == 1) {
   source(file = file.path(repo, "tidy.R"))
 }
 
-# run scripts #
+# generate graphs
 if (graphs == 1) {
   source(file = file.path(repo, "graphs.R"))
 }
+
+# knit rmd document to html 
+if (knit == 1) {
+  rmarkdown::render(
+    input = file.path(repo, "sample-wwbi-v1_1.Rmd"),
+    output_format = 'html_document',
+    output_file = file.path(wwbi_dat, "wwbi-v1-1.html"),
+    quiet = FALSE
+  )
+}
+
+
 
 #credits https://www.r-bloggers.com/2018/07/how-to-add-trend-lines-in-r-using-plotly/
 # https://stackoverflow.com/questions/56758733/in-r-use-and-k-as-a-y-axis-labels-for-thousands-of-dollars
