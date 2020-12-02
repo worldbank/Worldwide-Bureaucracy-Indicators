@@ -25,7 +25,7 @@ user <- 1
 # for Tom
 if (user == 1) {
 # scripts
-repo <- "C:/Users/WB551206/local/GitHub/placeholder-bl-data-viz"  
+repo <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators/jsVisualizations" 
 # data 
 wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
 }

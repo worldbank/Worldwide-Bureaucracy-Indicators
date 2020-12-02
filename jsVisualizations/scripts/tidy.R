@@ -187,6 +187,15 @@ wwbi$lnTotEmp <- log(wwbi$BI.EMP.TOTL.NO)
 
 
 
+# create subset of key variables to handle missing values
+subset1 <- wwbi %>%
+  select(ctyname, year, gdp_pc2017, BI.EMP.TOTL.PB.ZS, BI.EMP.PWRK.PB.ZS, BI.EMP.FRML.PB.ZS) %>%
+  # keep only if year, gdp and one of the three employment vars are non missing
+  filter( (is.na(year) == FALSE & is.na(gdp_pc2017) == FALSE) ) %>%
+  filter( (is.na(BI.EMP.TOTL.PB.ZS) == FALSE
+           | is.na(BI.EMP.PWRK.PB.ZS) == FALSE)
+          | is.na(BI.EMP.FRML.PB.ZS) == FALSE )
+
 
 
 
