@@ -133,23 +133,6 @@ wwbi <- pivot_wider(
 
 
 
-
-# WDI wrangling.
-# none?
-
-
-
-
-# join WWBI and WDI info
-# ## first join to wdi dictionary 
-# wwbi <- left_join(wwbi, wdi_dny,
-#                   by = c("ctycode" = "iso3c"),
-#                   na_matches = 'never',
-#                   keep = TRUE) 
-# 
-
-
-
 # join with WDI microdata 
 ## first convert year to integer
 
@@ -174,13 +157,6 @@ assert_that(sum(is.na(wwbi$iso2c)) == 0 )
 
 
 
-## add numeric income group variable 
-# wwbi$incomegroupNum <- NA
-# wwbi$incomegroupNum[wwbi$IncomeGroup == "Low income"] <- 12
-# wwbi$incomegroupNum[wwbi$IncomeGroup == "Lower middle income"] <- 18
-# wwbi$incomegroupNum[wwbi$IncomeGroup == "Upper middle income"] <- 24
-# wwbi$incomegroupNum[wwbi$IncomeGroup == "High income"] <- 30
-#assert_that(sum(is.na(wwbi$incomegroupNum)) == 0)
 
 
 # convert data storeage types 
