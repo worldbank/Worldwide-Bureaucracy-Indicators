@@ -403,7 +403,7 @@ p3_1 <-
 
 
 
-# 4. 3d scatter plot ----
+# 3d scatter plot ----
 
 p4temp = paste('<b>%{text}</b>',
                '<br>Private Med Age: %{x}',
@@ -467,6 +467,8 @@ p4 <-
 # colors 
 colorp5 <- brewer.pal(n_distinct(wwbi$region), "Set1")
 
+
+
 p5 <- 
   plot_ly(data = wwbi) %>%
   add_trace(
@@ -481,7 +483,7 @@ p5 <-
     text = ~ctyname,
     alpha = 0.7,
     hovertemplate = p5temp,
-    marker = list(sizeref = 0.08, sizemin = 12, line = list(width = 0))
+    marker = list(sizeref = 0.5, sizemin = 4, line = list(width = 0))
     ) %>%
   # y = x plane
   add_trace(x = 0:1,
@@ -505,10 +507,45 @@ p5 <-
     )) %>%
   config(scrollZoom = FALSE)
 
-
-
-
-
+# using only 3 most recent observations
+p5.1 <- 
+  plot_ly(data = subset2) %>%
+  add_trace(
+    type = 'scatter3d',
+    mode = 'markers',
+    color = ~region,
+    colors = colorp5,
+    size = ~ln_gdp,
+    x = ~ BI.EMP.TOTL.PB.ZS, # share of total employment
+    y = ~ BI.EMP.PWRK.PB.ZS, # share of paid employment
+    z = ~BI.EMP.FRML.PB.ZS,  # share of formal employment
+    text = ~ctyname,
+    alpha = 0.7,
+    hovertemplate = p5temp,
+    marker = list(sizeref = 0.5, sizemin = 4, line = list(width = 0))
+  ) %>%
+  # y = x plane
+  add_trace(x = 0:1,
+            y = 0:1,
+            z = 0:1,
+            type = 'scatter3d', # scatter3d,
+            mode = 'lines',
+            surfacecolor = "#dcdcdc",
+            opacity = 1,
+            showlegend = FALSE) %>%
+  layout(
+    title = list( text = "<b>Public Sector Employment as Share of Different Measures of All Employment</b>",
+                  font = list(size = 16)),
+    legend = list(title = list(text='<b>Region</b>', font = list(size = 12))),
+    # dragmode = 'FALSE',
+    scene = list(
+      xaxis = list(title = "As Share of Total Employment", range = c(0,1)),
+      yaxis = list(title = "As Share of Paid Employment", range = c(0,1)),
+      zaxis = list(title = "As Share of Formal Employment", range = c(0,1))
+      
+    )) %>%
+  config(scrollZoom = FALSE)
+  
 
 
 
@@ -520,7 +557,7 @@ p5 <-
 # Export ----
 
 save(
-p3, p3_1, p4, p5, p6, p6.1, p7, p7.2, p7.3, p8,
+p3, p3_1, p4, p5, p5.1, p6, p6.1, p7, p7.2, p7.3, p8,
 wwbi,
 file = file.path(wwbi_dat, "wwbi.Rdata")
 )

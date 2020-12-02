@@ -25,11 +25,11 @@ A sandbox for graphical meditations on the WWBI.
 
 
 ## Updates
-### Last update: 1 Dec
+### Last update: 2 Dec
 
 - Incorporating feedback as best as possible.
 - Still focusing on schematics so please excuse rough aesthetics and bugs.
-- long story short, it seems there's a bug in the graphing package that doesn't allow you to have **both** a toggle and a time-animation in the same graph
+
 
 ## Proposed solution/idea: have a two-tier presentation approach
 1. Tier 1 is the selection of ~3 graphs that represent the wwbi well, look professional, don't take eons to make, and are intuitive to most all users. These graphs go directly on our website and serve are designed to reach the general public/casual user.
@@ -50,23 +50,11 @@ p6.1
 ```
 
 
-#### 1.2: A possible animation version without toggling errors 
+### 2.1: Using only Formal Employment vs GDP per capita
 
-Let me know if you see a few points "flying in" from the top left of the graph. I think this has to do with how plotly is reading missing values (which shouldn't happen) so I'll continue looking into it.
+The marginal cost of adding a toggle between different measures of employment is high and bug-prone, so I just created this graph using only `Formal Employoment`. If we like this setup I can try to implement the y-axis variable toggle.
 
-
-```{r}
-p8
-```
-
-
-
-### 2: Using only Formal Employment vs GDP per capita
-
-The marginal cost of adding a toggle between different measures of employment is high and bug-prone, so I just created this graph using only `marginal cost`. If we like this setup I can try to implement the y-axis variable toggle.
-
-
-Note: long story but generating the country names to appear in the hover text is complicated and I'm not sure it's possible, so I'm investigating. I'd love to have the country name appear on the mouse hover along with the other data because I think the name is important. 
+Note: awaiting approval from the powers that be to help us decide on which variation we like best
 
 ```{r}
 p7
@@ -84,16 +72,23 @@ p7.3
 ```
 
 
-### 3: Comparing all three measures of public employment colored by region
+### 3.1: Comparing all three measures of public employment colored by region
 Same as before, where size of the dot is somewhat scaled to log gdp, excpet zooming has been disabled here. Note that clicking and dragging in the graph region will rotate the axes.
 
-In the future I'd love to add best-fit lines by region as in the 2d-graphs, but in the R api you have to do this manually I think, so I'll invest the time if/when we decide they're useful.
+3.1 uses the full dataset...
 
 ```{r}
 p5
 ```
 
 
+####3.2 But here's a version using only the three most recent years for each country
+```{r}
+p5.1
+```
+
+
+### Readily-available color schemes
 Again here are the available color schemes. Graph 3 uses `Set1`.
 ```{r}
 RColorBrewer::display.brewer.all()
