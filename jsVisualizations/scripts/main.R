@@ -50,7 +50,7 @@ if (user == 2) {
 
 tidy    = 1
 graphs  = 1
-knit    = 0
+knit    = 1
 
 
 

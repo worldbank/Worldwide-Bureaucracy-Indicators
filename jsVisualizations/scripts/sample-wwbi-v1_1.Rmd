@@ -54,22 +54,19 @@ p6.1
 
 The marginal cost of adding a toggle between different measures of employment is high and bug-prone, so I just created this graph using only `Formal Employoment`. If we like this setup I can try to implement the y-axis variable toggle.
 
-Note: awaiting approval from the powers that be to help us decide on which variation we like best
+Note: at this point we're trying to figure out if we should add the by-region best fit lines.
+
+#### 2.1: no by-region lines
 
 ```{r}
 p7
 ```
 
-#### 2.2: Changing the by-region line style 
+#### 2.2: by-region lines, with dots
 ```{r}
 p7.2
 ```
 
-#### 2.3: changing the overall line style
-
-```{r}
-p7.3
-```
 
 
 ### 3.1: Comparing all three measures of public employment colored by region

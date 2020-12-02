@@ -209,7 +209,7 @@ p8 <- p8 %>%
 
 
 
-# 7: remake of graph 2: ----
+# formal employment vs gdp per capita: ----
 # use formal employment vs gdp per capita, by country and best-fit lines for each, overall 
 
 htp7 = paste('%{text}')
@@ -244,6 +244,7 @@ p7 <- ggplotly(p7)
 
 p7 <- p7 %>%
   style(hovertemplate = htp7, legendgroup = 'group1', traces = 0:13) %>%
+  style(line=list(dash='dot', width = 0), traces = 8:13) %>% # "eliminate" the region line traces
   style(hovertemplate = htp7, legendgroup = 'group2', traces = 14,
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
@@ -258,6 +259,7 @@ p7 <- p7 %>%
 # change line type to dot for region
 p7.2 <- p7 %>%
   style(line=list(dash='dot'), traces = 8:13) # chanes the by-region lines traces only
+
 # change overall line to dot
 p7.3 <- p7 %>%
   style(line=list(dash='dot', width = 5), traces = 14)
