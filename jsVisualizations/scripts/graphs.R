@@ -156,15 +156,6 @@ p6.1 <- p6.1 %>%
 
 # 8: employment vs gdp with animation 
 
-# inspect keyvars of wwbi 
-subset1 <- wwbi %>%
-  select(ctyname, year, gdp_pc2017, BI.EMP.TOTL.PB.ZS, BI.EMP.PWRK.PB.ZS, BI.EMP.FRML.PB.ZS) %>%
-  # keep only if year, gdp and one of the three employment vars are non missing
-  filter( (is.na(year) == FALSE & is.na(gdp_pc2017) == FALSE) ) %>%
-  filter( (is.na(BI.EMP.TOTL.PB.ZS) == FALSE
-           | is.na(BI.EMP.PWRK.PB.ZS) == FALSE)
-          | is.na(BI.EMP.FRML.PB.ZS) == FALSE )
-
 p8 <-
   ggplot(subset1, aes(x = gdp_pc2017)) +
   # Total Employment
