@@ -556,6 +556,23 @@ p5.1 <-
 
 
 
+
+
+                        ### Cross-Country Comparison ####
+# make heatmap
+hmp <- plot_ly(
+  data = wwbi_hmp,
+  x = 'indicator',
+  y = 'ctycode',
+  z = 'value',
+  type = 'heatmap'
+)
+
+
+
+
+
+
 # Export ----
 
 save(

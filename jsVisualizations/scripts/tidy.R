@@ -18,6 +18,17 @@ library(WDI)
                               #     Load Data     # ----
                               
 
+# load cross-country comparison data
+wwbi_x <- read_xlsx(
+  path = file.path(wwbi_dat, "Cross-country wage comparison data.xlsx"),
+  na = ""
+) %>%
+  rename(
+    "ctyname" = `Country Name`,
+    "ctycode" = `Country Code`,
+    "region"  = Region
+  )
+
 
 # load WDI metadata, main 'micro' data
 wdi_meta <- WDI_data
@@ -219,6 +230,23 @@ subset2 <- wwbi %>%
   filter(row_number() <= 3)
 
 
+
+
+
+
+
+
+
+                                # wrangling the cross country comparison # ----
+# for the heatmap we have to have in long format 
+wwbi_hmp <- wwbi_x %>%
+  pivot_longer(
+    cols = c("Senior official", "Judge", "Hospital doctor", "Hospital nurse",
+             "Government economist", "University teacher", "Secondary school teacher",
+             "Primary school teacher", "Police officer"),
+    names_to = "indicator"
+    
+  )
 
 
 
