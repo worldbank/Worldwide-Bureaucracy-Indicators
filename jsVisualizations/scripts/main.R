@@ -27,18 +27,22 @@ user <- 1
 if (user == 1) {
 # scripts
 code_top <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators"
-repo <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators/jsVisualizations/scripts"
+repo <- file.path(code_top, "jsVisualizations/scripts")
 # data 
-wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi/output"
+wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+wwbi_out <- file.path(wwbi_dat, "output")
 }
 
 # for ??
 if (user == 2) {
   # scripts
-  repo <- ""  
+  code_top <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators"
+  repo <- file.path(code_top, "jsVisualizations/scripts")
   # data 
-  wwbi <- ""
+  wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+  wwbi_out <- file.path(wwbi_dat, "output")
 }
+
 
 
 
@@ -68,7 +72,7 @@ if (knit == 1) {
   rmarkdown::render(
     input = file.path(repo, "sample-wwbi-v1_1.Rmd"),
     output_format = 'html_document',
-    output_file = file.path(wwbi_dat, "wwbi-v1-1.html"),
+    output_file = file.path(wwbi_out, "wwbi-v1-1.html"),
     quiet = FALSE
   )
 }

@@ -187,6 +187,11 @@ wwbi$lnTotEmp <- log(wwbi$BI.EMP.TOTL.NO)
 
 
 
+
+
+                                # create graph-specific subsets # ----
+
+
 # create subset of key variables to handle missing values
 subset1 <- wwbi %>%
   select(ctyname, year, gdp_pc2017, BI.EMP.TOTL.PB.ZS, BI.EMP.PWRK.PB.ZS, BI.EMP.FRML.PB.ZS) %>%
@@ -195,6 +200,24 @@ subset1 <- wwbi %>%
   filter( (is.na(BI.EMP.TOTL.PB.ZS) == FALSE
            | is.na(BI.EMP.PWRK.PB.ZS) == FALSE)
           | is.na(BI.EMP.FRML.PB.ZS) == FALSE )
+
+
+
+# create subset for 3d scatter keeping only 3 most recent measures for each country 
+  #     size = ~ln_gdp,
+  # x = ~ BI.EMP.TOTL.PB.ZS, # share of total employment
+  # y = ~ BI.EMP.PWRK.PB.ZS, # share of paid employment
+  # z = ~BI.EMP.FRML.PB.ZS,  # share of formal employment
+
+subset2 <- wwbi %>%
+  filter(is.na(gdp_pc2017) == FALSE  # obs must have all 4 of these points
+         & is.na(BI.EMP.TOTL.PB.ZS) == FALSE
+         & is.na(BI.EMP.PWRK.PB.ZS) == FALSE
+         & is.na(BI.EMP.FRML.PB.ZS) == FALSE) %>%
+  arrange(ctyname, desc(year), .by_group = TRUE) %>% # by country, keep most 3 recent obs only 
+  group_by(ctyname) %>%
+  filter(row_number() <= 3)
+
 
 
 
