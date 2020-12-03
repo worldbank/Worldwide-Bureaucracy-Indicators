@@ -109,3 +109,23 @@ hmp
 hmp
 ```
 
+
+
+### 5: Wage bill vs log GDP per capita
+There are two different measures for wage bill as percent of GDP, so I made each sepeartely and tried putting them on the same graph
+
+```{r}
+p9a
+```
+
+
+5.2
+```{r}
+p9b
+```
+
+5.3: combined 
+```{r}
+p9c
+```
+

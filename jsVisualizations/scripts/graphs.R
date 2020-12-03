@@ -666,7 +666,11 @@ p9c <-
               linetype = 1, size = 0.5, se = F, alpha = a.p9.li) +
   scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
   theme_minimal() +
-  theme(legend.position = 'bottom') 
+  theme(legend.position = 'bottom') +
+  labs(title = "",
+       x = "",
+       y = "",
+       color = "")
 
 p9c <- ggplotly(p9c) %>%
   style(hovertemplate = htp9, name ='Global Trend: Wage Bill as % of GDP', legendgroup = 1, traces = c(8),
@@ -753,7 +757,7 @@ hmp <- plot_ly(
 # Export ----
 
 save(
-p3, p3_1, p4, p5, p5.1, p6, p6.1, p7, p7.2, p7.3, p8, hmp, p9a, p9c, p9c
+p3, p3_1, p4, p5, p5.1, p6, p6.1, p7, p7.2, p7.3, p8, hmp, p9a, p9c, p9c,
 wwbi,
 file = file.path(wwbi_dat, "wwbi.Rdata")
 )
