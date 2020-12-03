@@ -554,6 +554,155 @@ p5.1 <-
 
 
 
+# wage bill as percentage of economic measures  ----
+# graph a: using y as % of gdp 
+
+
+a.p9 = 0.3
+a.p9.li = 0.5
+
+htp9 = paste('Log GDP per cap.: %{x:.1f}',
+             '<br>Wage Bill: %{y:.2f}%')
+
+p9a <-
+  ggplot(wwbi, aes(x = gdp_pc2017)) +
+  # Wage bill As % of gdp 
+  geom_point(aes(y = BI.WAG.TOTL.GD.ZS, color = region), alpha = a.p9) +
+  stat_smooth(aes(y =BI.WAG.TOTL.GD.ZS, color = '#1B9E77'), method = 'loess',
+              linetype = 1, size = 0.5, se = F, alpha = a.p9.li) +
+  scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
+  # scale_color_manual(name = ''
+  #                    labels = c("Total Employment", "Paid Employment", "Formal Employment"),
+  #                    values = c("#1B9E77", "#D95F02", "#7570B3")
+  #                    ) +
+  theme_minimal() +
+  theme(legend.position = 'bottom') +
+  labs(title = "",
+       x = "",
+       y = "",
+       color = "")
+
+p9a <- ggplotly(p9a) %>%
+ style(hovertemplate = htp9, name ='Global Trend', legendgroup = 2, traces = c(8)) %>%
+ style(hovertemplate = htp9, legendgroup = 1, traces = c(1:7)) %>%
+  layout(
+    title = list(
+      text = "<b>Wage Bill Expenditure Across GDP per Capita</b>",
+      y = 0.98
+    ),
+    xaxis = list(
+      title = list(text = "<b>GDP per Capita (in constant 2017 dollars)</b>")
+    ),
+    yaxis = list(
+      title = list(text = "<b>Wage Bill as Percent of GDP</b>"),
+      tickmode = 'array',
+      range = c(0,20),
+      tickvals = c(0,5,10,15,20),
+      ticktext = c(0,5,10,15,20)
+    ),
+    legend = list(title = list(text = '<b>Region</b>'))
+  ) 
+
+
+
+
+# graph b: using y as % pof public expenditure
+
+p9b <-
+  ggplot(wwbi, aes(x = gdp_pc2017)) +
+  # Wage bill As % of public expenditure
+  geom_point(aes(y = BI.WAG.TOTL.PB.ZS, color = region), alpha = a.p9) +
+  stat_smooth(aes(y= BI.WAG.TOTL.PB.ZS, color = '#1B9E77'), method = 'loess',
+              linetype = 1, size = 0.5, se = F, alpha = a.p9.li) +
+  scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
+  # scale_color_manual(name = ''
+  #                    labels = c("Total Employment", "Paid Employment", "Formal Employment"),
+  #                    values = c("#1B9E77", "#D95F02", "#7570B3")
+  #                    ) +
+  theme_minimal() +
+  theme(legend.position = 'bottom') +
+  labs(title = "",
+       x = "",
+       y = "",
+       color = "")
+
+p9b <- ggplotly(p9b) %>%
+  style(hovertemplate = htp9, name ='Global Trend', legendgroup = 2, traces = c(8)) %>%
+  style(hovertemplate = htp9, legendgroup = 1, traces = c(1:7)) %>%
+  layout(
+    title = list(
+      text = "<b>Wage Bill Expenditure Across GDP per Capita</b>",
+      y = 0.98
+    ),
+    xaxis = list(
+      title = list(text = "<b>GDP per Capita (in constant 2017 dollars)</b>")
+    ),
+    yaxis = list(
+      title = list(text = "<b>Wage Bill as Percent of Public Expenditure</b>"),
+      range = c(0,60),
+      tickvals = c(0, 10, 20, 30, 40, 50, 60),
+      ticktext = c(0, 10, 20, 30, 40, 50, 60)
+    ),
+    legend = list(title = list(text = '<b>Region</b>'))
+  ) 
+
+
+
+
+# combinding graphs 9a and 9b
+
+colorp9 <- c(RColorBrewer::brewer.pal(8, 'Set2'),
+             RColorBrewer::brewer.pal(8, 'Set2'))
+
+p9c <- 
+  ggplot(wwbi, aes(x = gdp_pc2017)) +
+  # using wage bill as % of gdp
+  geom_point(aes(y = BI.WAG.TOTL.GD.ZS, color = region), alpha = a.p9) +
+  stat_smooth(aes(y =BI.WAG.TOTL.GD.ZS, color = '#da70d6'), method = 'loess',
+              linetype = 1, size = 0.5, se = F, alpha = a.p9.li) +
+  # Wage bill As % of public expenditure
+  geom_point(aes(y = BI.WAG.TOTL.PB.ZS, color = region), alpha = a.p9) +
+  stat_smooth(aes(y= BI.WAG.TOTL.PB.ZS, color = '#1e90ff'), method = 'loess',
+              linetype = 1, size = 0.5, se = F, alpha = a.p9.li) +
+  scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
+  theme_minimal() +
+  theme(legend.position = 'bottom') 
+
+p9c <- ggplotly(p9c) %>%
+  style(hovertemplate = htp9, name ='Global Trend: Wage Bill as % of GDP', legendgroup = 1, traces = c(8),
+        line = list(color = '#ff8c00')) %>%
+  style(hovertemplate = htp9, name ='Global Trend: Wage bill as % of Public Expenditure',
+        legendgroup = 2, traces = c(16), line=list(color='#1e90ff')) %>%
+  style(hovertemplate = htp9, legendgroup = 1, showlegend = T, traces = c(1:7),
+        marker=list(symbol='circle-open')
+        ) %>%
+  style(hovertemplate = htp9, legendgroup = 2, showlegend = T, traces = c(9:15),
+        marker=list(symbol='square', opacity=0.6)) %>%
+  layout(
+    title = list(
+      text = "<b>Wage Bill Expenditure Across GDP per Capita</b>",
+      y = 0.98
+    ),
+    xaxis = list(
+      title = list(text = "<b>GDP per Capita (in constant 2017 dollars)</b>")
+    ),
+    yaxis = list(
+      title = list(text = "<b>Wage Bill</b>"),
+      range = c(0,60),
+      tickvals = c(0, 10, 20, 30, 40, 50, 60),
+      ticktext = c(0, 10, 20, 30, 40, 50, 60)
+    ),
+    legend = list(title = list(text = '<b>Region</b>'), traceorder = 'reversed'),
+    colorway = colorp9
+  ) 
+
+p9c
+
+plotly_json(p9c)
+
+
+
+
 
 
 
@@ -604,7 +753,7 @@ hmp <- plot_ly(
 # Export ----
 
 save(
-p3, p3_1, p4, p5, p5.1, p6, p6.1, p7, p7.2, p7.3, p8, hmp,
+p3, p3_1, p4, p5, p5.1, p6, p6.1, p7, p7.2, p7.3, p8, hmp, p9a, p9c, p9c
 wwbi,
 file = file.path(wwbi_dat, "wwbi.Rdata")
 )
