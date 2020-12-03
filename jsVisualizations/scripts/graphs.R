@@ -691,7 +691,7 @@ p9c <- ggplotly(p9c) %>%
       title = list(text = "<b>GDP per Capita (in constant 2017 dollars)</b>")
     ),
     yaxis = list(
-      title = list(text = "<b>Wage Bill</b>"),
+      title = list(text = "<b>Wage Bill in Percent </b>"),
       range = c(0,60),
       tickvals = c(0, 10, 20, 30, 40, 50, 60),
       ticktext = c(0, 10, 20, 30, 40, 50, 60)
