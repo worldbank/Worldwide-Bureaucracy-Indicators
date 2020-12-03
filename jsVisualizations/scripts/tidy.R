@@ -11,6 +11,7 @@ library(hablar)
 library(lubridate)
 library(forcats)
 library(WDI)
+library(scales)
 
 
 
@@ -26,8 +27,17 @@ wwbi_x <- read_xlsx(
   rename(
     "ctyname" = `Country Name`,
     "ctycode" = `Country Code`,
-    "region"  = Region
-  )
+    "region"  = Region,
+    "IncomeLevel" = "Income Level",
+    "SeniorOfficial" = "Senior official",
+    "HospitalDoctor" = "Hospital doctor",
+    "HospitalNurse"  = "Hospital nurse",
+    "GovernmentEconomist" = "Government economist",
+    "UniversityTeacher" = "University teacher",
+    "SecondarySchoolTeacher" = "Secondary school teacher",
+    "PrimarySchoolTeacher" = "Primary school teacher",
+    "PoliceOfficer" = "Police officer"
+  ) 
 
 
 # load WDI metadata, main 'micro' data
@@ -240,13 +250,19 @@ subset2 <- wwbi %>%
                                 # wrangling the cross country comparison # ----
 # for the heatmap we have to have in long format 
 wwbi_hmp <- wwbi_x %>%
+ mutate( across(c("SeniorOfficial", "Judge", "HospitalDoctor", "HospitalNurse",
+               "GovernmentEconomist", "UniversityTeacher", "SecondarySchoolTeacher",
+               "PrimarySchoolTeacher", "PoliceOfficer"),
+         ~ rescale(., to = c(-1,1)) )) %>% # rescale each column independently to -1 to 1, where 0 is mean
   pivot_longer(
-    cols = c("Senior official", "Judge", "Hospital doctor", "Hospital nurse",
-             "Government economist", "University teacher", "Secondary school teacher",
-             "Primary school teacher", "Police officer"),
+    cols = c("SeniorOfficial", "Judge", "HospitalDoctor", "HospitalNurse",
+             "GovernmentEconomist", "UniversityTeacher", "SecondarySchoolTeacher",
+             "PrimarySchoolTeacher", "PoliceOfficer"),
     names_to = "indicator"
-    
-  )
+  ) %>%
+  filter(!is.na(value))  # remove rows with missing values
+  
+
 
 
 

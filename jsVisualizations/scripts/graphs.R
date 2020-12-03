@@ -562,14 +562,13 @@ p5.1 <-
 # make heatmap
 hmp <- plot_ly(
   data = wwbi_hmp,
-  x = 'indicator',
-  y = 'ctycode',
-  z = 'value',
-  type = 'heatmap'
+  type = 'heatmap',
+  x = ~indicator,
+  y = ~ctycode,
+  z = ~value
 )
 
-
-
+hmp
 
 
 
