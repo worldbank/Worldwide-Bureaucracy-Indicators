@@ -12,7 +12,7 @@ library(lubridate)
 library(forcats)
 library(WDI)
 library(scales)
-
+library(sjmisc)
 
 
 
@@ -249,21 +249,37 @@ subset2 <- wwbi %>%
 
                                 # wrangling the cross country comparison # ----
 # for the heatmap we have to have in long format 
+varlist1 <- c("SeniorOfficial", "Judge", "HospitalDoctor", "HospitalNurse",
+              "GovernmentEconomist", "UniversityTeacher", "SecondarySchoolTeacher",
+              "PrimarySchoolTeacher", "PoliceOfficer") # abbreviations are wonderful
+
+# create n miss by variable tibble.
+n.miss <- as.data.frame(colSums(is.na(wwbi_x))) %>%
+  mutate(
+    var = rownames(.)
+  ) %>%
+  rename(nmiss = "colSums(is.na(wwbi_x))") %>%
+  as.tibble() %>%
+  filter(row_number() >= 5) %>%
+  arrange(nmiss)
+
+
 wwbi_hmp <- wwbi_x %>%
- mutate( across(c("SeniorOfficial", "Judge", "HospitalDoctor", "HospitalNurse",
-               "GovernmentEconomist", "UniversityTeacher", "SecondarySchoolTeacher",
-               "PrimarySchoolTeacher", "PoliceOfficer"),
-         ~ rescale(., to = c(-1,1)) )) %>% # rescale each column independently to -1 to 1, where 0 is mean
+ mutate( across(varlist1,
+         ~ rescale(., to = c(0,1)) )) %>% # rescale each column independently to -1 to 1, where 0 is mean
+  mutate( # generate total
+    total = rowSums(.[5:13], na.rm = TRUE)
+  ) %>%
   pivot_longer(
-    cols = c("SeniorOfficial", "Judge", "HospitalDoctor", "HospitalNurse",
-             "GovernmentEconomist", "UniversityTeacher", "SecondarySchoolTeacher",
-             "PrimarySchoolTeacher", "PoliceOfficer"),
+    cols = varlist1,
     names_to = "indicator"
   ) %>%
-  filter(!is.na(value))  # remove rows with missing values
-  
+  filter(!is.na(value)) %>% # remove rows with missing values
+  arrange(-total)
 
-
+wwbi_hmp %>%
+  group_by(indicator) %>%
+  dplyr::summarize(sum(is.na(wwbi_hmp$value)))
 
 
 

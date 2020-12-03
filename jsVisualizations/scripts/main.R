@@ -50,7 +50,7 @@ if (user == 2) {
 
 tidy    = 1
 graphs  = 1
-knit    = 0
+knit    = 1
 
 
 
@@ -82,4 +82,6 @@ if (knit == 1) {
 #credits https://www.r-bloggers.com/2018/07/how-to-add-trend-lines-in-r-using-plotly/
 # https://stackoverflow.com/questions/56758733/in-r-use-and-k-as-a-y-axis-labels-for-thousands-of-dollars
 # https://stackoverflow.com/questions/32098836/ggplotly-r-labeling-trace-names
+# https://stackoverflow.com/questions/41895432/mutating-column-in-dplyr-using-rowsums
+# https://stackoverflow.com/questions/52288525/change-tick-mark-labels-to-specific-strings-in-plotly
 # 

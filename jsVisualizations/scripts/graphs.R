@@ -559,23 +559,52 @@ p5.1 <-
 
 
                         ### Cross-Country Comparison ####
+# hover text for heatmap
+hmp.ht = paste('Country: <b>%{y}</b>',
+               '<br>Indicator: <b>%{x}</b>',
+               '<br>Scaled Value: <b>%{z:.2f}</b>',
+               '<extra></extra>')
+
+
 # make heatmap
 hmp <- plot_ly(
   data = wwbi_hmp,
   type = 'heatmap',
   x = ~indicator,
   y = ~ctycode,
-  z = ~value
-)
-
-hmp
+  z = ~value,
+  colorbar = list(tickmode = 'array', tickvals = c(0.0, 0.25, 0.50, 0.75, 1.0), title = "Scaled Value"),
+  hovertemplate = hmp.ht
+) %>%
+  layout(
+    plot_bgcolor = "#dcdcdc",
+    title = list(text = "<b>Comparing Indicators Across Countries</b>"),
+    yaxis = list(
+      title = list(text = "Country"),
+      categoryorder = 'total ascending',
+      tickfont = list(size = 8)
+    ),
+    xaxis = list(
+      title = list(text = "Indicator"),
+      showgrid = FALSE,
+      categoryorder = 'array', 
+      categoryarray = n.miss$var, # arrangement by descending order of missing values
+      tickmode = 'array',
+      tickvals = n.miss$var, #tickvals must be defined for custom labels to work below
+      ticktext = c("Hospital Doctor", "Hospital Nurse",        
+                    "Primary School Teacher", "Police Officer",
+                    "Secondary School Teacher", "Judge",
+                    "University Teacher", "Government Economist",
+                    "Senior Official")
+    )
+  )
 
 
 
 # Export ----
 
 save(
-p3, p3_1, p4, p5, p5.1, p6, p6.1, p7, p7.2, p7.3, p8,
+p3, p3_1, p4, p5, p5.1, p6, p6.1, p7, p7.2, p7.3, p8, hmp,
 wwbi,
 file = file.path(wwbi_dat, "wwbi.Rdata")
 )
