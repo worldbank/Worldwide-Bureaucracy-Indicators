@@ -9,12 +9,49 @@
 
 library(shiny)
 
-# Define UI for application that draws a histogram
+
+# setup 
+mapfill.choices <- 
+  c("GDP Per Capita" = "gdp_pc2017",
+    "Females, as a share of public paid employees" = "BI.PWK.PUBS.FE.ZS"
+    )
+
+choices <- setNames(names_all$indcode, names_all$indname)
+
+
+
+#       -           -       -     -   -   -   UI - - - ---- 
 shinyUI(
   navbarPage( "Coffee Table",
     tabPanel("Map",
 
-      plotlyOutput('map', height = 'auto', width = '100%')
+      leafletOutput('map'),
+      
+      # panel select
+      absolutePanel(
+        ## panel settings
+        draggable = TRUE,
+        
+        
+        # contents of panel
+        sliderInput(
+          'in.year',
+          "Select Year",
+          min = min(wwbi_geo$year),
+          max = max(wwbi_geo$year),
+          value = 2017,
+          sep = "",
+          step = 1),
+        
+        selectInput(
+          'in.mapfill',
+          "Fill Variable",
+          choices = choices,
+          multiple = FALSE,
+          width = '250px'
+        )
+        
+      ) # end absolute panel
       
              
              

@@ -5,6 +5,7 @@ library(sf)
 library(rjson)
 library(leaflet)
 library(RColorBrewer)
+library(htmltools)
 
 
                   # Import World Bank Admin0 Files ----
@@ -50,48 +51,55 @@ wwbi_geo <-
   st_as_sf()
 
 
+# misc: create date variable for year 
+wwbi_geo$year_dt <-
+  as.Date(as.character(wwbi_geo$year),
+                            format="%Y")
 
+
+
+save(
+  # final wwbi files
+  wwbi_geo,
+  wwbi,
+  names_all,
+  # world geo polygon files
+  world_geo,
+  world_sf,
+  world_sf_raw,
+  file = file.path(cafe, "data.Rdata")
+)
 
 
 
 # inside server ----
 
 ## define color pallette 
-pal <- colorBin("YlOrRd", domain = wwbi_geo$ln_gdp, bins = 5)
+pal <- colorBin("YlOrRd", domain = wwbi_geo$gdp_pc2017,
+                bins = c(0, 5000, 10000, 20000, 30000, 40000, Inf))
 
 ## build map base
 m <- wwbi_geo %>%
   filter(year == 2017) %>%
   leaflet() %>%
-  addTiles() 
-
+  addTiles() %>%
 ## add fill
-m <- m %>%
   addPolygons(
-    fillColor = ~pal(ln_gdp),
+    fillColor = ~pal(gdp_pc2017),
     weight = 2,
     opacity = 1,
     color =  "white",
     dashArray = 1,
-    fillOpacity = 0.8
-  )
-
+    fillOpacity = 0.8,
+    label = ~ctyname
+  ) %>%
 ## add legend 
-m %>%
   addLegend(
     pal = pal,
     position = "bottomright",
     na.label = "No Info",
-    values = ~ln_gdp,
-    title = "Log GDP Per Capita"
-    
+    values = ~gdp_pc2017,
+    title = paste("GDP Per Capita,",
+                  "<br>(2017 USD)")
   )
-
-
-
-
-plot_ly() %>%
-  add_trace(
-    type = 'choropleth',
-    geojson = world
-  )
+m
