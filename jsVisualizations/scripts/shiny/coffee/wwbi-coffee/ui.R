@@ -47,6 +47,7 @@ shinyUI(
           'in.mapfill',
           "Fill Variable",
           choices = choices,
+          selected = "BI.WAG.TOTL.GD.ZS",
           multiple = FALSE,
           width = '250px'
         )

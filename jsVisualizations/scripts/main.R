@@ -89,4 +89,9 @@ if (coffee == 1) {
 #credits https://www.r-bloggers.com/2018/07/how-to-add-trend-lines-in-r-using-plotly/
 # https://stackoverflow.com/questions/56758733/in-r-use-and-k-as-a-y-axis-labels-for-thousands-of-dollars
 # https://stackoverflow.com/questions/32098836/ggplotly-r-labeling-trace-names
+# pal <- colorBin("YlOrRd", domain = wwbi_geo$gdp_pc2017,
+# https://stackoverflow.com/questions/48953149/dynamic-color-fill-for-polygon-using-leaflet-in-shiny-not-working
 # 
+
+
+
