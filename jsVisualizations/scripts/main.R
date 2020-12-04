@@ -52,7 +52,8 @@ tidy    = 1
 graphs  = 1
 knit    = 1
 
-
+# shiny 
+coffee  = 1
 
 
     # run scripts #
@@ -76,6 +77,12 @@ if (knit == 1) {
     quiet = FALSE
   )
 }
+
+# shiny 
+if (coffee == 1) {
+  source(file = file.path(repo, "shiny/coffee/wwbi-coffee/MAIN-coffee.R"))
+}
+
 
 
 

@@ -12,7 +12,11 @@ library(shiny)
 shinyServer(function(input, output) {
    
   output$map <- renderPlotly({
-    
+    plot_ly() %>%
+      add_trace(
+        type = 'chloropleth'
+        
+      )
     
   })
   
