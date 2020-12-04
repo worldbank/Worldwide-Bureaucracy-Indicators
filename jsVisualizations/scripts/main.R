@@ -48,9 +48,9 @@ if (user == 2) {
 
     # toggles # 
 
-tidy    = 1
-graphs  = 1
-knit    = 1
+tidy    = 0
+graphs  = 0
+knit    = 0
 
 # shiny 
 coffee  = 1

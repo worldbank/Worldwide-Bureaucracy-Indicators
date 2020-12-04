@@ -9,10 +9,24 @@ library(shiny)
 
 # Paths
 
+cafe <- file.path(repo, "shiny/coffee/wwbi-coffee")
+
 worldjson <-
-  "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/names+boundaries/WB_Boundaries_GeoJSON_lowres/WB_Adm0_boundary_lines_10m_lowres.geojson"
+  "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/names+boundaries/WB_Boundaries_GeoJSON_lowres/WB_countries_Admin0_lowres.geojson"
+# %% cant get plotly to show country lines 
+
+# prepare the coffee
+coffee.tidy = 1 
+run         = 1 
 
 
+
+
+if (coffee.tidy == 1 ) {
+  source(file.path(cafe, "coffee-tidy.R"))
+}
 
 # Run app 
+if (run == 1) {
 shiny::runApp('jsVisualizations/scripts/shiny/coffee/wwbi-coffee')
+}
