@@ -12,8 +12,7 @@ library(shiny)
 cafe <- file.path(repo, "shiny/coffee/wwbi-coffee")
 
 worldjson <-
-  "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/names+boundaries/WB_Boundaries_GeoJSON_lowres/WB_countries_Admin0_lowres.geojson"
-# %% cant get plotly to show country lines 
+  "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/names+boundaries/WB_Boundaries_GeoJSON_lowres/WB_Adm0_boundary_lines_10m_lowres.geojson"
 
 # prepare the coffee
 coffee.tidy = 1 
