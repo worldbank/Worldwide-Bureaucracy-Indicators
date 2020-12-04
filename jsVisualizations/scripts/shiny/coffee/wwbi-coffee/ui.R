@@ -10,24 +10,17 @@
 library(shiny)
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(
-  
-  # Application title
-  titlePanel("Old Faithful Geyser Data"),
-  
-  # Sidebar with a slider input for number of bins 
-  sidebarLayout(
-    sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
-    ),
+shinyUI(
+  navbarPage( "Coffee Table",
+    tabPanel("Map",
+
+      plotlyOutput('map', height = 'auto', width = '100%')
+      
+             
+             
     
-    # Show a plot of the generated distribution
-    mainPanel(
-       plotOutput("distPlot")
-    )
-  )
-))
+             
+             
+             
+    ) # end Map panel
+  )) # end navbarPage / UI
