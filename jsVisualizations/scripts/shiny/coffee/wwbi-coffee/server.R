@@ -46,7 +46,7 @@ shinyServer(function(input, output) {
   
   # color palette 
   colorpal <- reactive({
-    colorNumeric("YlOrRd", data()$input$in.mapfill)
+    colorNumeric("YlOrRd", NULL)
   })
   
 
@@ -75,10 +75,10 @@ shinyServer(function(input, output) {
     
     leafletProxy("map", data = data()) %>%
       clearShapes() %>%
-      addPolygons(fillColor = ~pal(gdp_pc2017), fillOpacity = 0.8,
+      addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
                   weight = 1, 
-                  label = ~paste0(ctyname, " $",
-                                  prettyNum(round(gdp_pc2017),
+                  label = ~paste0(ctyname, 
+                                  prettyNum(round(eval(as.symbol(input$in.mapfill))),
                                             big.mark = ',')  ))
     
   })
@@ -93,7 +93,9 @@ shinyServer(function(input, output) {
      if (input$legend) {
         pal <- colorpal()
         proxy %>% addLegend(position = 'bottomright',
-                            pal = pal, values = ~gdp_pc2017
+                            pal = pal,
+                            values = ~eval(as.symbol(input$in.mapfill)),
+                            title = ~as.character(input$in.mapfill)
                             )
         
      }

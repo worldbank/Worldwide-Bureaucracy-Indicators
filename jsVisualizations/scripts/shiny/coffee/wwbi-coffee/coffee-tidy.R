@@ -114,9 +114,6 @@ colorNumeric(
 
 
 
-"CartoDB.Positron"   "CartoDB.DarkMatter" "OpenStreetMap"     
-[4] "Esri.WorldImagery"  "OpenTopoMap"
-
 ## try using mapview (sf)
 wwbi_geo17 <- wwbi_geo %>%
   filter(year == 2017)
