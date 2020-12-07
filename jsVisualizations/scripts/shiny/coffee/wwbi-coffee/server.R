@@ -68,18 +68,38 @@ shinyServer(function(input, output) {
      
   })
   
-  # for incremental changes
+  # for incremental changes to map
   observe({
     pal <- colorpal()
     
     
     leafletProxy("map", data = data()) %>%
       clearShapes() %>%
-      addPolygons(fillColor = ~pal(gdp_pc2017), fillOpacity = 0.8, label = ~paste0(ctyname, " $",
-                                                                                  prettyNum(round(gdp_pc2017),
-                                                                                            big.mark = ',')  ))
+      addPolygons(fillColor = ~pal(gdp_pc2017), fillOpacity = 0.8,
+                  weight = 1, 
+                  label = ~paste0(ctyname, " $",
+                                  prettyNum(round(gdp_pc2017),
+                                            big.mark = ',')  ))
     
   })
+  
+  
+  # for incremental changes to legend 
+  observe({
+    proxy <- leafletProxy('map', data = data())
+    
+    proxy %>% clearControls()
+      
+     if (input$legend) {
+        pal <- colorpal()
+        proxy %>% addLegend(position = 'bottomright',
+                            pal = pal, values = ~gdp_pc2017
+                            )
+        
+     }
+    
+  })
+  
   
 })
 

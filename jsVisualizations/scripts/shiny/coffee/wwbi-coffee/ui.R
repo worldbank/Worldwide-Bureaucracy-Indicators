@@ -55,7 +55,9 @@ shinyUI(
           selected = "BI.WAG.TOTL.GD.ZS",
           multiple = FALSE,
           width = '250px'
-        )
+        ),
+        
+        checkboxInput("legend", "Show Legend", TRUE)
         
       ) # end absolute panel
       
