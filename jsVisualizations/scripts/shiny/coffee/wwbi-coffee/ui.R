@@ -24,8 +24,13 @@ choices <- setNames(names_all$indcode, names_all$indname)
 shinyUI(
   navbarPage( "Coffee Table",
     tabPanel("Map",
-
-      leafletOutput('map'),
+             
+            
+      textOutput('text1'),
+      textOutput('text2'),
+      textOutput('text3'),
+             
+      leafletOutput('map', height = 600),
       
       # panel select
       absolutePanel(

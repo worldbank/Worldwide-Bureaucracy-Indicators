@@ -31,56 +31,53 @@ load("data.Rdata")
 
 #       -           -       -     -   -   -   SERVER - - - ---- 
 shinyServer(function(input, output) {
-  
+ # browser()
   # reactive values ----
   year <- reactive({input$in.year})
   
-  mapfill <- reactive({input$in.mapfill})
+  mapfill <- reactive({ input$in.mapfill })
   
   
+  # filter dataset by year 
+  data <- reactive({
+    wwbi_geo %>% filter(year == year() )
+  }) 
   
   
+  # color palette 
+  colorpal <- reactive({
+    colorNumeric("YlOrRd", data()$input$in.mapfill)
+  })
   
-  # define colorscheme/bins
-  pal <- 
-    colorBin(
-          "YlOrRd",
-          domain = wwbi_geo$BI.WAG.TOTL.GD.ZS,
-          bins = 5,
-          pretty = TRUE
-        )
-    
+
+
+  
    
-                  
+  
+  # output$text1 <- renderText( mapfill()  )
+  # output$text2 <- renderPrint( mapfill() )
+  # output$text3 <- renderPrint( pal() )
                   
    
   output$map <- renderLeaflet({
-
-    ## build map base
-    wwbi_geo %>%
-      filter(year == 2007 ) %>% # error: arguement lat is missing.
-      leaflet(date = ) %>%
-      addTiles() %>%
-      setView(zoom = 3) %>%
-      ## add fill
-      addPolygons(
-        fillColor = ~pal(BI.WAG.TOTL.GD.ZS),
-        weight = 2,
-        opacity = 1,
-        color =  "white",
-        dashArray = 1,
-        fillOpacity = 0.8,
-        label = ~ctyname
-      ) %>%
-      ## add legend 
-      addLegend(
-        pal = pal,
-        position = "bottomright",
-        na.label = "No Info",
-        values = ~mapfill(),
-        title = paste("GDP Per Capita,",
-                      "<br>(2017 USD)")
-      )
+    
+    ## build base map base
+      leaflet(data = data()) %>%
+      setView(zoom = 2, lat = 0, lng = 0) %>%
+      addTiles() 
+     
+  })
+  
+  # for incremental changes
+  observe({
+    pal <- colorpal()
+    
+    
+    leafletProxy("map", data = data()) %>%
+      clearShapes() %>%
+      addPolygons(fillColor = ~pal(gdp_pc2017), fillOpacity = 0.8, label = ~paste0(ctyname, " $",
+                                                                                  prettyNum(round(gdp_pc2017),
+                                                                                            big.mark = ',')  ))
     
   })
   

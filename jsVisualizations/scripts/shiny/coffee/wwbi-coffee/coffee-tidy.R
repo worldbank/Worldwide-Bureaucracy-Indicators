@@ -6,6 +6,9 @@ library(rjson)
 library(leaflet)
 library(RColorBrewer)
 library(htmltools)
+library(mapview)
+library(leaflet)
+library(leafpop)
 
 
                   # Import World Bank Admin0 Files ----
@@ -103,3 +106,29 @@ m <- wwbi_geo %>%
                   "<br>(2017 USD)")
   )
 m
+
+colorNumeric(
+  palette = "YlOrRd",
+  domain = wwbi_geo$BI.WAG.PRVS.FM.SM # data()$mapfill()
+)
+
+
+
+"CartoDB.Positron"   "CartoDB.DarkMatter" "OpenStreetMap"     
+[4] "Esri.WorldImagery"  "OpenTopoMap"
+
+## try using mapview (sf)
+wwbi_geo17 <- wwbi_geo %>%
+  filter(year == 2017)
+
+st_crs(wwbi_geo17)
+
+mapview(
+  wwbi_geo17,
+  zcol = "gdp_pc2017")
+
+
+mapviewOptions()
+
+
+mapview(franconia)
