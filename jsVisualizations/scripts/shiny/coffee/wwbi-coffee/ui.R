@@ -25,16 +25,15 @@ shinyUI(
   navbarPage( "Coffee Table",
     tabPanel("Map",
              
-            
-      textOutput('text1'),
-      textOutput('text2'),
-      textOutput('text3'),
-             
-      leafletOutput('map', height = 600),
+      #  tags$style(type = 'text/css', 'html, body {width:100%;height:100%}'),
+        
+      # map   
+      leafletOutput('map', height = '800px', width = '100%'),
       
       # panel select
       absolutePanel(
         ## panel settings
+        right = 30, top = 80,
         draggable = TRUE,
         
         
@@ -67,5 +66,5 @@ shinyUI(
              
              
              
-    ) # end Map panel
+    ) # end boostrap page / Map panel
   )) # end navbarPage / UI

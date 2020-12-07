@@ -91,7 +91,9 @@ if (coffee == 1) {
 # https://stackoverflow.com/questions/32098836/ggplotly-r-labeling-trace-names
 # pal <- colorBin("YlOrRd", domain = wwbi_geo$gdp_pc2017,
 # https://stackoverflow.com/questions/48953149/dynamic-color-fill-for-polygon-using-leaflet-in-shiny-not-working
-# 
+# # https://stackoverflow.com/questions/60058905/addlegend-r-leaflet-based-on-user-input
+
+
 
 
 
