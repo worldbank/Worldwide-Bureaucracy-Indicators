@@ -23,50 +23,72 @@ library(lubridate)
 ## load data
 load("data.Rdata")
 
-## define color pallette 
-# pal.old <- colorBin("YlOrRd", domain = wwbi_geo$gdp_pc2017,
-#                 bins = c(0, 5000, 10000, 20000, 30000, 40000, Inf))
-
-
+## define varlist of keyvars to keep 
+keepvars <- c("ctycode", "ctyname", "year",
+              "iso2c", "country", "gdp_pc2017",
+              "iso3c", "region", "income",
+              "lending", "ln_gdp", "lnTotEmp")
 
 #       -           -       -     -   -   -   SERVER - - - ---- 
 shinyServer(function(input, output) {
- # browser()
-  # reactive values ----
+
+    # reactive values ----
   year <- reactive({input$in.year})
   
   mapfill <- reactive({ input$in.mapfill })
   
   
+  
+  #### Data control ----
   # filter dataset by year 
-  data <- reactive({
+  data_yr <- reactive({
     wwbi_geo %>% filter(year == year() )
   }) 
   
+  # most recent dataset yet 
+  data_rcnt <- reactive({
+    wwbi_geo %>%
+      select(keepvars, all_of(input$in.mapfill) ) %>%
+      group_by(country) %>%
+      arrange(-year) %>%
+      filter(row_number() == 1)
+  })
   
-  # color palette 
+  
+  # data switch
+  data <- reactive({
+    data_rcnt()
+    # if (input$recent) {
+    #   data <- data_rcnt()
+    # } else {
+    #   data <- data_yr()
+    # }
+    
+  })
+  
+    
+  
+  
+  # color palette ----
   colorpal <- reactive({
     colorNumeric("YlOrRd", NULL)
   })
   
 
-
-  
-   
-  
-  # output$text1 <- renderText( mapfill()  )
-  # output$text2 <- renderPrint( mapfill() )
-  # output$text3 <- renderPrint( pal() )
-                  
-   
+     
+  # map ----
   output$map <- renderLeaflet({
     
     ## build base map base
-      leaflet(data = data()) %>%
+      leaflet(data = wwbi_geo_shp ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 2, lat = 0, lng = 0) %>%
       addTiles() 
      
   })
+  
+  
+  
+  
   
   # for incremental changes to map
   observe({
@@ -101,6 +123,11 @@ shinyServer(function(input, output) {
      }
     
   })
+  
+  
+  # render table 
+  output$data <- renderTable(
+  )
   
   
 })

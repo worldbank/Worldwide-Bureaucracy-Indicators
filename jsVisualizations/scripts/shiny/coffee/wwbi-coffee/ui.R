@@ -38,6 +38,7 @@ shinyUI(
         
         
         # contents of panel
+        checkboxInput('recent', "Use most recent year", FALSE),
         sliderInput(
           'in.year',
           "Select Year",
@@ -66,5 +67,12 @@ shinyUI(
              
              
              
-    ) # end boostrap page / Map panel
+    ), # end boostrap page / Map panel,
+    
+    tabPanel("table",
+             
+             renderTable('data')
+             )
+    
+    
   )) # end navbarPage / UI

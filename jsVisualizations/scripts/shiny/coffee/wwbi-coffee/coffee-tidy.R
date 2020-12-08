@@ -24,7 +24,10 @@ worldVars <- c("FID",       "OBJECTID",  "featurecla","LEVEL",     "TYPE",      
               "REGION_UN", "SUBREGION", "REGION_WB", "NAME_EN",  
               "WB_NAME",   "WB_RULES",  "WB_REGION", "Shape_Leng","Shape_Area","geometry")
 
-
+keepvars <- c("ctycode", "ctyname", "year",
+              "iso2c", "country", "gdp_pc2017",
+              "iso3c", "region", "income",
+              "lending", "ln_gdp", "lnTotEmp")
 
 ## make map dataframes
 world_sf_raw <- st_read(worldjson)
@@ -61,10 +64,16 @@ wwbi_geo$year_dt <-
 
 
 
+# create a subset of wwbi only for createing the shapes
+wwbi_geo_shp <- wwbi_geo %>%
+  select(keepvars) %>%
+  group_by(ctycode) %>%
+  filter(row_number() == 1)
+
 save(
   # final wwbi files
   wwbi_geo,
-  wwbi,
+  wwbi_geo_shp,
   names_all,
   # world geo polygon files
   world_geo,
@@ -129,3 +138,15 @@ mapviewOptions()
 
 
 mapview(franconia)
+
+
+keepvars <- c("ctycode", "ctyname", "year",
+              "iso2c", "country", "gdp_pc2017",
+              "iso3c", "region", "income",
+              "lending", "ln_gdp", "lnTotEmp")
+
+test <- wwbi_geo %>%
+  select(keepvars, "BI.WAG.TOTL.GD.ZS") %>%
+  group_by(ctycode) %>%
+  arrange(-year) %>%
+  filter(row_number() == 1)
