@@ -110,21 +110,37 @@ agg_toggle <- list(
 a.f1 = 0.3
 a.f1.li = 0.5
 
-htf1 = paste('Log GDP per cap.: %{x:.1f}',
-             '<br>Public Employment: %{y:.2f}%')
+htf1 = paste('%{text}', # for use in ggplotly
+             '<br>Log GDP per cap.: %{x:.1f}',
+             '<br>Public Employment: %{y:.2f}%'
+             )
+
+htf1gg <- paste(ctyname, "Year", year, "GDP", gdp_pc2017)
 
 f1 <-
   ggplot(wwbi, aes(x = gdp_pc2017)) +
   # Total Employment
-  geom_point(aes(y = BI.EMP.TOTL.PB.ZS, color = '#1B9E77'), alpha = a.f1) +
+  geom_point(aes(y = BI.EMP.TOTL.PB.ZS, color = '#1B9E77',
+                 text = paste0(ctyname, ', ', year,
+                              "<br>GDP pc: ", prettyNum(round(gdp_pc2017), big.mark = ','),
+                              "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2)),
+                 alpha = a.f1)) +
   stat_smooth(aes(y =BI.EMP.TOTL.PB.ZS, color = '#1B9E77'), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   # Paid Employment
-  geom_point(aes(y = BI.EMP.PWRK.PB.ZS, color = '#D95F02'), alpha = a.f1) +
+  geom_point(aes(y = BI.EMP.PWRK.PB.ZS, color = '#D95F02',
+                 text = paste0(ctyname, ', ', year,
+                              "<br>GDP pc: ", prettyNum(round(gdp_pc2017), big.mark = ','),
+                              "<br>Public Employment Share: ", round(BI.EMP.PWRK.PB.ZS, 2)),
+                 alpha = a.f1)) +
   stat_smooth(aes(y =BI.EMP.PWRK.PB.ZS, color = '#D95F02'), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   # Formal Employment
-  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = '#7570B3'), alpha = a.f1) +
+  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = '#7570B3', 
+                 text = paste0(ctyname, ', ', year,
+                              "<br>GDP pc: ", prettyNum(round(gdp_pc2017), big.mark = ','),
+                              "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
+                 alpha = a.f1)) +
   stat_smooth(aes(y =BI.EMP.FRML.PB.ZS, color = '#7570B3'), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
@@ -138,10 +154,10 @@ f1 <-
        y = "Public Employment (Share of Country-wide Employment)",
        color = "Measure of Country-wide Employment")
 
-f1 <- ggplotly(f1) %>%
-  style( name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
-  style( name = 'Paid Employment', traces = c(3,4)) %>%
-  style( name = 'Formal Employment', traces = c(5,6)) %>%
+f1 <- ggplotly(f1, tooltip = c('text')) %>%
+  style(name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
+  style(name = 'Paid Employment', traces = c(3,4)) %>%
+  style(name = 'Formal Employment', traces = c(5,6)) %>%
   layout(
     title = list(
       text = "<b>Public Employment as a Share of Country-wide Employment</b>",
@@ -151,8 +167,8 @@ f1 <- ggplotly(f1) %>%
   ) 
 
 
-f1
-plotly_json(f1)
+
+
 
 # f2 formal employment vs gdp per capita: ----
 # use formal employment vs gdp per capita, by country and best-fit lines for each, overall 
