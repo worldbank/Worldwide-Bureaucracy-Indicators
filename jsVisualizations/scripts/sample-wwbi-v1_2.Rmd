@@ -1,0 +1,131 @@
+---
+title: "Sample WWBI Graphs"
+author: "Tom"
+date: "1 December, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(plotly)
+library(rmarkdown)
+library(RColorBrewer)
+knitr::opts_chunk$set(
+  echo = FALSE, warning = FALSE, fig.width = 10, fig.height = 10)
+
+
+wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+
+load(file = file.path(wwbi_dat, "wwbi.Rdata"))
+
+```
+
+# Intro
+
+A sandbox for graphical meditations on the WWBI. 
+
+
+## Updates
+### Last update: 2 Dec
+
+- Incorporating feedback as best as possible.
+- Still focusing on schematics so please excuse rough aesthetics and bugs.
+
+
+## Proposed solution/idea: have a two-tier presentation approach
+1. Tier 1 is the selection of ~3 graphs that represent the wwbi well, look professional, don't take eons to make, and are intuitive to most all users. These graphs go directly on our website and serve are designed to reach the general public/casual user.
+2. Tier 2 is linked from our main webpage and brings the user to a "WWBI data explorer" that is more advanced than the graphs on tier 1. Users can explore pre-made graphs and build their own graphs interactively via a GUI with more advanced functionality than the world bank data explorer offers; this tool is aimed at students, researchers, or more interested users. 
+
+# Graphs 
+
+### 1: Total/Paid/Formal Employment vs GDP per capita.
+
+It looks like we have to chose between the toggle and time animation, so I've made a draft of what best-fit lines would look like. 
+
+~~ Note 1: if I'm understanding the depths of Plotly's GitHub Issues pages, it sounds like the package is capable of doing what we want in the same graph (1. best fit lines, 2. animation over time, 3. toggle y axis measure of type of public employment) but basically the R api is not capable of this, it can be done in python or directly in javascript, so it depends on how badly we want to have all three of these things. 
+
+~~ Note 2: the technical gymnastics in note 1 can be avoided if we were to generate this graph in a dedicated web-based application (ie, shiny). The issue really comes from the fact that we are trying to generate the graph with these parameters entirely in javascript, ie, for a static, traditional webpage. I mentioned this as an idea of a place where the user could to go after getting *wwbi graphs lite* with more serious graphs, which I still think would be a good idea to explore
+
+```{r}
+p6.1
+```
+
+
+### 2.1: Using only Formal Employment vs GDP per capita
+
+The marginal cost of adding a toggle between different measures of employment is high and bug-prone, so I just created this graph using only `Formal Employoment`. If we like this setup I can try to implement the y-axis variable toggle.
+
+Note: at this point we're trying to figure out if we should add the by-region best fit lines.
+
+#### 2.1: no by-region lines
+
+```{r}
+p7
+```
+
+#### 2.2: by-region lines, with dots
+```{r}
+p7.2
+```
+
+
+
+### 3.1: Comparing all three measures of public employment colored by region
+Same as before, where size of the dot is somewhat scaled to log gdp, excpet zooming has been disabled here. Note that clicking and dragging in the graph region will rotate the axes.
+
+3.1 uses the full dataset...
+
+```{r}
+p5
+```
+
+
+####3.2 But here's a version using only the three most recent years for each country
+```{r}
+p5.1
+```
+
+
+### Readily-available color schemes
+Again here are the available color schemes. Graph 3 uses `Set1`.
+```{r}
+RColorBrewer::display.brewer.all()
+```
+
+
+### 4 : Heatmap / Traffic light map 
+
+The only thing to note here is that there are too many countries to have the plot render all of the text on the y axis. Alternatives I can think of include: <br>
+- simply not including the y axis labels (the mouse over does include country labels...)
+- make the graph longer so that all the names render (see next figure)
+
+```{r} 
+hmp
+```
+
+#### 4.2: long heatmap
+
+
+```{r, fig.height=18} 
+hmp
+```
+
+
+
+### 5: Wage bill vs log GDP per capita
+There are two different measures for wage bill as percent of GDP, so I made each sepeartely and tried putting them on the same graph
+
+```{r}
+p9a
+```
+
+
+5.2
+```{r}
+p9b
+```
+
+5.3: combined 
+```{r}
+p9c
+```
+

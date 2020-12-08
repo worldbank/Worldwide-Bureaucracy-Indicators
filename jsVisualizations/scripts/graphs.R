@@ -17,7 +17,7 @@ load(file = file.path(wwbi_dat, "wwbi-tbls.Rdata"))
 
 ## settings 
 s_alpha = 0.25 # alpha for lots of dots
-
+span = 0.8 # fit of line, closer to 1 is more strict fit, 0 is looser
 
 
 ## buttons for graph 1 
@@ -122,26 +122,26 @@ f1 <-
   # Total Employment
   geom_point(aes(y = BI.EMP.TOTL.PB.ZS, color = '#1B9E77',
                  text = paste0(ctyname, ', ', year,
-                              "<br>GDP pc: ", prettyNum(round(gdp_pc2017), big.mark = ','),
+                              "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
                               "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2)),
                  alpha = a.f1)) +
-  stat_smooth(aes(y =BI.EMP.TOTL.PB.ZS, color = '#1B9E77'), method = 'loess',
+  stat_smooth(aes(y =BI.EMP.TOTL.PB.ZS, color = '#1B9E77', span = span), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   # Paid Employment
   geom_point(aes(y = BI.EMP.PWRK.PB.ZS, color = '#D95F02',
                  text = paste0(ctyname, ', ', year,
-                              "<br>GDP pc: ", prettyNum(round(gdp_pc2017), big.mark = ','),
+                              "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
                               "<br>Public Employment Share: ", round(BI.EMP.PWRK.PB.ZS, 2)),
                  alpha = a.f1)) +
-  stat_smooth(aes(y =BI.EMP.PWRK.PB.ZS, color = '#D95F02'), method = 'loess',
+  stat_smooth(aes(y =BI.EMP.PWRK.PB.ZS, color = '#D95F02', span = span), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   # Formal Employment
   geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = '#7570B3', 
                  text = paste0(ctyname, ', ', year,
-                              "<br>GDP pc: ", prettyNum(round(gdp_pc2017), big.mark = ','),
+                              "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
                  alpha = a.f1)) +
-  stat_smooth(aes(y =BI.EMP.FRML.PB.ZS, color = '#7570B3'), method = 'loess',
+  stat_smooth(aes(y =BI.EMP.FRML.PB.ZS, color = '#7570B3', span = span), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
   scale_color_manual(name = '',
@@ -173,17 +173,20 @@ f1 <- ggplotly(f1, tooltip = c('text')) %>%
 # f2 formal employment vs gdp per capita: ----
 # use formal employment vs gdp per capita, by country and best-fit lines for each, overall 
 
-htf2 = paste('%{text}')
-
 
 # f2.1: breakout by region
 f2.1 <- 
   ggplot(wwbi, aes(x = gdp_pc2017)) +
   # Formal Employment
-  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = region), alpha = a.f1) +
+  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = region, 
+                 text = paste0(ctyname, ', ', year,
+                               "<br>", region,
+                               "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
+                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
+                 alpha = a.f1)) +
   # overall line 
   stat_smooth(aes(y =BI.EMP.FRML.PB.ZS), method = 'loess',
-              linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = 01) +
+              linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = span) +
   scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
   theme_minimal() +
   labs(title = "",
@@ -191,15 +194,15 @@ f2.1 <-
        y = "Public Employment as Share of Formal Employment",
        color = "")
 
-f2.1 <- ggplotly(f2.1) %>%
-  style(hovertemplate = htf2, legendgroup = 'East Asia & Pacific', traces = 1) %>%
-  style(hovertemplate = htf2, legendgroup = 'Europe & Central Asia', traces = 2) %>%
-  style(hovertemplate = htf2, legendgroup = 'Latin America & Caribbean', traces = 3) %>%
-  style(hovertemplate = htf2, legendgroup = 'Middle East & North Africa', traces = 4) %>%
-  style(hovertemplate = htf2, legendgroup = 'North America', traces = 5) %>%
-  style(hovertemplate = htf2, legendgroup = 'South Asia', traces = 6) %>%
-  style(hovertemplate = htf2, legendgroup = 'Sub-Saharan Africa', traces = 7) %>%
-  style(hovertemplate = htf2, legendgroup = 'Overall Trend', traces = 8,
+f2.1 <- ggplotly(f2.1, tooltip = c("text")) %>%
+  style(legendgroup = 'East Asia & Pacific', traces = 1) %>%
+  style(legendgroup = 'Europe & Central Asia', traces = 2) %>%
+  style(legendgroup = 'Latin America & Caribbean', traces = 3) %>%
+  style(legendgroup = 'Middle East & North Africa', traces = 4) %>%
+  style(legendgroup = 'North America', traces = 5) %>%
+  style(legendgroup = 'South Asia', traces = 6) %>%
+  style(legendgroup = 'Sub-Saharan Africa', traces = 7) %>%
+  style(legendgroup = 'Overall Trend', traces = 8,
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
     title = list(
@@ -214,10 +217,15 @@ f2.1 <- ggplotly(f2.1) %>%
 f2.2 <- 
   ggplot(wwbi, aes(x = gdp_pc2017)) +
   # Formal Employment
-  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = income), alpha = a.f1) +
+  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = income,
+                 text = paste0(ctyname, ', ', year,
+                               "<br>", income,
+                               "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
+                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
+             alpha = a.f1)) +
   # overall line 
   stat_smooth(aes(y =BI.EMP.FRML.PB.ZS), method = 'loess',
-              linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = 01) +
+              linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = span) +
   scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
   theme_minimal() +
   labs(title = "",
@@ -225,12 +233,12 @@ f2.2 <-
        y = "Public Employment as Share of Formal Employment",
        color = "")
 
-f2.2 <- ggplotly(f2.2) %>%
-  style(hovertemplate = htf2, legendgroup = 'High Income', traces = 1) %>%
-  style(hovertemplate = htf2, legendgroup = 'Low Income', traces = 2) %>%
-  style(hovertemplate = htf2, legendgroup = 'Lower Middle Income', traces = 3) %>%
-  style(hovertemplate = htf2, legendgroup = 'Upper Middle Income', traces = 4) %>%
-  style(hovertemplate = htf2, legendgroup = 'group2', traces = 5,
+f2.2 <- ggplotly(f2.2, tooltip = c('text')) %>%
+  style(legendgroup = 'High Income', traces = 1) %>%
+  style(legendgroup = 'Low Income', traces = 2) %>%
+  style(legendgroup = 'Lower Middle Income', traces = 3) %>%
+  style(legendgroup = 'Upper Middle Income', traces = 4) %>%
+  style(legendgroup = 'group2', traces = 5,
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
     title = list(
@@ -246,10 +254,15 @@ f2.2 <- ggplotly(f2.2) %>%
 f2.3 <- 
   ggplot(wwbi, aes(x = gdp_pc2017)) +
   # Formal Employment
-  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = lending), alpha = a.f1) +
+  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = lending,
+                 text = paste0(ctyname, ', ', year,
+                               "<br>", income,
+                               "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
+                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
+             alpha = a.f1)) +
   # overall line 
   stat_smooth(aes(y =BI.EMP.FRML.PB.ZS), method = 'loess',
-              linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = 01) +
+              linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = span) +
   scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
   theme_minimal() +
   labs(title = "",
@@ -257,12 +270,12 @@ f2.3 <-
        y = "Public Employment as Share of Formal Employment",
        color = "")
 
-f2.3 <- ggplotly(f2.3) %>%
-  style(hovertemplate = htf2, legendgroup = 'Blend', traces = 1) %>%
-  style(hovertemplate = htf2, legendgroup = 'IBRD', traces = 2) %>%
-  style(hovertemplate = htf2, legendgroup = 'IDA', traces = 3) %>%
-  style(hovertemplate = htf2, legendgroup = 'Not Classified', traces = 4) %>%
-  style(hovertemplate = htf2, legendgroup = 'group2', traces = 5,
+f2.3 <- ggplotly(f2.3, tooltip = c('text')) %>%
+  style(legendgroup = 'Blend', traces = 1) %>%
+  style(legendgroup = 'IBRD', traces = 2) %>%
+  style(legendgroup = 'IDA', traces = 3) %>%
+  style(legendgroup = 'Not Classified', traces = 4) %>%
+  style(legendgroup = 'group2', traces = 5,
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
     title = list(
@@ -271,6 +284,7 @@ f2.3 <- ggplotly(f2.3) %>%
     ),
     legend = list(title = list(text = '<b>Lending Category</b>'))
   ) 
+
 
 
 
@@ -375,16 +389,26 @@ p9b <- ggplotly(p9b) %>%
 colorp9 <- c(RColorBrewer::brewer.pal(8, 'Set2'),
              RColorBrewer::brewer.pal(8, 'Set2'))
 
-p9c <- 
+f3 <- 
   ggplot(wwbi, aes(x = gdp_pc2017)) +
   # using wage bill as % of gdp
-  geom_point(aes(y = BI.WAG.TOTL.GD.ZS, color = region), alpha = a.p9) +
+  geom_point(aes(y = BI.WAG.TOTL.GD.ZS, color = region, 
+                 text = paste0(ctyname, ', ', year,
+                               "<br>", region,
+                               "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
+                               "<br>Wage Bill (% GDP): ", round(BI.WAG.TOTL.GD.ZS, 1), "%")),
+             alpha = a.p9) +
   stat_smooth(aes(y =BI.WAG.TOTL.GD.ZS, color = '#da70d6'), method = 'loess',
-              linetype = 1, size = 0.5, se = F, alpha = a.p9.li) +
+              linetype = 1, size = 0.5, se = F, alpha = a.p9.li, span = span) +
   # Wage bill As % of public expenditure
-  geom_point(aes(y = BI.WAG.TOTL.PB.ZS, color = region), alpha = a.p9) +
+  geom_point(aes(y = BI.WAG.TOTL.PB.ZS, color = region,
+                 text = paste0(ctyname, ', ', year,
+                               "<br>", region,
+                               "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
+                               "<br>Wage Bill (% Expenditure): ", round(BI.WAG.TOTL.PB.ZS, 1), "%")),
+             alpha = a.p9) +
   stat_smooth(aes(y= BI.WAG.TOTL.PB.ZS, color = '#1e90ff'), method = 'loess',
-              linetype = 1, size = 0.5, se = F, alpha = a.p9.li) +
+              linetype = 1, size = 0.5, se = F, alpha = a.p9.li, span = span) +
   scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
   theme_minimal() +
   theme(legend.position = 'bottom') +
@@ -393,15 +417,15 @@ p9c <-
        y = "",
        color = "")
 
-p9c <- ggplotly(p9c) %>%
-  style(hovertemplate = htp9, name ='Global Trend: Wage Bill as % of GDP', legendgroup = 1, traces = c(8),
+f3 <- ggplotly(f3, tooltip = c("text")) %>%
+  style(name ='Global Trend: Wage Bill as % of GDP', legendgroup = 1, traces = c(8),
         line = list(color = '#ff8c00')) %>%
-  style(hovertemplate = htp9, name ='Global Trend: Wage bill as % of Public Expenditure',
+  style(name ='Global Trend: Wage bill as % of Public Expenditure',
         legendgroup = 2, traces = c(16), line=list(color='#1e90ff')) %>%
-  style(hovertemplate = htp9, legendgroup = 1, showlegend = T, traces = c(1:7),
+  style(legendgroup = 1, showlegend = T, traces = c(1:7),
         marker=list(symbol='circle-open')
         ) %>%
-  style(hovertemplate = htp9, legendgroup = 2, showlegend = T, traces = c(9:15),
+  style(legendgroup = 2, showlegend = T, traces = c(9:15),
         marker=list(symbol='square', opacity=0.6)) %>%
   layout(
     title = list(
@@ -421,9 +445,7 @@ p9c <- ggplotly(p9c) %>%
     colorway = colorp9
   ) 
 
-p9c
-
-plotly_json(p9c)
+f3
 
 
 
@@ -478,7 +500,7 @@ hmp <- plot_ly(
 # Export ----
 
 save(
-  f1, f2.1, f2.2, f2.3, hmp, p9a, p9c, p9c,
+  f1, f2.1, f2.2, f2.3, hmp, f3, # not exporting p9a, p9c, p9c
 wwbi,
 file = file.path(wwbi_dat, "wwbi.Rdata")
 )
