@@ -115,7 +115,6 @@ htf1 = paste('%{text}', # for use in ggplotly
              '<br>Public Employment: %{y:.2f}%'
              )
 
-htf1gg <- paste(ctyname, "Year", year, "GDP", gdp_pc2017)
 
 f1 <-
   ggplot(wwbi, aes(x = gdp_pc2017)) +
@@ -206,7 +205,8 @@ f2.1 <- ggplotly(f2.1, tooltip = c("text")) %>%
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
     title = list(
-      text = "<b>Public Employment as a Share of Country-wide Formal Employment</b>",
+      text = paste0("<b>Public Employment as a Share of Country-wide Formal Employment</b>",
+                    "<br>By Region"),
       y = 0.98
     ),
     legend = list(title = list(text = '<b>Region</b>'))
@@ -242,7 +242,8 @@ f2.2 <- ggplotly(f2.2, tooltip = c('text')) %>%
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
     title = list(
-      text = "<b>Public Employment as a Share of Country-wide Formal Employment</b>",
+      text = paste0("<b>Public Employment as a Share of Country-wide Formal Employment</b>",
+                    "<br>By Income Group"),
       y = 0.98
     ),
     legend = list(title = list(text = '<b>Income Group</b>'))
@@ -279,7 +280,8 @@ f2.3 <- ggplotly(f2.3, tooltip = c('text')) %>%
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
     title = list(
-      text = "<b>Public Employment as a Share of Country-wide Formal Employment</b>",
+      text = paste0("<b>Public Employment as a Share of Country-wide Formal Employment</b>", 
+                    "<br>By Lending Group"),
       y = 0.98
     ),
     legend = list(title = list(text = '<b>Lending Category</b>'))
@@ -445,8 +447,6 @@ f3 <- ggplotly(f3, tooltip = c("text")) %>%
     colorway = colorp9
   ) 
 
-f3
-
 
 
 
@@ -474,7 +474,7 @@ hmp <- plot_ly(
 ) %>%
   layout(
     plot_bgcolor = "#dcdcdc",
-    title = list(text = "<b>Comparing Indicators Across Countries</b>"),
+    title = list(text = "<b>Indicator Comparison Across Countries</b>"),
     yaxis = list(
       title = list(text = "Country"),
       categoryorder = 'total ascending',

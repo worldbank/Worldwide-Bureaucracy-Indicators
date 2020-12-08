@@ -50,7 +50,7 @@ if (user == 2) {
 
 tidy    = 1
 graphs  = 1
-knit    = 0
+knit    = 1
 
 
 
@@ -70,7 +70,7 @@ if (graphs == 1) {
 # knit rmd document to html 
 if (knit == 1) {
   rmarkdown::render(
-    input = file.path(repo, "sample-wwbi-v1_1.Rmd"),
+    input = file.path(repo, "sample-wwbi-v1_2.Rmd"),
     output_format = 'html_document',
     output_file = file.path(wwbi_out, "wwbi-v1-2.html"),
     quiet = FALSE
