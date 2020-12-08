@@ -176,8 +176,14 @@ f2.1 <-
        color = "")
 
 f2.1 <- ggplotly(f2.1) %>%
-  style(hovertemplate = htf2, legendgroup = 'group1', traces = 1:7) %>%
-  style(hovertemplate = htf2, legendgroup = 'group2', traces = 8,
+  style(hovertemplate = htf2, legendgroup = 'East Asia & Pacific', traces = 1) %>%
+  style(hovertemplate = htf2, legendgroup = 'Europe & Central Asia', traces = 2) %>%
+  style(hovertemplate = htf2, legendgroup = 'Latin America & Caribbean', traces = 3) %>%
+  style(hovertemplate = htf2, legendgroup = 'Middle East & North Africa', traces = 4) %>%
+  style(hovertemplate = htf2, legendgroup = 'North America', traces = 5) %>%
+  style(hovertemplate = htf2, legendgroup = 'South Asia', traces = 6) %>%
+  style(hovertemplate = htf2, legendgroup = 'Sub-Saharan Africa', traces = 7) %>%
+  style(hovertemplate = htf2, legendgroup = 'Overall Trend', traces = 8,
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
     title = list(
@@ -204,7 +210,10 @@ f2.2 <-
        color = "")
 
 f2.2 <- ggplotly(f2.2) %>%
-  style(hovertemplate = htf2, legendgroup = 'group1', traces = 1:4) %>%
+  style(hovertemplate = htf2, legendgroup = 'High Income', traces = 1) %>%
+  style(hovertemplate = htf2, legendgroup = 'Low Income', traces = 2) %>%
+  style(hovertemplate = htf2, legendgroup = 'Lower Middle Income', traces = 3) %>%
+  style(hovertemplate = htf2, legendgroup = 'Upper Middle Income', traces = 4) %>%
   style(hovertemplate = htf2, legendgroup = 'group2', traces = 5,
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
@@ -214,6 +223,7 @@ f2.2 <- ggplotly(f2.2) %>%
     ),
     legend = list(title = list(text = '<b>Income Group</b>'))
   ) 
+
 
 
 # 7.3: breakout by lending categories
@@ -232,7 +242,10 @@ f2.3 <-
        color = "")
 
 f2.3 <- ggplotly(f2.3) %>%
-  style(hovertemplate = htf2, legendgroup = 'group1', traces = 1:4) %>%
+  style(hovertemplate = htf2, legendgroup = 'Blend', traces = 1) %>%
+  style(hovertemplate = htf2, legendgroup = 'IBRD', traces = 2) %>%
+  style(hovertemplate = htf2, legendgroup = 'IDA', traces = 3) %>%
+  style(hovertemplate = htf2, legendgroup = 'Not Classified', traces = 4) %>%
   style(hovertemplate = htf2, legendgroup = 'group2', traces = 5,
         showlegend = TRUE, name = 'Overall Trend') %>%
   layout(
@@ -245,6 +258,7 @@ f2.3 <- ggplotly(f2.3) %>%
 
 
 
+plotly_json(f2.3)
 
 
 
