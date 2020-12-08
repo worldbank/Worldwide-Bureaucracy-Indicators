@@ -70,9 +70,9 @@ if (graphs == 1) {
 # knit rmd document to html 
 if (knit == 1) {
   rmarkdown::render(
-    input = file.path(repo, "sample-wwbi-v1_1.Rmd"),
+    input = file.path(repo, "sample-wwbi-v1_2.Rmd"),
     output_format = 'html_document',
-    output_file = file.path(wwbi_out, "wwbi-v1-1.html"),
+    output_file = file.path(wwbi_out, "wwbi-v1-2.html"),
     quiet = FALSE
   )
 }
@@ -82,4 +82,6 @@ if (knit == 1) {
 #credits https://www.r-bloggers.com/2018/07/how-to-add-trend-lines-in-r-using-plotly/
 # https://stackoverflow.com/questions/56758733/in-r-use-and-k-as-a-y-axis-labels-for-thousands-of-dollars
 # https://stackoverflow.com/questions/32098836/ggplotly-r-labeling-trace-names
+# https://stackoverflow.com/questions/41895432/mutating-column-in-dplyr-using-rowsums
+# https://stackoverflow.com/questions/52288525/change-tick-mark-labels-to-specific-strings-in-plotly
 # 

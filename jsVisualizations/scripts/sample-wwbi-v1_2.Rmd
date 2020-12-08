@@ -1,0 +1,59 @@
+---
+title: "WWBI Graphs"
+author: "Tom"
+date: "8 December, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(plotly)
+library(rmarkdown)
+library(RColorBrewer)
+knitr::opts_chunk$set(
+  echo = FALSE, warning = FALSE, fig.width = 10, fig.height = 10)
+
+
+wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+
+load(file = file.path(wwbi_dat, "wwbi.Rdata"))
+
+```
+
+# Intro
+
+Version 1.2: updating and trimming down options after our first review.
+
+
+# Graphs 
+
+# Figure 1
+```{r}
+f1
+```
+
+# Figure 2.1
+```{r}
+f2.1
+```
+
+
+# Figure 2.2
+```{r}
+f2.2
+```
+
+# Figure 2.3
+```{r}
+f2.3
+```
+
+# Figure 3
+```{r}
+f3
+```
+
+# Figure 4
+```{r, fig.height=18} 
+hmp
+```
+
