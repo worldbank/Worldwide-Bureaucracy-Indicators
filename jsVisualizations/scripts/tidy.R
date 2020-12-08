@@ -265,8 +265,6 @@ n.miss <- as.data.frame(colSums(is.na(wwbi_x))) %>%
 
 
 wwbi_hmp <- wwbi_x %>%
- mutate( across(varlist1,
-         ~ rescale(., to = c(0,1)) )) %>% # rescale each column independently to -1 to 1, where 0 is mean
   mutate( # generate total
     total = rowSums(.[5:13], na.rm = TRUE)
   ) %>%

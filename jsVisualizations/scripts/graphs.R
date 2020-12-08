@@ -139,9 +139,9 @@ f1 <-
        color = "Measure of Country-wide Employment")
 
 f1 <- ggplotly(f1) %>%
-  style(hovertemplate = htf1, name ='Total Employment', traces = c(1,2)) %>%
-  style(hovertemplate = htf1, name = 'Paid Employment', traces = c(3,4)) %>%
-  style(hovertemplate = htf1, name = 'Formal Employment', traces = c(5,6)) %>%
+  style( name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
+  style( name = 'Paid Employment', traces = c(3,4)) %>%
+  style( name = 'Formal Employment', traces = c(5,6)) %>%
   layout(
     title = list(
       text = "<b>Public Employment as a Share of Country-wide Employment</b>",
@@ -151,8 +151,8 @@ f1 <- ggplotly(f1) %>%
   ) 
 
 
-
-
+f1
+plotly_json(f1)
 
 # f2 formal employment vs gdp per capita: ----
 # use formal employment vs gdp per capita, by country and best-fit lines for each, overall 
@@ -255,290 +255,6 @@ f2.3 <- ggplotly(f2.3) %>%
     ),
     legend = list(title = list(text = '<b>Lending Category</b>'))
   ) 
-
-
-
-plotly_json(f2.3)
-
-
-
-#3. Public secotr employment as a share of all, urban, rural residents over time ----
-
-
-p3 <-
-  plot_ly(
-    data = wwbi,
-    x = ~BI.EMP.TOTL.PB.RU.ZS, # rural
-    y = ~BI.EMP.PWRK.PB.UR.ZS, # urban
-    text = ~ctyname,
-    hoverinfo = "text+x+y"
-  ) %>%
-  add_markers(
-    showlegend = FALSE,
-    color = ~region,
-    size = ~incomegroupNum,
-    sizemode = 'area',
-    frame = ~year,
-    ids = ~ctyname,
-    marker = list(
-      line = list(
-        width = 5
-      )
-    )
-  ) %>%
-  add_markers(
-    color = ~region,
-    size = ~incomegroupNum,
-    sizemode = 'area',
-    showlegend = TRUE,
-    alpha = s_alpha, 
-    alpha_stroke = s_alpha
-  ) %>%
-  layout(
-    title = list(
-      text = "Public Sector Employment as a share of total employment by location over time",
-      size = 20
-    ),
-    xaxis = list(
-      range = c(0,0.7),
-      title = list(
-        text = '(Rural) Percent of Total Employment'
-      )
-    ),
-    yaxis = list(
-      range = c(0,0.7),
-      title = list(
-        text = "(Urban) Percent of Total Employment"
-      )
-    ),
-    shapes = list(
-      type = 'line',
-      layer = 'below',
-      x0 = 0,
-      x1 = 1,
-      y0 = 0,
-      y1 = 1,
-      opacity = 0.3
-    )
-  ) %>%
-  animation_opts(
-    frame = 1200,
-    transition = 600,
-    easing = 'linear',
-    mode = 'immediate'
-  ) 
-
-
-p3_1 <-
-  plot_ly(
-    data = wwbi,
-    x = ~BI.EMP.TOTL.PB.RU.ZS, # rural
-    y = ~BI.EMP.PWRK.PB.UR.ZS, # urban
-    text = ~ctyname,
-    hoverinfo = "text+x+y"
-  ) %>%
-  add_markers(
-    showlegend = FALSE,
-    color = ~region,
-    size = 10,
-    sizemode = 'area',
-    frame = ~year,
-    ids = ~ctyname,
-    marker = list(
-      line = list(
-        width = 5
-      )
-    )
-  ) %>%
-  add_markers(
-    color = ~region,
-    size = 10,
-    sizemode = 'area',
-    showlegend = TRUE,
-    alpha = s_alpha, 
-    alpha_stroke = s_alpha
-  ) %>%
-  layout(
-    title = list(
-      text = "Public Sector Employment as a share of total employment by location over time",
-      size = 20
-    ),
-    xaxis = list(
-      range = c(0,0.7),
-      title = list(
-        text = '(Rural) Percent of Total Employment'
-      )
-    ),
-    yaxis = list(
-      range = c(0,0.7),
-      title = list(
-        text = "(Urban) Percent of Total Employment"
-      )
-    ),
-    shapes = list(
-      type = 'line',
-      layer = 'below',
-      x0 = 0,
-      x1 = 1,
-      y0 = 0,
-      y1 = 1,
-      opacity = 0.3
-    )
-  ) %>%
-  animation_opts(
-    frame = 1200,
-    transition = 600,
-    easing = 'linear',
-    mode = 'immediate'
-  ) 
-
-
-
-# 3d scatter plot ----
-
-p4temp = paste('<b>%{text}</b>',
-               '<br>Private Med Age: %{x}',
-               '<br>Public Med Age: %{y}',
-               '<br>Wage Bill % GDP: %{z: .1f}%',
-               '<extra></extra>')
-
-
-p5temp = paste('<b>%{text}</b>',
-               '<br>As share of total employment: %{x: .1f}%',
-               '<br>As share of paid employment: %{y: .1f}%',
-               '<br>As share of formal employment: %{z: .1f}%',
-               '<extra></extra>')
-
-
-# make bestfit line 
-mod <- lm(BI.WAG.TOTL.GD.ZS ~ BI.PWK.AGES.PV.MD + BI.PWK.AGES.PB.MD, data = wwbi)
-cf.mod <- coef(mod)
-
-# calculate z 
-x1.seq <- seq(min(wwbi$BI.PWK.AGES.PV.MD, na.rm = TRUE), max(wwbi$BI.PWK.AGES.PV.MD, na.rm = TRUE), length.out = 25)
-x2.seq <- seq(min(wwbi$BI.PWK.AGES.PB.MD, na.rm = TRUE), max(wwbi$BI.PWK.AGES.PB.MD, na.rm = TRUE), length.out = 25)
-z1.seq <- t(outer(x1.seq, x2.seq, function(x,y) cf.mod[1] + cf.mod[2]*x +cf.mod[3]*y ))
-
-plane.seq <- t(outer(x1.seq, x2.seq, function(x,y) 0 + x + y))
-
-
-p4 <- 
-  plot_ly(data = wwbi) %>%
-  add_trace(
-            type = 'scatter3d',
-            mode = 'markers',
-            x = ~ BI.PWK.AGES.PV.MD, # median age of private paid employess
-            y = ~ BI.PWK.AGES.PB.MD, # median age of public paid employees
-            z = ~BI.WAG.TOTL.GD.ZS,  # Wage bill as a percentage of GDP 
-            text = ~ctyname,
-            color = ~lnTotEmp, # no of total employees
-            alpha = 0.7,
-            hovertemplate = p4temp) %>%
-  # y = x plane
-  add_trace(x = 20:50,
-            y = 20:50,
-            z = 0,
-            type = 'scatter3d', # scatter3d,
-            mode = 'lines',
-            surfacecolor = "#dcdcdc",
-            opacity = 1,
-            showlegend = FALSE) %>%
-  layout(
-    title = list( text = "Median Age of Public/Private Sector and Wage Bill Spending"),
-    scene = list(
-      xaxis = list(title = "Median Age of Private Paid Employees", range = c(20,50)),
-      yaxis = list(title = "Median Age of Public Paid Employees", range = c(20,50)),
-      zaxis = list(title = "Wage Bill as Percentage of GDP")
-    
-  )) %>%
-  colorbar(title = "Log Total Employed Persons") 
-
-
-
-# colors 
-colorp5 <- brewer.pal(n_distinct(wwbi$region), "Set1")
-
-
-
-p5 <- 
-  plot_ly(data = wwbi) %>%
-  add_trace(
-    type = 'scatter3d',
-    mode = 'markers',
-    color = ~region,
-    colors = colorp5,
-    size = ~ln_gdp,
-    x = ~ BI.EMP.TOTL.PB.ZS, # share of total employment
-    y = ~ BI.EMP.PWRK.PB.ZS, # share of paid employment
-    z = ~BI.EMP.FRML.PB.ZS,  # share of formal employment
-    text = ~ctyname,
-    alpha = 0.7,
-    hovertemplate = p5temp,
-    marker = list(sizeref = 0.5, sizemin = 4, line = list(width = 0))
-    ) %>%
-  # y = x plane
-  add_trace(x = 0:1,
-            y = 0:1,
-            z = 0:1,
-            type = 'scatter3d', # scatter3d,
-            mode = 'lines',
-            surfacecolor = "#dcdcdc",
-            opacity = 1,
-            showlegend = FALSE) %>%
-  layout(
-    title = list( text = "<b>Public Sector Employment as Share of Different Measures of All Employment</b>",
-                  font = list(size = 16)),
-    legend = list(title = list(text='<b>Region</b>', font = list(size = 12))),
-   # dragmode = 'FALSE',
-    scene = list(
-      xaxis = list(title = "As Share of Total Employment", range = c(0,1)),
-      yaxis = list(title = "As Share of Paid Employment", range = c(0,1)),
-      zaxis = list(title = "As Share of Formal Employment", range = c(0,1))
-      
-    )) %>%
-  config(scrollZoom = FALSE)
-
-# using only 3 most recent observations
-p5.1 <- 
-  plot_ly(data = subset2) %>%
-  add_trace(
-    type = 'scatter3d',
-    mode = 'markers',
-    color = ~region,
-    colors = colorp5,
-    size = ~ln_gdp,
-    x = ~ BI.EMP.TOTL.PB.ZS, # share of total employment
-    y = ~ BI.EMP.PWRK.PB.ZS, # share of paid employment
-    z = ~BI.EMP.FRML.PB.ZS,  # share of formal employment
-    text = ~ctyname,
-    alpha = 0.7,
-    hovertemplate = p5temp,
-    marker = list(sizeref = 0.5, sizemin = 4, line = list(width = 0))
-  ) %>%
-  # y = x plane
-  add_trace(x = 0:1,
-            y = 0:1,
-            z = 0:1,
-            type = 'scatter3d', # scatter3d,
-            mode = 'lines',
-            surfacecolor = "#dcdcdc",
-            opacity = 1,
-            showlegend = FALSE) %>%
-  layout(
-    title = list( text = "<b>Public Sector Employment as Share of Different Measures of All Employment</b>",
-                  font = list(size = 16)),
-    legend = list(title = list(text='<b>Region</b>', font = list(size = 12))),
-    # dragmode = 'FALSE',
-    scene = list(
-      xaxis = list(title = "As Share of Total Employment", range = c(0,1)),
-      yaxis = list(title = "As Share of Paid Employment", range = c(0,1)),
-      zaxis = list(title = "As Share of Formal Employment", range = c(0,1))
-      
-    )) %>%
-  config(scrollZoom = FALSE)
-  
-
-
 
 
 
@@ -704,7 +420,7 @@ plotly_json(p9c)
 # hover text for heatmap
 hmp.ht = paste('Country: <b>%{y}</b>',
                '<br>Indicator: <b>%{x}</b>',
-               '<br>Scaled Value: <b>%{z:.2f}</b>',
+               '<br>Comparison Value: <b>%{z:.2f}</b>',
                '<extra></extra>')
 
 
@@ -715,7 +431,7 @@ hmp <- plot_ly(
   x = ~indicator,
   y = ~ctycode,
   z = ~value,
-  colorbar = list(tickmode = 'array', tickvals = c(0.0, 0.25, 0.50, 0.75, 1.0), title = "Scaled Value"),
+  colorbar = list(tickmode = 'auto', title = "Comparison Value"),
   hovertemplate = hmp.ht
 ) %>%
   layout(
@@ -746,7 +462,7 @@ hmp <- plot_ly(
 # Export ----
 
 save(
-p3, p3_1, p4, p5, p5.1, p6, p6.1, p7, p7.2, p7.3, p8, hmp, p9a, p9c, p9c,
+  f1, f2.1, f2.2, f2.3, hmp, p9a, p9c, p9c,
 wwbi,
 file = file.path(wwbi_dat, "wwbi.Rdata")
 )
