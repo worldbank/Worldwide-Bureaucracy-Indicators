@@ -72,7 +72,7 @@ if (knit == 1) {
   rmarkdown::render(
     input = file.path(repo, "sample-wwbi-v1_1.Rmd"),
     output_format = 'html_document',
-    output_file = file.path(wwbi_out, "wwbi-v1-1.html"),
+    output_file = file.path(wwbi_out, "wwbi-v1-2.html"),
     quiet = FALSE
   )
 }
