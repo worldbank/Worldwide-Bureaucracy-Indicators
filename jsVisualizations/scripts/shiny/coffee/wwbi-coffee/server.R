@@ -16,6 +16,9 @@ library(htmltools)
 library(tidyverse)
 library(lubridate)
 
+# if (input$debug) {
+#   browser()
+# }
 
 
 # setup ----
