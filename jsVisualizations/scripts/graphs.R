@@ -123,24 +123,24 @@ f1 <-
   geom_point(aes(y = BI.EMP.TOTL.PB.ZS, color = '#1B9E77',
                  text = paste0(ctyname, ', ', year,
                               "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-                              "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2)),
-                 alpha = a.f1)) +
+                              "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2))),
+             alpha = a.f1) +
   stat_smooth(aes(y =BI.EMP.TOTL.PB.ZS, color = '#1B9E77', span = span), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   # Paid Employment
   geom_point(aes(y = BI.EMP.PWRK.PB.ZS, color = '#D95F02',
                  text = paste0(ctyname, ', ', year,
                               "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-                              "<br>Public Employment Share: ", round(BI.EMP.PWRK.PB.ZS, 2)),
-                 alpha = a.f1)) +
+                              "<br>Public Employment Share: ", round(BI.EMP.PWRK.PB.ZS, 2))),
+                 alpha = a.f1) +
   stat_smooth(aes(y =BI.EMP.PWRK.PB.ZS, color = '#D95F02', span = span), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   # Formal Employment
   geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = '#7570B3', 
                  text = paste0(ctyname, ', ', year,
                               "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-                              "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
-                 alpha = a.f1)) +
+                              "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2))),
+                 alpha = a.f1) +
   stat_smooth(aes(y =BI.EMP.FRML.PB.ZS, color = '#7570B3', span = span), method = 'loess',
               linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
   scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
@@ -178,12 +178,12 @@ f1 <- ggplotly(f1, tooltip = c('text')) %>%
 f2.1 <- 
   ggplot(wwbi, aes(x = gdp_pc2017)) +
   # Formal Employment
-  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = region, 
+  geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = region,
                  text = paste0(ctyname, ', ', year,
                                "<br>", region,
                                "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
-                 alpha = a.f1)) +
+                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)) ),
+             alpha = a.f1) +
   # overall line 
   stat_smooth(aes(y =BI.EMP.FRML.PB.ZS), method = 'loess',
               linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = span) +
@@ -222,8 +222,8 @@ f2.2 <-
                  text = paste0(ctyname, ', ', year,
                                "<br>", income,
                                "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
-             alpha = a.f1)) +
+                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2))),
+             alpha = a.f1) +
   # overall line 
   stat_smooth(aes(y =BI.EMP.FRML.PB.ZS), method = 'loess',
               linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = span) +
@@ -260,8 +260,8 @@ f2.3 <-
                  text = paste0(ctyname, ', ', year,
                                "<br>", income,
                                "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2)),
-             alpha = a.f1)) +
+                               "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2))),
+             alpha = a.f1) +
   # overall line 
   stat_smooth(aes(y =BI.EMP.FRML.PB.ZS), method = 'loess',
               linetype = 1, size = 1.25, se = F, alpha = a.f1.li, na.rm = T, span = span) +
