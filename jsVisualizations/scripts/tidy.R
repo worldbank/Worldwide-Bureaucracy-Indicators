@@ -279,6 +279,15 @@ wwbi_hmp %>%
   group_by(indicator) %>%
   dplyr::summarize(sum(is.na(wwbi_hmp$value)))
 
+# rescale 'value' to have 1 as midpoint (1 indicates global average)
+  wwbi_hmp <- wwbi_hmp %>%
+  mutate(
+    value_scl = rescale_mid(wwbi_hmp$value, to = c(0,2), mid = 1)
+    
+  )
+
+
+
 
 
                                 #    Export     # ----

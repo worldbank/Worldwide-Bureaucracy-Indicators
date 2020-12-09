@@ -5,6 +5,7 @@
 
 library(RColorBrewer)
 library(listviewer)
+library(scales)
 
 # load data 
 load(file = file.path(wwbi_dat, "wwbi-tbls.Rdata"))
@@ -454,7 +455,13 @@ f3 <- ggplotly(f3, tooltip = c("text")) %>%
 
 
 
-                        ### Cross-Country Comparison ####
+                        ### Heatmap: Cross-Country Comparison ####
+
+# detour: what is the distribution of responses 
+ggplot(data = wwbi_hmp) +
+  geom_area(stat = 'bin', aes(value, color = indicator))
+
+
 # hover text for heatmap
 hmp.ht = paste('Country: <b>%{y}</b>',
                '<br>Indicator: <b>%{x}</b>',
@@ -469,7 +476,15 @@ hmp <- plot_ly(
   x = ~indicator,
   y = ~ctycode,
   z = ~value,
-  colorbar = list(tickmode = 'auto', title = "Comparison Value"),
+  colorscale = 'Viridis',
+  zauto = FALSE, # turns of auto color scale with respect to domain,
+  zmin = 0, # min color domain
+  zmid = 1, # midpoint of color domain
+  zmax = 2, # max of color domain 
+  colorbar = list(title = "Comparison Value",
+                  tickmode = 'array',
+                  tickvals = c(0,0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2),
+                  ticktext = c("0", "0.25", "0.5", "0.75", "1", "1.25", "1.5", "1.75", "2+")),
   hovertemplate = hmp.ht
 ) %>%
   layout(
@@ -495,12 +510,52 @@ hmp <- plot_ly(
     )
   )
 
+hmp_hz <- plot_ly(
+    data = wwbi_hmp,
+    type = 'heatmap',
+    y = ~indicator,
+    x = ~ctycode,
+    z = ~value,
+    colorscale = 'Viridis',
+    zauto = FALSE, # turns of auto color scale with respect to domain,
+    zmin = 0, # min color domain
+    zmid = 1, # midpoint of color domain
+    zmax = 2, # max of color domain 
+    colorbar = list(title = "Comparison Value",
+                    tickmode = 'array',
+                    tickvals = c(0,0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2),
+                    ticktext = c("0", "0.25", "0.5", "0.75", "1", "1.25", "1.5", "1.75", "2+")),
+    hovertemplate = hmp.ht
+  ) %>%
+  layout(
+    plot_bgcolor = "#dcdcdc",
+    title = list(text = "<b>Indicator Comparison Across Countries</b>"),
+    xaxis = list(
+      title = list(text = "Country"),
+      categoryorder = 'total ascending',
+      tickfont = list(size = 8)
+    ),
+    yaxis = list(
+      title = list(text = "Indicator"),
+      showgrid = FALSE,
+      autorange = 'reverse',
+      categoryorder = 'array', 
+      categoryarray = n.miss$var, # arrangement by descending order of missing values
+      tickmode = 'array',
+      tickvals = n.miss$var, #tickvals must be defined for custom labels to work below
+      ticktext = c("Hospital Doctor", "Hospital Nurse",        
+                   "Primary School Teacher", "Police Officer",
+                   "Secondary School Teacher", "Judge",
+                   "University Teacher", "Government Economist",
+                   "Senior Official")
+    )
+  )
 
-
+hmp_hz
 # Export ----
 
 save(
-  f1, f2.1, f2.2, f2.3, hmp, f3, # not exporting p9a, p9c, p9c
+  f1, f2.1, f2.2, f2.3, hmp, hmp_hz, f3, # not exporting p9a, p9c, p9c
 wwbi,
 file = file.path(wwbi_dat, "wwbi.Rdata")
 )
