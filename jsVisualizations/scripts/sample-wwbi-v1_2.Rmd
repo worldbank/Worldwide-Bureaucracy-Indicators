@@ -19,13 +19,9 @@ load(file = file.path(wwbi_dat, "wwbi.Rdata"))
 
 ```
 
-# Intro
+# Introduction
 
-This document presents draft figures of the Worldwide Bureaucracy Indicators for potential use in future, public-facing digital mediums.
-
-The figures 
-
-All graphs are downloadable directly generated using publicly-available data and can be reproduced with code from the WWBI GitHub [repository](https://github.com/worldbank/Worldwide-Bureaucracy-Indicators).
+This document presents draft figures of the Worldwide Bureaucracy Indicators for potential use in future, public-facing digital mediums. In constructing the images, we prioritized user functionality and transparency. The figures contain features that most users expect nowadays from high-quality websites, including including hovertext and legend interactivity, as well as the ability to download the image directly from the browser. Furthermore, the figures use publicly-available data and can be reproduced with code from the WWBI GitHub [repository](https://github.com/worldbank/Worldwide-Bureaucracy-Indicators) so that researchers or more curious users can see eactly how the graphs were developed.
 
 
 
