@@ -474,7 +474,7 @@ hmp <- plot_ly(
   data = wwbi_hmp,
   type = 'heatmap',
   x = ~indicator,
-  y = ~ctycode,
+  y = ~ctyname,
   z = ~value,
   colorscale = 'Viridis',
   zauto = FALSE, # turns of auto color scale with respect to domain,
@@ -491,7 +491,7 @@ hmp <- plot_ly(
     plot_bgcolor = "#dcdcdc",
     title = list(text = "<b>Indicator Comparison Across Countries</b>"),
     yaxis = list(
-      title = list(text = "Country"),
+      title = list(text = ""),
       categoryorder = 'total ascending',
       tickfont = list(size = 8)
     ),
@@ -510,6 +510,9 @@ hmp <- plot_ly(
     )
   )
 
+hmp
+
+# horizontal version of heatmap
 hmp_hz <- plot_ly(
     data = wwbi_hmp,
     type = 'heatmap',
@@ -529,7 +532,7 @@ hmp_hz <- plot_ly(
   ) %>%
   layout(
     plot_bgcolor = "#dcdcdc",
-    title = list(text = "<b>Indicator Comparison Across Countries</b>"),
+    title = list(text = "<b>Indicator Comparison</b>"),
     xaxis = list(
       title = list(text = "Country"),
       categoryorder = 'total ascending',
@@ -551,7 +554,7 @@ hmp_hz <- plot_ly(
     )
   )
 
-hmp_hz
+
 # Export ----
 
 save(
