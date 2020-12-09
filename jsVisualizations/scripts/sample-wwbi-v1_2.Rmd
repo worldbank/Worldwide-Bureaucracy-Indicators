@@ -57,3 +57,4 @@ f3
 hmp
 ```
 
+Note: The figure presents the ratio of public sector wages for specific occupations within a country to the global median – taken as 1.  Ratio’s above 1 indicate a cross-country premium for the indexed occupation compared to the global median (shaded X) while ratio’s below 1 indicate a negative cross-country premium (shaded Y). Blank cells show no available data.

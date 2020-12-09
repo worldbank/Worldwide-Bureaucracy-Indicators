@@ -532,7 +532,7 @@ hmp_hz <- plot_ly(
   ) %>%
   layout(
     plot_bgcolor = "#dcdcdc",
-    title = list(text = "<b>Indicator Comparison</b>"),
+    title = list(text = "<b>Cross-country wage comparison of selected occupations (by median)</b>"),
     xaxis = list(
       title = list(text = "Country"),
       categoryorder = 'total ascending',
