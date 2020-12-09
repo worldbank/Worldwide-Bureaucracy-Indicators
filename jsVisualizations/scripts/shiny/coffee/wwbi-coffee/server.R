@@ -45,13 +45,14 @@ shinyServer(function(input, output) {
   #### Data control ----
   # filter dataset by year 
   data_yr <- reactive({
-    wwbi_geo %>% filter(year == year() )
+    wwbi_geo %>%
+      filter(year == 2017 )
   }) 
   
   # most recent dataset yet 
   data_rcnt <- reactive({
     wwbi_geo %>%
-      select(keepvars, all_of(input$in.mapfill) ) %>%
+      select(keepvars, all_of(input$in.mapfill) ) %>% # combine 
       group_by(country) %>%
       arrange(-year) %>%
       filter(row_number() == 1)
@@ -61,11 +62,11 @@ shinyServer(function(input, output) {
   # data switch
   data <- reactive({
     data_rcnt()
-    # if (input$recent) {
-    #   data <- data_rcnt()
-    # } else {
-    #   data <- data_yr()
-    # }
+    if (input$recent) {
+      data <- data_rcnt()
+    } else {
+      data <- data_yr()
+    }
     
   })
   
@@ -128,9 +129,9 @@ shinyServer(function(input, output) {
   })
   
   
-  # render table 
-  output$data <- renderTable(
-  )
+  # render table
+  output$data <- renderDataTable(data() )
+  
   
   
 })

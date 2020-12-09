@@ -71,7 +71,7 @@ shinyUI(
     
     tabPanel("table",
              
-             renderTable('data')
+             dataTableOutput('data')
              )
     
     
