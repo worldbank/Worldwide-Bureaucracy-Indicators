@@ -47,7 +47,7 @@ shinyServer(function(input, output) {
   data_yr <- reactive({
     yr <- 
       wwbi_geo %>%
-      filter(year == 2017 )
+      filter(year == input$in.year )
   }) 
   
   # most recent dataset yet 
@@ -106,7 +106,7 @@ shinyServer(function(input, output) {
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
                   weight = 1, 
                   label = ~paste0(ctyname, 
-                                  prettyNum(round(eval(as.symbol(input$in.mapfill))),
+                                  prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
                                             big.mark = ',')  ))
     
   })
