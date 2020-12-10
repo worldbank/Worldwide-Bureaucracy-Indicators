@@ -10,7 +10,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
-
+library(plotly)
 
 # setup 
 mapfill.choices <- 
@@ -87,6 +87,7 @@ shinyUI(
                       label = "Select up to 5 countries or economies",
                       choices = wwbi_geo_shp$ctyname,
                       multiple = TRUE,
+                      selected = c("Afghanistan", "Albania", "Angola"),
                       options = list(`live-search` = TRUE,
                                      `max-options` = 5,
                                      `mobile` = FALSE, 
@@ -97,7 +98,8 @@ shinyUI(
         
         mainPanel(
           
-        
+        plotlyOutput("comp1", height = "500px"),
+        plotlyOutput("comp2", height = '500px')
         
         
       ))) #end sidebarlayout, main panel, country/economy panel
