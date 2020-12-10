@@ -8,6 +8,8 @@
 #
 
 library(shiny)
+library(shinydashboard)
+library(shinyWidgets)
 
 
 # setup 
@@ -72,7 +74,35 @@ shinyUI(
     tabPanel("table",
              
              dataTableOutput('data')
-             )
+             ), # end data table page 
+    
+    
+    
+    tabPanel("Comparison",
+      
+      sidebarLayout(
+        sidebarPanel(
+          
+          pickerInput('comp.country',
+                      label = "Select up to 5 countries or economies",
+                      choices = wwbi_geo_shp$ctyname,
+                      multiple = TRUE,
+                      options = list(`live-search` = TRUE,
+                                     `max-options` = 5,
+                                     `mobile` = FALSE, 
+                                     `actions-box` = TRUE))
+          
+          
+        ), # end sidebar panel
+        
+        mainPanel(
+          
+        
+        
+        
+      ))) #end sidebarlayout, main panel, country/economy panel
+             
+
     
     
   )) # end navbarPage / UI
