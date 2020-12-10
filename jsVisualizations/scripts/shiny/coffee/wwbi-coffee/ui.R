@@ -41,7 +41,7 @@ shinyUI(
         checkboxInput('recent', "Use most recent year", TRUE),
         sliderInput(
           'in.year',
-          "Select Year",
+          "Select Specific Year",
           min = min(wwbi_geo$year),
           max = max(wwbi_geo$year),
           value = 2017,

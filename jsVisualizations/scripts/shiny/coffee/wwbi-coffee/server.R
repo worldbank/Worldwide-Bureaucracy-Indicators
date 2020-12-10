@@ -45,16 +45,17 @@ shinyServer(function(input, output) {
   #### Data control ----
   # filter dataset by year 
   data_yr <- reactive({
-    wwbi_geo %>%
+    yr <- 
+      wwbi_geo %>%
       filter(year == 2017 )
   }) 
   
   # most recent dataset yet 
   data_rcnt <- reactive({
-    wwbi_geo %>%
+      wwbi_geo %>%
       select(keepvars, input$in.mapfill ) %>% 
-      filter(is.na(input$in.mapfill) == FALSE) %>% # remove missing values for variable
-      arrange(ctycode, -year) %>% # arrnage by country and year descending %%% still not working.
+      filter(is.na(eval(as.symbol(input$in.mapfill))) == FALSE) %>%   # remove missing values for variable 
+      arrange(ctycode, -year) %>% # arrnage by country and year descending
       group_by(ctycode) %>%
       filter(row_number() == 1)
   })
@@ -62,12 +63,13 @@ shinyServer(function(input, output) {
   
   # data switch
   data <- reactive({
-    data_rcnt()
     if (input$recent) {
       data <- data_rcnt()
     } else {
       data <- data_yr()
     }
+    
+    return(data)
     
   })
   
@@ -98,7 +100,6 @@ shinyServer(function(input, output) {
   # for incremental changes to map
   observe({
     pal <- colorpal()
-    
     
     leafletProxy("map", data = data()) %>%
       clearShapes() %>%
@@ -131,7 +132,7 @@ shinyServer(function(input, output) {
   
   
   # render table
-  output$data <- renderDataTable(data_rcnt() %>% st_drop_geometry() )
+  output$data <- renderDataTable(data() %>% st_drop_geometry() )
   
   
   
