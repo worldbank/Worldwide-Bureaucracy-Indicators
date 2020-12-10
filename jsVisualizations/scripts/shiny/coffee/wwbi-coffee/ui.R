@@ -38,7 +38,7 @@ shinyUI(
         
         
         # contents of panel
-        checkboxInput('recent', "Use most recent year", FALSE),
+        checkboxInput('recent', "Use most recent year", TRUE),
         sliderInput(
           'in.year',
           "Select Year",

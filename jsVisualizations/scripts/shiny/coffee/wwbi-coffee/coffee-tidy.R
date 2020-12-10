@@ -147,6 +147,8 @@ keepvars <- c("ctycode", "ctyname", "year",
 
 test <- wwbi_geo %>%
   select(keepvars, "BI.WAG.TOTL.GD.ZS") %>%
+  filter(is.na(BI.WAG.TOTL.GD.ZS) == FALSE) %>% # remove missing values for variable
+  arrange(ctycode, -year) %>% # arrnage by country and year descending
   group_by(ctycode) %>%
-  arrange(-year) %>%
   filter(row_number() == 1)
+  

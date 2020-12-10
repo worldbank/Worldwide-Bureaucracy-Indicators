@@ -52,9 +52,10 @@ shinyServer(function(input, output) {
   # most recent dataset yet 
   data_rcnt <- reactive({
     wwbi_geo %>%
-      select(keepvars, all_of(input$in.mapfill) ) %>% # combine 
-      group_by(country) %>%
-      arrange(-year) %>%
+      select(keepvars, input$in.mapfill ) %>% 
+      filter(is.na(input$in.mapfill) == FALSE) %>% # remove missing values for variable
+      arrange(ctycode, -year) %>% # arrnage by country and year descending %%% still not working.
+      group_by(ctycode) %>%
       filter(row_number() == 1)
   })
   
@@ -130,7 +131,7 @@ shinyServer(function(input, output) {
   
   
   # render table
-  output$data <- renderDataTable(data() )
+  output$data <- renderDataTable(data_rcnt() %>% st_drop_geometry() )
   
   
   
