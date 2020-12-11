@@ -35,33 +35,40 @@ shinyUI(
       # panel select
       absolutePanel(
         ## panel settings
-        right = 30, top = 80,
-        draggable = TRUE,
+        left = 20, bottom = 20, draggable = TRUE, 
+        wellPanel(
+          style = "opacity: 0.80",
         
         
         # contents of panel
-        checkboxInput('recent', "Use most recent year", TRUE),
+        tags$h4(tags$b("Fill Variable")),
+        
+        pickerInput(
+          'in.mapfill',
+          choices = choices,
+          selected = "BI.WAG.TOTL.GD.ZS",
+          multiple = FALSE,
+          width = 'fit',
+          options = list(`live-search` = TRUE, `mobile` = FALSE)
+        ),
+        
+        tags$h4(tags$b("Year")),
+        switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'small'),
+        
+        tags$h5("Select Year"),
         sliderInput(
-          'in.year',
-          "Select Specific Year",
+          'in.year', NULL,
+          width = '180px',
           min = min(wwbi_geo$year),
           max = max(wwbi_geo$year),
           value = 2017,
           sep = "",
           step = 1),
         
-        selectInput(
-          'in.mapfill',
-          "Fill Variable",
-          choices = choices,
-          selected = "BI.WAG.TOTL.GD.ZS",
-          multiple = FALSE,
-          width = '250px'
-        ),
         
-        checkboxInput("legend", "Show Legend", TRUE)
+        materialSwitch("legend", "Show Legend",status = 'primary', TRUE, right = T)
         
-      ) # end absolute panel
+      )) # end absolute panel; wellpanel
       
              
              

@@ -103,9 +103,7 @@ shinyServer(function(input, output) {
      
   })
   
-  
-  
-  
+
   
   # for incremental changes to map
   observe({
@@ -118,7 +116,7 @@ shinyServer(function(input, output) {
                   label = ~paste0(ctyname, 
                                   prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
                                             big.mark = ',')  ))
-    
+
   })
   
   
@@ -200,8 +198,11 @@ shinyServer(function(input, output) {
           y = 0.98
         ),
         yaxis = list(range = c(0,0.8), tickmode = 'auto'),
-        legend = list(title = list(text = '<b>Measures of Public Employment</b>'))
-      ) 
+        legend = list(title = list(text = '<b>Measures of Public Employment</b>')),
+        modebar = list(orientation = 'v')
+      ) %>%
+      config(modeBarButtons = list(list('hoverClosestCartesian'), list('hoverCompareCartesian')))
+  
     
     return(f1)
     
@@ -239,8 +240,10 @@ shinyServer(function(input, output) {
           y = 0.98
         ),
         yaxis = list(range = c(0,0.8), tickmode = 'auto'),
-        legend = list(title = list(text = '<b>Countries</b>'))
-      ) 
+        legend = list(title = list(text = '<b>Countries</b>')),
+        modebar = list(orientation = 'v')
+      ) %>%
+      config(modeBarButtons = list(list('hoverClosestCartesian'), list('hoverCompareCartesian')))
     
     return(f2)
     
