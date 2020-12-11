@@ -45,9 +45,13 @@ shinyServer(function(input, output) {
   #### Data control ----
   # filter dataset by year 
   data_yr <- reactive({
-    yr <- 
+    if (input$recent == TRUE) {
+      return()
+    } else {
       wwbi_geo %>%
-      filter(year == input$in.year )
+        filter(year == input$in.year )
+    }
+  
   }) 
   
   # most recent dataset yet 
@@ -63,7 +67,7 @@ shinyServer(function(input, output) {
   
   # data switch
   data <- reactive({
-    if (input$recent) {
+    if (input$recent == TRUE) {
       data <- data_rcnt()
     } else {
       data <- data_yr()
@@ -92,15 +96,16 @@ shinyServer(function(input, output) {
   # alpha 
   a.f1.li = 0.6
   a.f1    = 0.6
-     
+  
+
   #### map ####
   output$map <- renderLeaflet({
     
     ## build base map base
       leaflet(data = wwbi_geo_shp ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 2, lat = 0, lng = 0) %>%
-      addTiles() %>%
-      tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)
+      addTiles()
+     # tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)
      
   })
   
@@ -114,10 +119,9 @@ shinyServer(function(input, output) {
       clearShapes() %>%
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
                   weight = 1, 
-                  label = ~paste0(ctyname, 
-                                  prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
-                                            big.mark = ',')  )) %>%
-      tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)
+                  label = ~paste0(ctyname, ": ",  prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
+                                                               big.mark = ',' ))
+      ) 
 
   })
   

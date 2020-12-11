@@ -55,15 +55,20 @@ shinyUI(
         tags$h4(tags$b("Year")),
         switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'small'),
         
-        tags$h5("Select Year"),
-        sliderInput(
-          'in.year', NULL,
-          width = '180px',
-          min = min(wwbi_geo$year),
-          max = max(wwbi_geo$year),
-          value = 2017,
-          sep = "",
-          step = 1),
+        #tags$h5("Select Year"),
+        conditionalPanel(
+          condition = "input.recent == false",
+          sliderInput(
+            'in.year', "Select Year",
+            width = '180px',
+            min = min(wwbi_geo$year),
+            max = max(wwbi_geo$year),
+            value = 2017,
+            sep = "",
+            step = 1)
+        ),
+        
+        
         
         
         materialSwitch("legend", "Show Legend",status = 'primary', TRUE, right = T)
