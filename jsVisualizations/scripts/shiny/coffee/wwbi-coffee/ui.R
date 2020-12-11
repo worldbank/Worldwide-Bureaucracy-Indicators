@@ -91,14 +91,23 @@ shinyUI(
                       options = list(`live-search` = TRUE,
                                      `max-options` = 5,
                                      `mobile` = FALSE, 
-                                     `actions-box` = TRUE))
+                                     `actions-box` = TRUE)),
+          
+          radioGroupButtons('comp.c2',
+                            "Graph 2: type of employment",
+                            choices = c("Total Employment" = "BI.EMP.TOTL.PB.ZS",
+                                        "Paid Employment" = "BI.EMP.PWRK.PB.ZS",
+                                        "Formal Employment" = "BI.EMP.FRML.PB.ZS"))
           
           
         ), # end sidebar panel
         
         mainPanel(
+        tags$h1("Public Sector Employment"), tags$br(),
           
-        plotlyOutput("comp1", height = "500px"),
+          tags$h2("By Different Measures of Employment"),
+        plotlyOutput("comp1", height = "500px"), tags$br(), tags$br(),
+        tags$h2("By Country/Economy"),
         plotlyOutput("comp2", height = '500px')
         
         

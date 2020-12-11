@@ -183,7 +183,7 @@ shinyServer(function(input, output) {
       scale_color_manual(name = '',
                          labels = c("Total Employment", "Paid Employment", "Formal Employment"),
                          values = c("#1B9E77", "#D95F02", "#7570B3")) +
-      theme_minimal() +
+      theme_classic() +
       theme(legend.position = 'bottom') +
       labs(title = "",
            x = "GDP per Capita (in constant 2017 dollars)",
@@ -199,6 +199,7 @@ shinyServer(function(input, output) {
           text = "<b>Public Employment as a Share of Country-wide Employment</b>",
           y = 0.98
         ),
+        yaxis = list(range = c(0,0.8), tickmode = 'auto'),
         legend = list(title = list(text = '<b>Measures of Public Employment</b>'))
       ) 
     
@@ -214,49 +215,31 @@ shinyServer(function(input, output) {
     f2 <-
       ggplot(data_comp(), aes(x = year)) +
       # Total Employment
-      geom_point(aes(y = BI.EMP.TOTL.PB.ZS, color = ctyname,
+      geom_point(aes(y = eval(as.symbol(input$comp.c2)), color = ctyname,
                      text = paste0(ctyname, ', ', year,
                                    "<br>GDP pc: ", "$", prettyNum(round(year), big.mark = ','),
                                    "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2))),
                  alpha = a.f1) +
-      stat_smooth(aes(y =BI.EMP.TOTL.PB.ZS, color = ctyname, span = span), method = 'loess',
+      stat_smooth(aes(y = eval(as.symbol(input$comp.c2)), color = ctyname, span = span), method = 'loess',
                   linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-      # Paid Employment
-      geom_point(aes(y = BI.EMP.PWRK.PB.ZS, color = ctyname,
-                     text = paste0(ctyname, ', ', year,
-                                   "<br>GDP pc: ", "$", prettyNum(round(year), big.mark = ','),
-                                   "<br>Public Employment Share: ", round(BI.EMP.PWRK.PB.ZS, 2))),
-                 alpha = a.f1) +
-      stat_smooth(aes(y =BI.EMP.PWRK.PB.ZS, color = ctyname, span = span), method = 'loess',
-                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-      # Formal Employment
-      geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = ctyname,
-                     text = paste0(ctyname, ', ', year,
-                                   "<br>GDP pc: ", "$", prettyNum(round(year), big.mark = ','),
-                                   "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2))),
-                 alpha = a.f1) +
-      stat_smooth(aes(y =BI.EMP.FRML.PB.ZS, color = ctyname, span = span), method = 'loess',
-                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-      # scale_color_manual(name = '',
-      #                    labels = c("Total Employment", "Paid Employment", "Formal Employment"),
-      #                    values = c("#1B9E77", "#D95F02", "#7570B3")) +
-      theme_minimal() +
+      theme_classic() +
       theme(legend.position = 'bottom') +
       labs(title = "",
-           x = "GDP per Capita (in constant 2017 dollars)",
-           y = "Public Employment (Share of Country-wide Employment)",
-           color = "Measure of Country-wide Employment")
+           x = "Year",
+           y = paste0("Public Employment:", as.character(input$comp.c2)),
+           color = "")
     
     f2 <- ggplotly(f2, tooltip = c('text')) %>%
-      style(name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
-      style(name = 'Paid Employment', traces = c(3,4)) %>%
-      style(name = 'Formal Employment', traces = c(5,6)) %>%
+      # style(name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
+      # style(name = 'Paid Employment', traces = c(3,4)) %>%
+      # style(name = 'Formal Employment', traces = c(5,6)) %>%
       layout(
         title = list(
           text = "<b>Public Employment as a Share of Country-wide Employment</b>",
           y = 0.98
         ),
-        legend = list(title = list(text = '<b>Measures of Public Employment</b>'))
+        yaxis = list(range = c(0,0.8), tickmode = 'auto'),
+        legend = list(title = list(text = '<b>Countries</b>'))
       ) 
     
     return(f2)
