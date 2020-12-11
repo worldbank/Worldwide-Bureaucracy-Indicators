@@ -103,7 +103,7 @@ shinyServer(function(input, output) {
     
     ## build base map base
       leaflet(data = wwbi_geo_shp ) %>% # use the obejct that contains just the boundary files
-      setView(zoom = 2, lat = 0, lng = 0) %>%
+      setView(zoom = 3, lat = 0, lng = 0) %>%
       addTiles()
      # tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)
      
@@ -118,7 +118,7 @@ shinyServer(function(input, output) {
     leafletProxy("map", data = data()) %>%
       clearShapes() %>%
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
-                  weight = 1, 
+                  weight = 0.5, 
                   label = ~paste0(ctyname,
                                   " (", year, ")",
                                   ": ", 

@@ -68,9 +68,9 @@ shinyUI(
             step = 1)
         ),
         
+        tags$h4(tags$b("Options")),
         
-        
-        
+        materialSwitch("plot", "Show Plot",status = 'primary', TRUE, right = T),
         materialSwitch("legend", "Show Legend",status = 'primary', TRUE, right = T)
         
       )) # end absolute panel; wellpanel
