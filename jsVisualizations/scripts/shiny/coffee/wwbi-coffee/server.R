@@ -119,7 +119,10 @@ shinyServer(function(input, output) {
       clearShapes() %>%
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
                   weight = 1, 
-                  label = ~paste0(ctyname, ": ",  prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
+                  label = ~paste0(ctyname,
+                                  " (", year, ")",
+                                  ": ", 
+                                  prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
                                                                big.mark = ',' ))
       ) 
 
