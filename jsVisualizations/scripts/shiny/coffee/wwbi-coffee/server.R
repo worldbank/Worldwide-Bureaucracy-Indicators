@@ -99,7 +99,8 @@ shinyServer(function(input, output) {
     ## build base map base
       leaflet(data = wwbi_geo_shp ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 2, lat = 0, lng = 0) %>%
-      addTiles() 
+      addTiles() %>%
+      tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)
      
   })
   
@@ -115,7 +116,8 @@ shinyServer(function(input, output) {
                   weight = 1, 
                   label = ~paste0(ctyname, 
                                   prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
-                                            big.mark = ',')  ))
+                                            big.mark = ',')  )) %>%
+      tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)
 
   })
   
