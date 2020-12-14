@@ -84,8 +84,8 @@ shinyUI(
     ), # end boostrap page / Map panel,
     
     tabPanel("table",
-             
-             dataTableOutput('data')
+             tags$h4("Future home of browsable WWBI data table"), tags$br() 
+            # dataTableOutput()
              ), # end data table page 
     
     

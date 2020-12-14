@@ -147,10 +147,7 @@ shinyServer(function(input, output) {
     
   })
   
-  
-  # render table
-  output$data <- renderDataTable(data() %>% st_drop_geometry() )
-  
+
   
   
   
