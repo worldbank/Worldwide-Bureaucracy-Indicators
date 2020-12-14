@@ -32,6 +32,10 @@ keepvars <- c("ctycode", "ctyname", "year",
               "iso3c", "region", "income",
               "lending", "ln_gdp", "lnTotEmp")
 
+
+# define graph aesthetics
+span = 0.8
+
 #       -           -       -     -   -   -   SERVER - - - ---- 
 shinyServer(function(input, output) {
 
