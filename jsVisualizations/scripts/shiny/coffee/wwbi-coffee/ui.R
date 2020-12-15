@@ -29,7 +29,7 @@ library(leafpop)
 ## load indicator names data only
 #names <- readRDS("data/names.Rda")
 
-load("data/UIdata.Rdata")
+load("data/ui-data.Rdata")
 
 ## define dropdown choices
 mapfill.choices <- 
