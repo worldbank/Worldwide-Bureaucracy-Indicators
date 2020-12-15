@@ -11,6 +11,17 @@ library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
 library(plotly)
+library(shiny)
+library(sf)
+library(rjson)
+library(leaflet)
+library(RColorBrewer)
+library(htmltools)
+library(tidyverse)
+library(lubridate)
+library(mapview)
+library(leafpop)
+
 
 # setup 
 mapfill.choices <- 
