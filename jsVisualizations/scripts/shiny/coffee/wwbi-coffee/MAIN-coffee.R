@@ -12,7 +12,7 @@ library(shiny)
 cafe <- file.path(repo, "shiny/coffee/wwbi-coffee")
 
 worldjson <-
-  "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/names+boundaries/WB_Boundaries_GeoJSON_lowres/WB_countries_Admin0_lowres.geojson"
+  file.path(wwbi_dat, "WB_Boundaries_GeoJSON_lowres/WB_countries_Admin0_lowres.geojson")
 
 # prepare the coffee
 coffee.tidy = 1 

@@ -100,6 +100,7 @@ shinyServer(function(input, output) {
       clearShapes() %>%
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
                   weight = 0.5, 
+                  layerId = ~iso3c,
                   label = ~paste0(ctyname,
                                   " (", year, ")",
                                   ": ", 
@@ -130,6 +131,39 @@ shinyServer(function(input, output) {
   
 
   
+  #### Map subplots ---- 
+  #output$clickplot <- renderText({as.character(input$map_shape_click$id) })
+  
+  
+  
+  
+  ## subset main dataframe with coords from click
+  
+  # determine country id that was clicked
+  countryclick <- reactive({ 
+    if (is.null(input$map_shape_click))
+      return(NULL) # world average plot goes here
+    input$map_shape_click$id
+  })
+  
+  
+  # filter data based on click
+  data_clickplot <- reactive({ 
+    wwbi_geo %>%
+      filter(iso3c %in% countryclick() )
+  })
+  
+  
+  # generate a little ggplot
+  output$clickplot <- renderPlot({
+    ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill))) ) +
+      geom_point() +
+      stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), color = '#D95F02', span = span), method = 'loess',
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
+                    labs(y = "", x = "") +
+      theme_classic() + theme(panel.background = element_rect(fill = '#ffffff'))
+      
+  })
   
   
   

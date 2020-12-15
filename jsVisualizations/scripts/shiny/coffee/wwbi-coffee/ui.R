@@ -61,6 +61,10 @@ shinyUI(
           style = "opacity: 0.80",
         
         
+          
+        # clickplot 
+        plotOutput('clickplot', height = 200),
+          
         # contents of panel
         tags$h4(tags$b("Fill Variable")),
         
