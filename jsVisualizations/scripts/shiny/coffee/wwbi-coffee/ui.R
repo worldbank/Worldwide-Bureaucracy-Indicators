@@ -23,13 +23,23 @@ library(mapview)
 library(leafpop)
 
 
-# setup 
+# setup ----
+
+
+## load indicator names data only
+#names <- readRDS("data/names.Rda")
+
+load("data/UIdata.Rdata")
+
+## define dropdown choices
 mapfill.choices <- 
   c("GDP Per Capita" = "gdp_pc2017",
     "Females, as a share of public paid employees" = "BI.PWK.PUBS.FE.ZS"
-    )
+  )
 
 choices <- setNames(names_all$indcode, names_all$indname)
+
+
 
 
 
@@ -72,8 +82,8 @@ shinyUI(
           sliderInput(
             'in.year', "Select Year",
             width = '180px',
-            min = min(wwbi_geo$year),
-            max = max(wwbi_geo$year),
+            min = wwbiMinYr,
+            max = wwbiMaxYr,
             value = 2017,
             sep = "",
             step = 1)
@@ -108,7 +118,7 @@ shinyUI(
           
           pickerInput('comp.country',
                       label = "Select up to 5 countries or economies",
-                      choices = wwbi_geo_shp$ctyname,
+                      choices = ctynames,
                       multiple = TRUE,
                       selected = c("Afghanistan", "Albania", "Angola"),
                       options = list(`live-search` = TRUE,

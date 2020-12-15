@@ -70,6 +70,17 @@ wwbi_geo_shp <- wwbi_geo %>%
   group_by(ctycode) %>%
   filter(row_number() == 1)
 
+
+# create min and max year values 
+wwbiMinYr <- min(wwbi_geo$year)
+wwbiMaxYr <- max(wwbi_geo$year)
+
+# create country/economy name list 
+ctynames <- wwbi_geo_shp$ctyname
+
+
+
+
 save(
   # final wwbi files
   wwbi_geo,
@@ -81,4 +92,9 @@ save(
   world_sf_raw,
   file = file.path(cafe, "data/data.Rdata")
 )
+
+save(names_all,
+     ctynames,
+     wwbiMinYr, wwbiMaxYr,
+     file = file.path(cafe, "data/UIdata.rdata"))
 

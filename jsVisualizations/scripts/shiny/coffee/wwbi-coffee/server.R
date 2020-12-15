@@ -1,31 +1,14 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
+# server.R
+# for coffee table
 
-
-
-
-# if (input$debug) {
-#   browser()
-# }
-
-
-# setup ----
-
-## load data
-load("data.Rdata")
+# load data 
+load("data/data.Rdata")
 
 ## define varlist of keyvars to keep 
 keepvars <- c("ctycode", "ctyname", "year",
               "iso2c", "country", "gdp_pc2017",
               "iso3c", "region", "income",
               "lending", "ln_gdp", "lnTotEmp")
-
 
 # define graph aesthetics
 span = 0.8
