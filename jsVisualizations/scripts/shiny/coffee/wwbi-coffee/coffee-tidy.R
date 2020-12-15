@@ -45,6 +45,7 @@ world_geo    <- world_sf %>%
 
 
                     # Merge with WWBI ----
+                    
 # import wwbi files from earlier code 
 load(file = file.path(wwbi_dat, "wwbi-tbls.Rdata"))
 
@@ -57,10 +58,19 @@ wwbi_geo <-
   st_as_sf()
 
 
-# misc: create date variable for year 
+
+
+
+                    # Additional Data manipulation ----
+
+
+# create date variable for year 
 wwbi_geo$year_dt <-
   as.Date(as.character(wwbi_geo$year),
                             format="%Y")
+
+# add averages for world by indicator
+wwbi_geo <-
 
 
 

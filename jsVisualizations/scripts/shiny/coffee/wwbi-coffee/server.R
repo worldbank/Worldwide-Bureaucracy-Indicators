@@ -156,6 +156,8 @@ shinyServer(function(input, output) {
   
   # generate a little ggplot
   output$clickplot <- renderPlot({
+    if (is.null(countryclick() ))
+      return(NULL)
     ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill))) ) +
       geom_point() +
       stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), color = '#D95F02', span = span), method = 'loess',
