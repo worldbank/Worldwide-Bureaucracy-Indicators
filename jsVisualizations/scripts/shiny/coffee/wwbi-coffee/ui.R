@@ -63,7 +63,11 @@ shinyUI(
         
           
         # clickplot 
-        plotOutput('clickplot', height = 200),
+        conditionalPanel(
+          condition = "input.plot == true",
+          plotOutput('clickplot', height = 200, width = 250)
+        ),
+        
           
         # contents of panel
         tags$h4(tags$b("Fill Variable")),
