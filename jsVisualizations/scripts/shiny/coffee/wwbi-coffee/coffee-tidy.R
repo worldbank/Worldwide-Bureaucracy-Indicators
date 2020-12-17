@@ -43,7 +43,6 @@ world_geo    <- world_sf %>%
 
 
 
-
                     # Merge with WWBI ----
                     
 # import wwbi files from earlier code 
