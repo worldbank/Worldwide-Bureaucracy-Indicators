@@ -172,8 +172,11 @@ shinyServer(function(input, output) {
                   linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
       labs(y = "", x = "" , color = "") +
       theme_classic() +
-      theme(panel.background = element_rect(fill = '#ffffff'),
-            legend.position = 'top') +
+      theme(panel.background = element_rect(fill = 'transparent', color = NA),
+            plot.background = element_rect(fill = 'transparent', color = NA),
+            legend.position = 'top',
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank()) +
       scale_color_manual(values = c("#00bfff", "World Average" = "#708090"))
 
   })

@@ -40,6 +40,9 @@ mapfill.choices <-
 choices <- setNames(names_all$indcode, names_all$indname)
 
 
+## define wellPanel options
+
+
 
 
 
@@ -58,8 +61,8 @@ shinyUI(
         ## panel settings
         left = 20, bottom = 20, draggable = TRUE, 
         wellPanel(
-          style = "opacity: 0.80",
-        
+         style = "background: #ffffff; opacity: 0.8",
+
         
           
         # clickplot 
