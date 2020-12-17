@@ -77,8 +77,8 @@ shinyUI(
           choices = choices,
           selected = "BI.WAG.TOTL.GD.ZS",
           multiple = FALSE,
-          width = 'fit',
-          options = list(`live-search` = TRUE, `mobile` = FALSE)
+          width = '250px',
+          options = list(`live-search` = TRUE, `mobile` = FALSE, `dropupAuto` = TRUE, `size` = 10)
         ),
         
         tags$h4(tags$b("Year")),
