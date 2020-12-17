@@ -83,7 +83,7 @@ wwbi_worldav <- wwbi %>%
   summarize(.,
             across(where(is.numeric), ~mean(.x, na.rm = TRUE)),
             across(where(is.character), ~"World Average")) %>%
-  mutate(avtype = "World Average")
+  mutate(avtype = "World Average", ctycode = "World Average")
 
 
 ## Region Average 
@@ -156,4 +156,5 @@ save(names_all,
      ctynames,
      wwbiMinYr, wwbiMaxYr,
      file = file.path(cafe, "data/ui-data.Rdata"))
+
 

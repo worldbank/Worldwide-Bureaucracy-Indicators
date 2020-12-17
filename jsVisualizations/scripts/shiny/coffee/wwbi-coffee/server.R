@@ -158,19 +158,24 @@ shinyServer(function(input, output) {
   output$clickplot <- renderPlot({
     if (is.null(countryclick() ))
       return(NULL)
-    ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill))) ) +
-      geom_point() +
-      stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), color = '#D95F02', span = span),
-                  method = 'loess',
+    ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill)), color = ctyname)) +
+      geom_point() + #  color = '#00bfff'
+      stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), span = span),
+                  method = 'loess', # color = '#1e90ff'
                   linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
                     labs(y = "", x = "") +
-      geom_point(data = wwbi_av[wwbi_av$avtype %in% "World Average",]) +
-      stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), color = '#D95F02', span = span),
-                  method = 'loess',
+      geom_point(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
+                 aes(year, eval(as.symbol(input$in.mapfill)) )) + # color = '#708090'
+      stat_smooth(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
+                  aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
+                  method = 'loess', # , color = '#000000'
                   linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
-      labs(y = "", x = "") +
-      theme_classic() + theme(panel.background = element_rect(fill = '#ffffff'))
-      
+      labs(y = "", x = "" , color = "") +
+      theme_classic() +
+      theme(panel.background = element_rect(fill = '#ffffff'),
+            legend.position = 'top') +
+      scale_color_manual(values = c("#00bfff", "World Average" = "#708090"))
+
   })
   
   
