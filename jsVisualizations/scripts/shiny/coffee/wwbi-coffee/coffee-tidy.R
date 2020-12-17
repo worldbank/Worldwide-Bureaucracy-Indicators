@@ -69,12 +69,60 @@ wwbi_geo$year_dt <-
   as.Date(as.character(wwbi_geo$year),
                             format="%Y")
 
-# add averages for world by indicator
-wwbi_geo <-
+
+# add averages for world by indicator:
+# strategry is to create tibbles of data for each world, region, lending, income
+# catetory and append at end. 
+
+## count the number of rows to avoid including newly created averages in following averages
+wwbirows <- nrow(wwbi)
+
+## World Averate
+wwbi_worldav <- wwbi %>%
+  dplyr::group_by(year) %>%
+  summarize(.,
+            across(where(is.numeric), ~mean(.x, na.rm = TRUE)),
+            across(where(is.character), ~"World Average")) %>%
+  mutate(avtype = "World Average")
+
+
+## Region Average 
+wwbi_regionav <- wwbi %>%
+  dplyr::group_by(year, region) %>%
+  summarize(.,
+            across(where(is.numeric), ~mean(.x, na.rm = TRUE)),
+            across(where(is.character), ~"Region Average"))%>%
+  mutate(avtype = "Region Average")
+
+## Lending Category AVerage 
+wwbi_lendingav <- wwbi %>%
+  dplyr::group_by(year, lending) %>%
+  summarize(.,
+            across(where(is.numeric), ~mean(.x, na.rm = TRUE)),
+            across(where(is.character), ~"Lending Average"))%>%
+  mutate(avtype = "Lending Group Average")
+
+
+## income group average 
+wwbi_incomeav <- wwbi %>%
+  dplyr::group_by(year, income) %>%
+  summarize(.,
+            across(where(is.numeric), ~mean(.x, na.rm = TRUE)),
+            across(where(is.character), ~"Income Average")) %>%
+  mutate(avtype = "Income Group Average")
+
+## append 
+wwbi_av <- bind_rows(
+  wwbi_worldav, wwbi_regionav, wwbi_lendingav, wwbi_incomeav
+) %>%
+  select(avtype, region, lending, income, everything())
 
 
 
-# create a subset of wwbi only for createing the shapes
+
+
+
+# create a subset of wwbi only for creating the shapes
 wwbi_geo_shp <- wwbi_geo %>%
   select(keepvars) %>%
   group_by(ctycode) %>%
@@ -95,6 +143,7 @@ save(
   # final wwbi files
   wwbi_geo,
   wwbi_geo_shp,
+  wwbi_av,
   names_all,
   # world geo polygon files
   world_geo,

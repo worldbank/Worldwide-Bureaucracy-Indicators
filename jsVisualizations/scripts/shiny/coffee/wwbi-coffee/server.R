@@ -160,9 +160,15 @@ shinyServer(function(input, output) {
       return(NULL)
     ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill))) ) +
       geom_point() +
-      stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), color = '#D95F02', span = span), method = 'loess',
+      stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), color = '#D95F02', span = span),
+                  method = 'loess',
                   linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
                     labs(y = "", x = "") +
+      geom_point(data = wwbi_av[wwbi_av$avtype %in% "World Average",]) +
+      stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), color = '#D95F02', span = span),
+                  method = 'loess',
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
+      labs(y = "", x = "") +
       theme_classic() + theme(panel.background = element_rect(fill = '#ffffff'))
       
   })
