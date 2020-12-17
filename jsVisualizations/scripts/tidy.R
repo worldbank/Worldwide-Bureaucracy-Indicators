@@ -11,6 +11,7 @@ library(hablar)
 library(lubridate)
 library(forcats)
 library(WDI)
+library(stringr)
 
 
 
@@ -95,6 +96,18 @@ codes <- c("BI.EMP.TOTL.PB.ZS", "BI.EMP.PWRK.PB.ZS", "BI.EMP.FRML.PB.ZS",
 ## create table of indicator names/codes 
 names_all <- wwbi_raw %>%
   dplyr::distinct(indname, indcode)
+
+# 
+#   separate(col = indname, into = c("s1", "rest"), sep = "[[:space:]]{3}", remove = TRUE)
+# 
+# 
+# look <- function(rx) str_view_all(names_all$indname, rx)
+# look("[[:space:]]")
+# 
+# 
+# ### add a column of html-code infused names for line breaks in long names
+# names_all <- names_all %>%
+#   mutate(indHtml = str)
 
 names <- names_all[names_all$indcode %in% codes, ]
 
