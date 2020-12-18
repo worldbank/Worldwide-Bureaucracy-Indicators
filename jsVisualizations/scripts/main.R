@@ -48,12 +48,12 @@ if (user == 2) {
 
     # toggles # 
 
-tidy    = 0
+tidy    = 1
 graphs  = 0
 knit    = 0
 
 # shiny 
-coffee  = 1
+coffee  = 0
 
 
     # run scripts #

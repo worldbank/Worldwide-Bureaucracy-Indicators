@@ -95,19 +95,12 @@ codes <- c("BI.EMP.TOTL.PB.ZS", "BI.EMP.PWRK.PB.ZS", "BI.EMP.FRML.PB.ZS",
 
 ## create table of indicator names/codes 
 names_all <- wwbi_raw %>%
-  dplyr::distinct(indname, indcode)
-
-# 
-#   separate(col = indname, into = c("s1", "rest"), sep = "[[:space:]]{3}", remove = TRUE)
-# 
-# 
-# look <- function(rx) str_view_all(names_all$indname, rx)
-# look("[[:space:]]")
-# 
-# 
-# ### add a column of html-code infused names for line breaks in long names
-# names_all <- names_all %>%
-#   mutate(indHtml = str)
+  dplyr::distinct(indname, indcode) %>%
+  mutate(
+    nameHtml = gsub('^(.{15,25})(\\b)(.{15,25})(\\b)(.+)$',
+                    '\\1<br>\\3<br>\\5',
+                    indname) # insert a <br> for html rendering in multline
+  )
 
 names <- names_all[names_all$indcode %in% codes, ]
 
