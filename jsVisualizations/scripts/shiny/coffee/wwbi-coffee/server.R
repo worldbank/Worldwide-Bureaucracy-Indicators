@@ -122,8 +122,7 @@ shinyServer(function(input, output) {
         proxy %>% addLegend(position = 'bottomright',
                             pal = pal,
                             values = ~eval(as.symbol(input$in.mapfill)),
-                            title = paste("test", "<br>", "test") 
-                              #names_all$indname[names_all$indcode %in% as.character(input$in.mapfill)]
+                            title = names_all$nameHtml[names_all$indcode %in% as.character(input$in.mapfill)]
                             )
         
      }
