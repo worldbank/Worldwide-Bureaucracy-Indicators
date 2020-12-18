@@ -119,8 +119,40 @@ names_all <- wwbi_raw %>%
                                                      '\\1<br>\\3<br>\\5<br>\\7',
                                                      indname) # 3 breaks 
                                         ) #end 2nd ifelse
-                                  ) #end 1st ifelse
-        ) # end mutate
+                                  ), #end 1st ifelse
+    wage = if_else(str_detect(names_all$indcode, "BI.WAG"),
+                   true = TRUE,
+                   false= FALSE),
+    employmnet = if_else(str_detect(names_all$indcode, "BI.EMP"),
+                         true = TRUE,
+                         false= FALSE),
+    paidwork = if_else(str_detect(names_all$indcode, "BI.PWK"),
+                       true = TRUE,
+                       false= FALSE),
+    gender = if_else(str_detect(names_all$indcode, ".FE."),
+                     true = TRUE,
+                     false= FALSE),
+    wagepremium = if_else(str_detect(names_all$indcode, "BI.WAG.PREM"),
+                          true = TRUE,
+                          false= FALSE),
+    age = if_else(str_detect(names_all$indcode, "AGES"),
+                  true = TRUE,
+                  false= FALSE),
+    publicsec = if_else(str_detect(names_all$indcode, ".PUBS."),
+                        true = TRUE,
+                        false= FALSE),
+    privsec = if_else(str_detect(names_all$indcode, ".PRVS."),
+                      true = TRUE,
+                      false= FALSE)
+        )  # end mutate
+
+
+
+
+
+# generate a category variable 
+
+
 
 names <- names_all[names_all$indcode %in% codes, ]
 
