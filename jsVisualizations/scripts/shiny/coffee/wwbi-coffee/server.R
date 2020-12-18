@@ -83,7 +83,7 @@ shinyServer(function(input, output) {
   output$map <- renderLeaflet({
     
     ## build base map base
-      leaflet(data = wwbi_geo_shp ) %>% # use the obejct that contains just the boundary files
+      leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 3, lat = 0, lng = 0) %>%
       addTiles()
      # tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)

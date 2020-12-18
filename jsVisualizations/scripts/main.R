@@ -53,7 +53,7 @@ graphs  = 0
 knit    = 0
 
 # shiny 
-coffee  = 1
+coffee  = 0
 
 
     # run scripts #

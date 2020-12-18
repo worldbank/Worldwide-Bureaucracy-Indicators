@@ -42,7 +42,6 @@ world_geo    <- world_sf %>%
 
 
 
-
                     # Merge with WWBI ----
                     
 # import wwbi files from earlier code 
@@ -121,13 +120,6 @@ wwbi_av <- bind_rows(
 
 
 
-# create a subset of wwbi only for creating the shapes
-wwbi_geo_shp <- wwbi_geo %>%
-  select(keepvars) %>%
-  group_by(ctycode) %>%
-  filter(row_number() == 1)
-
-
 # create min and max year values 
 wwbiMinYr <- min(wwbi_geo$year)
 wwbiMaxYr <- max(wwbi_geo$year)
@@ -141,7 +133,7 @@ ctynames <- wwbi_geo_shp$ctyname
 save(
   # final wwbi files
   wwbi_geo,
-  wwbi_geo_shp,
+  wwbi_geo_shp, # this file has missing entires...
   wwbi_av,
   names_all,
   # world geo polygon files
