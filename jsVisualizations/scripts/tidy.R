@@ -93,14 +93,34 @@ codes <- c("BI.EMP.TOTL.PB.ZS", "BI.EMP.PWRK.PB.ZS", "BI.EMP.FRML.PB.ZS",
            "BI.EMP.TOTL.PB.MA.ZS",  "BI.EMP.TOTL.PB.FE.ZS",
            "BI.EMP.TOTL.PB.RU.ZS", "BI.EMP.PWRK.PB.UR.ZS") 
 
+# here we'll insert "<br>" to properly render long labels in legends, etc. 
+# But the number of breaks will be dependent on the length of the string, 
+# which we will also generate in the mutate. The number line breaks will 
+# go as follows:
+#   0-40 char: 1 break 
+#   41-80char: 2 breaks
+#   81 >=char: 3 breaks
+
 ## create table of indicator names/codes 
 names_all <- wwbi_raw %>%
   dplyr::distinct(indname, indcode) %>%
   mutate(
-    nameHtml = gsub('^(.{15,25})(\\b)(.{15,25})(\\b)(.+)$',
-                    '\\1<br>\\3<br>\\5',
-                    indname) # insert a <br> for html rendering in multline
-  )
+    length = str_length(indname),
+        # conditional splitting of lines based on length
+    nameHtml = if_else(length <= 40,
+                       true = gsub('^(.{5,20})(\\b)(.+)$',
+                                   '\\1<br>\\3', 
+                                   indname), # 1 break
+                       false = if_else( length >= 41 & length <= 70,
+                                        true = gsub('^(.{5,20})(\\b)(.{10,20})(\\b)(.+)$',
+                                                    '\\1<br>\\3<br>\\5', 
+                                                    indname), # 2 breaks
+                                        false = gsub('^(.{5,20})(\\b)(.{15,25})(\\b)(.{15,25})(\\b)(.+)$',
+                                                     '\\1<br>\\3<br>\\5<br>\\7',
+                                                     indname) # 3 breaks 
+                                        ) #end 2nd ifelse
+                                  ) #end 1st ifelse
+        ) # end mutate
 
 names <- names_all[names_all$indcode %in% codes, ]
 
