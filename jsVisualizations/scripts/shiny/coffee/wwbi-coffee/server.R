@@ -12,6 +12,7 @@ keepvars <- c("ctycode", "ctyname", "year",
 
 # define graph aesthetics
 span = 0.8
+#choices <- setNames(names_all$indcode, names_all$indname)
 
 #       -           -       -     -   -   -   SERVER - - - ---- 
 shinyServer(function(input, output) {
@@ -24,6 +25,22 @@ shinyServer(function(input, output) {
   
   
   #### Data control ----
+  
+  
+  # filter WWBI variables 
+  wwbiVars <- reactive({
+    names_all %>%
+      filter(across(all_of(input$filter)), ~ .x == TRUE)
+  }) 
+  
+  observeEvent(wwbiVars(), {
+    choices <- wbbiVars()
+    updatePickerInput(session = session, 'in.mapfill', choices = choices)
+  })
+  
+
+  
+  
   # filter dataset by year 
   data_yr <- reactive({
     if (input$recent == TRUE) {

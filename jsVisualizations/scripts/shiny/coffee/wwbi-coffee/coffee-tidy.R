@@ -125,7 +125,7 @@ wwbiMinYr <- min(wwbi_geo$year)
 wwbiMaxYr <- max(wwbi_geo$year)
 
 # create country/economy name list 
-ctynames <- wwbi_geo_shp$ctyname
+ctynames <- unique(wwbi_geo$ctyname)
 
 
 
@@ -133,7 +133,6 @@ ctynames <- wwbi_geo_shp$ctyname
 save(
   # final wwbi files
   wwbi_geo,
-  wwbi_geo_shp, # this file has missing entires...
   wwbi_av,
   names_all,
   # world geo polygon files
@@ -149,3 +148,6 @@ save(names_all,
      file = file.path(cafe, "data/ui-data.Rdata"))
 
 
+cols <- c("wage", "employment")
+test <- names_all %>%
+  filter(across(all_of(cols), ~ .x == FALSE))

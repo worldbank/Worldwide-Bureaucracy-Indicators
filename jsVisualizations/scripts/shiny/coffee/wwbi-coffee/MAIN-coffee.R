@@ -16,7 +16,7 @@ worldjson <-
 
 # prepare the coffee
 coffee.tidy = 1 
-run         = 1 
+run         = 0
 
 
 

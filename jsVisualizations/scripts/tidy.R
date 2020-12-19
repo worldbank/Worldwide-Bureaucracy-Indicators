@@ -119,29 +119,29 @@ names_all <- wwbi_raw %>%
                                                      '\\1<br>\\3<br>\\5<br>\\7',
                                                      indname) # 3 breaks 
                                         ) #end 2nd ifelse
-                                  ), #end 1st ifelse
-    wage = if_else(str_detect(names_all$indcode, "BI.WAG"),
+                                  ), #end 1st ifelse 
+    wage = if_else(str_detect(indcode, "BI.WAG"),
                    true = TRUE,
                    false= FALSE),
-    employmnet = if_else(str_detect(names_all$indcode, "BI.EMP"),
+    employment = if_else(str_detect(indcode, "BI.EMP"),
                          true = TRUE,
                          false= FALSE),
-    paidwork = if_else(str_detect(names_all$indcode, "BI.PWK"),
+    paidwork = if_else(str_detect(indcode, "BI.PWK"),
                        true = TRUE,
                        false= FALSE),
-    gender = if_else(str_detect(names_all$indcode, ".FE."),
+    gender = if_else(str_detect(indcode, ".FE."),
                      true = TRUE,
                      false= FALSE),
-    wagepremium = if_else(str_detect(names_all$indcode, "BI.WAG.PREM"),
+    wagepremium = if_else(str_detect(indcode, "BI.WAG.PREM"),
                           true = TRUE,
                           false= FALSE),
-    age = if_else(str_detect(names_all$indcode, "AGES"),
+    age = if_else(str_detect(indcode, "AGES"),
                   true = TRUE,
                   false= FALSE),
-    publicsec = if_else(str_detect(names_all$indcode, ".PUBS."),
+    publicsec = if_else(str_detect(indcode, ".PUBS."),
                         true = TRUE,
                         false= FALSE),
-    privsec = if_else(str_detect(names_all$indcode, ".PRVS."),
+    privsec = if_else(str_detect(indcode, ".PRVS."),
                       true = TRUE,
                       false= FALSE)
         )  # end mutate

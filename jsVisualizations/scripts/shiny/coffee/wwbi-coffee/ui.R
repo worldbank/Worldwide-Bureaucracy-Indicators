@@ -75,6 +75,22 @@ shinyUI(
         # contents of panel
         tags$h4(tags$b("Fill Variable")),
         
+        ## filter
+        pickerInput(
+          'filter', "Categories",
+          choices = c(
+            "Wages" = 'wage',
+            "Employment" = 'employment',
+            "Paid Work" = 'paidwork',
+            "Gender" = 'gender',
+            "Wage Premium" = 'wagepremium',
+            "Age" = 'age',
+            "Public Sector" = 'publicsec',
+            "Private Sector" = 'privsec'
+          ),
+          multiple = TRUE
+        ),
+        
         pickerInput(
           'in.mapfill',
           choices = choices,
