@@ -100,6 +100,7 @@ shinyServer(function(input, output) {
   output$map <- renderLeaflet({
     
     ## build base map base
+     vals$base <- 
       leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 3, lat = 0, lng = 0) %>%
       addTiles()
@@ -154,7 +155,7 @@ shinyServer(function(input, output) {
   observeEvent({
     input$map_zoom
     input$map_center},
-               {vals$current <- getMapData(map) %>% # store current map layer, adjusting the zoom, but can't read from output ob
+               {vals$current <- vals$base %>% # store current map layer, adjusting the zoom, but can't read from output ob
                  setView(zoom = input$map_zoom,
                          lat  = input$map_center$lat,
                          lng  = input$map_center$lng)
