@@ -49,10 +49,11 @@ if (user == 2) {
     # toggles # 
 
 tidy    = 1
-graphs  = 1
-knit    = 1
+graphs  = 0
+knit    = 0
 
-
+# shiny 
+coffee  = 1
 
 
     # run scripts #
@@ -77,11 +78,23 @@ if (knit == 1) {
   )
 }
 
+# shiny 
+if (coffee == 1) {
+  source(file = file.path(repo, "shiny/coffee/wwbi-coffee/MAIN-coffee.R"))
+}
+
+
 
 
 #credits https://www.r-bloggers.com/2018/07/how-to-add-trend-lines-in-r-using-plotly/
 # https://stackoverflow.com/questions/56758733/in-r-use-and-k-as-a-y-axis-labels-for-thousands-of-dollars
 # https://stackoverflow.com/questions/32098836/ggplotly-r-labeling-trace-names
+# pal <- colorBin("YlOrRd", domain = wwbi_geo$gdp_pc2017,
+# https://stackoverflow.com/questions/48953149/dynamic-color-fill-for-polygon-using-leaflet-in-shiny-not-working
+# # https://stackoverflow.com/questions/60058905/addlegend-r-leaflet-based-on-user-input
+# https://stackoverflow.com/questions/4946873/add-row-to-a-data-frame-with-total-sum-for-each-column
+# http://stackoverflow.com/questions/35090883/ddg#35090981
+# https://stackoverflow.com/questions/7455046/how-to-make-graphics-with-transparent-background-in-r-using-ggplot2
+# http://stackoverflow.com/questions/49428073/ddg#49434520
 # https://stackoverflow.com/questions/41895432/mutating-column-in-dplyr-using-rowsums
 # https://stackoverflow.com/questions/52288525/change-tick-mark-labels-to-specific-strings-in-plotly
-# 
