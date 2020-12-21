@@ -1,0 +1,317 @@
+---
+title: Bureaucracy Profile
+output: 
+  pdf_document
+header-includes:
+      - \usepackage{xcolor,sectsty}
+      - \usepackage[framemethod=tikz]{mdframed}
+      - \pagestyle{empty}
+      - \renewcommand{\familydefault}{\sfdefault}
+      - \definecolor{titlecolor}{RGB}{82,150,165}
+      - \definecolor{countrynamecolor}{RGB}{253,236,217}
+      - \definecolor{sectionbox}{RGB}{205,179,155}
+      - \definecolor{sectiontitle}{RGB}{45,82,90}
+      - \newmdenv[	linecolor= titlecolor,	innerleftmargin= 10pt,innerrightmargin	= 10pt, innertopmargin = 15pt,	innerbottommargin	= 5pt,	backgroundcolor = titlecolor]{titlebox}
+      - \newmdenv[linecolor = titlecolor,innerleftmargin = 10pt,innerrightmargin	= 10pt,innertopmargin	 	= 7pt,innerbottommargin	= 10pt,backgroundcolor		= titlecolor]{countrynamebox}
+      - \newmdenv[linecolor			= sectionbox,innerleftmargin		= 0pt, innerrightmargin	= 10pt,innertopmargin		= 10pt,innerbottommargin	= 10pt, backgroundcolor		= sectionbox]{sectionbox}
+      - \makeatletter\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}\begin{flushleft}\begin{titlebox}\Huge\color{white}\textbf{\@title}\@author\end{titlebox}\end{flushleft}\egroup}
+      - \makeatother
+      - \subsectionfont{\color{titlecolor}}
+      - \makeatletter
+params:
+  selected_country: "Argentina"
+---
+
+```{r setup, include=FALSE}
+# Never print codes or warnings
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(fig.width = 10)
+knitr::opts_chunk$set(fig.height = 4.5)
+knitr::opts_chunk$set(fig.show='hold')
+knitr::opts_chunk$set(fig.align='center')
+```
+
+```{r, include = F}
+# 1 Set Initial configs ===============================================================
+
+  # 1.1 Load packages --------------------------------------------------------------
+  library(ggplot2)
+  library(ggrepel)
+  library(viridis)
+  library(plotly)
+  library(gridExtra)
+  library(ggpubr)
+
+  # 1.2 Create theme that will be used for graphs -----------------------------------
+  my_theme <- theme_classic() +
+    theme(legend.position = "bottom",
+          legend.title = (element_blank()),
+          plot.title = element_text(hjust = .5))
+
+  # 1.3 Load the data ---------------------------------------------------------------
+  
+  # Load full data set
+  wwbi <- read.csv("data.csv", header = T,
+                   stringsAsFactors = F)
+
+  # If the country selected is not Thailand, we will not consider it for plot 7,
+  # It is an outlier and distorts the graph
+  plot7_data <- subset(wwbi, ccode!="THA")
+  
+  
+# 2 Calculate section switches ======================================================
+# Some countries will have missing variables. We need to know what variables we have
+# so no empty sections will be displayed, and figures are correctly aligned
+# ================================================================================= #
+  
+  # 2.1 Test if Wage bill section will be displayed and save that in an object ------
+  
+    # 2.1.1 Is the first plot going to be created? -----------------------------------
+    wb_gdp <- !is.na(wwbi$wage_gdp[wwbi$countryname == params$selected_country])
+    
+    # 2.1.2 Is the second plot going to be created? ----------------------------------
+    wb_exp <- !is.na(wwbi$wage_x[wwbi$countryname == params$selected_country])
+      
+    # 2.1.3 If any plots exist, create section ---------------------------------------
+    wagebill <- (wb_gdp | wb_exp)
+  
+ # 2.2 Test if section 2 will be displayed and save that in an object -------
+  
+  # 2.2.1 Is the third plot going to be created? -----------------------------------
+  wb_emp<-!is.na(wwbi$ps1[wwbi$countryname == params$selected_country])
+  # 2.2.2 Is the forth plot going to be created? -----------------------------------
+  wb_age<-!is.na(wwbi$age_mean_1[wwbi$countryname == params$selected_country])
+  # 2.2.3 Is the fifth plot going to be created? -----------------------------------
+  wb_gender<-!is.na(wwbi$female_1[wwbi$countryname == params$selected_country])
+  # 2.2.4 Is the sixth plot going to be created? -----------------------------------
+  wb_edu<-!is.na(wwbi$ed3_1[wwbi$countryname == params$selected_country])
+  # 2.2.5 If any plots exist, create section ---------------------------------------
+  publicemp <- (wb_emp | wb_age | wb_gender | wb_edu)
+  
+  # 2.3 Test if section 3 will be displayed and save that in an object -------
+  wb_premium<-!is.na(wwbi$coefreg[wwbi$countryname == params$selected_country])
+```
+
+`r paste0("\\begin{countrynamebox}\\flushleft\\huge\\color{countrynamecolor}",params$selected_country,"\\end{countrynamebox}")`
+`r if(wagebill){"\\vspace{15pt}\\begin{sectionbox}\\center\\Large\\color{sectiontitle}\\textbf{Wage bill}\\end{sectionbox}"}`
+
+```{r, eval = wagebill}
+# Add graphs for wage bill section
+
+  # Create GDP graph (if we have that information)  
+  if (wb_gdp) {
+    wb_gdp_plot <- 
+      ggplot() +
+        geom_smooth(data = wwbi,
+                    aes(x = lngdppc ,
+                        y = wage_gdp), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+        geom_point(data = wwbi,
+                   aes(x = lngdppc ,
+                       y = wage_gdp,
+                       color = region)) +
+        geom_point(data = wwbi[wwbi$countryname == params$selected_country, ],
+                   aes(x = lngdppc ,
+                       y = wage_gdp),
+                   color = "red", size=3) +
+        geom_label_repel(data = wwbi[wwbi$countryname == params$selected_country, ],
+                         aes(x = lngdppc ,
+                             y = wage_gdp, 
+                             label=paste0(countryname,": ", round(wage_gdp, 0), "% ")),
+                         color = "red") +
+        ylab("Wage bill(%)") + xlab("Log of GDP per capita") +
+        ggtitle("Wage bill as % of GDP") +
+        scale_color_viridis(discrete=TRUE)+
+        my_theme
+  }
+  
+  # Create Expenditure graph (if we have that information)  
+  if (wb_exp) {
+    wb_exp_plot <- 
+      ggplot() +
+        geom_smooth(data = wwbi,
+                    aes(x = lngdppc ,
+                        y = wage_x), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+        geom_point(data = wwbi,
+                   aes(x = lngdppc ,
+                       y = wage_x,
+                       color = region)) +
+        geom_point(data = wwbi[wwbi$countryname == params$selected_country, ],
+                   aes(x = lngdppc ,
+                       y = wage_x),
+                   color = "red", size=3) +
+        geom_label_repel(data = wwbi[wwbi$countryname == params$selected_country, ],
+                         aes(x = lngdppc ,
+                             y = wage_x, 
+                             label=paste0(countryname,": ", round(wage_x, 0), "% ")),
+                         color = "red") +
+        ylab("Wage bill(%)") + xlab("Log of GDP per capita") +
+        ggtitle("Wage bill as % of expenditures") +
+        scale_color_viridis(discrete=TRUE)+
+        my_theme
+  }
+
+  # Print graphs to report -- only print if the variables exist
+  if (wb_gdp & wb_exp) {
+    ggarrange(wb_gdp_plot, wb_exp_plot, ncol=2, common.legend = TRUE, legend="bottom")
+  } else if (wb_gdp & !wb_exp) {
+    wb_gdp_plot
+  } else if (!wb_gdp & wb_exp) {
+    wb_exp_plot
+  }
+```
+
+
+`r if(publicemp){"\\vspace{15pt}\\begin{sectionbox}\\center\\Large\\color{sectiontitle}\\textbf{Public employment}\\end{sectionbox}"}`
+```{r, eval = publicemp}
+
+# Create employment graph (if we have that information)  
+
+if(wb_emp){
+  wb_emp_plot<-ggplot() +
+    geom_smooth(data = wwbi,
+                aes(x = lngdppc ,
+                    y = ps1*100), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+    geom_point(data = wwbi,
+               aes(x = lngdppc ,
+                   y = ps1*100,
+                   color = region)) +
+    geom_point(data = wwbi[wwbi$countryname == params$selected_country, ],
+               aes(x = lngdppc ,
+                   y = ps1*100),
+               color = "red", size=3) +
+    geom_label_repel(data = wwbi[wwbi$countryname == params$selected_country, ],
+                     aes(x = lngdppc ,
+                         y = ps1*100, 
+                         label=paste0(countryname,": ", round(ps1*100, 0), "% ")),
+                     color = "red") +
+    ylab("Public employment(%)") + xlab("Log of GDP per capita") +
+    ggtitle("Public employment as share of wage employment") +
+    scale_color_viridis(discrete=TRUE)+
+    my_theme
+}
+
+# Create age graph (if we have that information)  
+
+if(wb_age){
+  wb_age_plot<-ggplot() +
+    geom_abline(color="grey", linetype="dashed")  +
+    geom_point(data = wwbi,
+               aes(x = age_mean_1 ,
+                   y = age_mean_0,
+                   color = region)) +
+    geom_point(data = wwbi[wwbi$countryname == params$selected_country, ],
+               aes(x = age_mean_1 ,
+                   y = age_mean_0),
+               color = "red", size=3) +
+    geom_label_repel(data = wwbi[wwbi$countryname == params$selected_country, ],
+                     aes(x = age_mean_1 ,
+                         y = age_mean_0, 
+                         label=paste0(countryname, " (",round(age_mean_1, 0), ", " ,round(age_mean_0, 0),")")),
+                     color = "red") +
+    ylab("Private sector") + xlab("Public sector") +
+    ggtitle("Mean age of employees in each sector") +
+    scale_color_viridis(discrete=TRUE)+
+    my_theme
+}
+
+# Create gender graph (if we have that information)  
+
+if(wb_gender){
+  wb_gender_plot<-ggplot() +
+    geom_abline(color="grey", linetype="dashed")  +
+    geom_point(data = wwbi,
+               aes(x = female_1*100 ,
+                   y = female_0*100,
+                   color = region)) +
+    geom_point(data = wwbi[wwbi$countryname == params$selected_country, ],
+               aes(x = female_1*100 ,
+                   y = female_0*100),
+               color = "red", size=3) +
+    geom_label_repel(data = wwbi[wwbi$countryname == params$selected_country, ],
+                     aes(x = female_1*100 ,
+                         y = female_0*100, 
+                         label=paste0(countryname, " (",round(female_1*100, 0), ", " ,round(female_0*100, 0),")")),
+                     color = "red") +
+    ylab("Private sector(%)") + xlab("Public sector(%)") +
+    ggtitle("Gender distribution in each sector") +
+    scale_color_viridis(discrete=TRUE)+
+    my_theme
+}
+
+# Create education graph (if we have that information)  
+
+if(wb_edu){
+  wb_edu_plot<-ggplot() +
+    geom_abline(color="grey", linetype="dashed")  +
+    geom_point(data = wwbi,
+               aes(x = ed3_1*100 ,
+                   y = ed3_0*100,
+                   color = region)) +
+    geom_point(data = wwbi[wwbi$countryname == params$selected_country, ],
+               aes(x = ed3_1*100 ,
+                   y = ed3_0*100),
+               color = "red", size=3) +
+    geom_label_repel(data = wwbi[wwbi$countryname == params$selected_country, ],
+                     aes(x = ed3_1*100 ,
+                         y = ed3_0*100, 
+                         label=paste0(countryname, " (",round(ed3_1*100, 0), ", " ,round(ed3_0*100, 0),")")),
+                     color = "red") +
+    ylab("Private sector(%)") + xlab("Public sector(%)") +
+    ggtitle("Share of employees with tertiary education in each sector") +
+    scale_color_viridis(discrete=TRUE)+
+    my_theme
+}
+# 3.2.3 Print graphs to report
+if (wb_emp & wb_age & wb_gender & wb_edu) {
+  print(ggarrange(wb_gender_plot, wb_edu_plot, ncol=2, common.legend = TRUE, legend="bottom"))
+  print(ggarrange(wb_emp_plot, wb_age_plot, ncol=2, common.legend = TRUE, legend="bottom"))
+} else if (wb_emp & !wb_age & !wb_gender & !wb_edu) {
+  wb_emp_plot
+}  else if (wb_emp & wb_age & wb_gender & !wb_edu) {
+  ggarrange(wb_emp_plot, wb_age_plot, ncol=2, common.legend = TRUE, legend="bottom")
+   wb_gender_plot
+} else if (wb_emp & !wb_age & wb_gender & wb_edu) {
+  ggarrange(wb_emp_plot, wb_gender_plot, ncol=2, common.legend = TRUE, legend="bottom")
+   wb_edu_plot
+}else if (wb_emp & wb_age & !wb_gender & wb_edu) {
+ ggarrange(wb_emp_plot, wb_age_plot, ncol=2, common.legend = TRUE, legend="bottom")
+   wb_edu_plot
+}
+```
+`r if(wb_premium){"\\vspace{15pt}\\begin{sectionbox}\\center\\Large\\color{sectiontitle}\\textbf{Wage premium}\\end{sectionbox}"}`
+
+```{r, eval = wb_premium, fig.width= 6.5, fig.height= 4,fig.show='hold',fig.align='center', warning = F}
+
+
+# Create employment graph (if we have that information)  
+if(wb_premium) {
+  wb_premium_plot<- ggplot() +
+    geom_smooth(data = plot7_data,
+                aes(x = lngdppc ,
+                    y = coefreg), method='lm', formula=y~x, se=FALSE,color="grey", linetype="dashed") +
+    geom_hline(yintercept =0) +
+    geom_point(data = plot7_data,
+               aes(x = lngdppc ,
+                   y = coefreg,
+                   color = region)) +
+    geom_point(data = wwbi[wwbi$countryname == params$selected_country, ],
+               aes(x = lngdppc,
+                   y = coefreg),
+               color = "red", size=3) +
+    geom_label_repel(data = wwbi[wwbi$countryname == params$selected_country, ],
+                     aes(x = lngdppc ,
+                         y = coefreg, 
+                         label=paste0(countryname, ": ",round(coefreg, 2))),
+                     color = "red") +
+    ylab("Wage premium") + xlab("Log of GDP per capita") +
+    ggtitle("Public sector wage premium") +
+    scale_color_viridis(discrete=TRUE)+
+    my_theme 
+}
+
+# 3.3.3 Print graphs to report
+if (wb_premium) {
+ wb_premium_plot
+}
+```
