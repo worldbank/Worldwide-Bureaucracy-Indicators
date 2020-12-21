@@ -114,15 +114,16 @@ shinyServer(function(input, output) {
     
     leafletProxy("map", data = data()) %>%
       clearShapes() %>%
+      addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1) %>% # all countries
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
-                  weight = 0.5, 
+                  weight = 0.5,
                   layerId = ~iso3c,
                   label = ~paste0(ctyname,
                                   " (", year, ")",
-                                  ": ", 
+                                  ": ",
                                   prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
                                                                big.mark = ',' ))
-      ) 
+      )
 
   })
   
