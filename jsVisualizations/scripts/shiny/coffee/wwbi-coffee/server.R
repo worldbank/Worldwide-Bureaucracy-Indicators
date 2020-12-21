@@ -146,6 +146,25 @@ shinyServer(function(input, output) {
     
   })
   
+  # dynamic map view as viewed by user ----
+  
+  # set empty reactive values object 
+  vals <- reactiveValues()
+  
+  observeEvent({
+    input$map_zoom
+    input$map_center},
+               {vals$current <- getMapData(map) %>% # store current map layer, adjusting the zoom, but can't read from output ob
+                 setView(zoom = input$map_zoom,
+                         lat  = input$map_center$lat,
+                         lng  = input$map_center$lng)
+               })
+  
+  output$dl <- downloadHandler(filename = "WWBI_Map.png",
+                              content = function(file) {
+                                mapshot(x = vals$current, # defined above
+                                        file = file)
+                              } )
 
   
   #### Map subplots ---- 

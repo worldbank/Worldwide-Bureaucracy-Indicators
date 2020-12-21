@@ -95,6 +95,7 @@ if (coffee == 1) {
 # https://stackoverflow.com/questions/4946873/add-row-to-a-data-frame-with-total-sum-for-each-column
 # http://stackoverflow.com/questions/35090883/ddg#35090981
 # https://stackoverflow.com/questions/7455046/how-to-make-graphics-with-transparent-background-in-r-using-ggplot2
+# http://stackoverflow.com/questions/49428073/ddg#49434520
 # 
 
 
