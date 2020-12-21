@@ -100,11 +100,9 @@ shinyServer(function(input, output) {
   output$map <- renderLeaflet({
     
     ## build base map base
-     vals$base <- 
-      leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
+    leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 3, lat = 0, lng = 0) %>%
-      addTiles()
-     # tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)
+      addTiles(options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) 
      
   })
   
@@ -149,23 +147,26 @@ shinyServer(function(input, output) {
   
   # dynamic map view as viewed by user ----
   
-  # set empty reactive values object 
-  vals <- reactiveValues()
-  
-  observeEvent({
-    input$map_zoom
-    input$map_center},
-               {vals$current <- vals$base %>% # store current map layer, adjusting the zoom, but can't read from output ob
-                 setView(zoom = input$map_zoom,
-                         lat  = input$map_center$lat,
-                         lng  = input$map_center$lng)
-               })
-  
-  output$dl <- downloadHandler(filename = "WWBI_Map.png",
-                              content = function(file) {
-                                mapshot(x = vals$current, # defined above
-                                        file = file)
-                              } )
+ #  # set empty reactive values object 
+ #  vals <- reactiveValues()
+ #  
+ # # vals$base <- output$map
+ #  
+ #  observeEvent({
+ #    input$map_zoom
+ #    input$map_center},
+ #               {vals$current <- vals$base # store current map layer, adjusting the zoom, but can't read from output ob
+ #                 # setView(zoom = input$map_zoom, # set zoom level to that of current view
+ #                 #         lat  = input$map_center$lat, # set the lat to the center lat coord of current view
+ #                 #         lng  = input$map_center$lng
+ #                #         ) # set the lng to the center lng coord of current view
+ #               })
+ #  
+ #  output$dl <- downloadHandler(filename = "WWBI_Map.png",
+ #                              content = function(file) {
+ #                                mapshot(x = vals$current(), # defined above
+ #                                        file = file)
+ #                              } )
 
   
   #### Map subplots ---- 
