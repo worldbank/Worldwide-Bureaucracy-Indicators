@@ -92,3 +92,40 @@ RColorBrewer::display.brewer.all()
 ```
 
 
+### 4 : Heatmap / Traffic light map 
+
+The only thing to note here is that there are too many countries to have the plot render all of the text on the y axis. Alternatives I can think of include: <br>
+- simply not including the y axis labels (the mouse over does include country labels...)
+- make the graph longer so that all the names render (see next figure)
+
+```{r} 
+hmp
+```
+
+#### 4.2: long heatmap
+
+
+```{r, fig.height=18} 
+hmp
+```
+
+
+
+### 5: Wage bill vs log GDP per capita
+There are two different measures for wage bill as percent of GDP, so I made each sepeartely and tried putting them on the same graph
+
+```{r}
+p9a
+```
+
+
+5.2
+```{r}
+p9b
+```
+
+5.3: combined 
+```{r}
+p9c
+```
+

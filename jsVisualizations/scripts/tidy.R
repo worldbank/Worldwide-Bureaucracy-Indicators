@@ -12,12 +12,32 @@ library(lubridate)
 library(forcats)
 library(WDI)
 library(stringr)
-
-
+library(scales)
+library(sjmisc)
 
 
                               #     Load Data     # ----
                               
+
+# load cross-country comparison data
+wwbi_x <- read_xlsx(
+  path = file.path(wwbi_dat, "Cross-country wage comparison data.xlsx"),
+  na = ""
+) %>%
+  rename(
+    "ctyname" = `Country Name`,
+    "ctycode" = `Country Code`,
+    "region"  = Region,
+    "IncomeLevel" = "Income Level",
+    "SeniorOfficial" = "Senior official",
+    "HospitalDoctor" = "Hospital doctor",
+    "HospitalNurse"  = "Hospital nurse",
+    "GovernmentEconomist" = "Government economist",
+    "UniversityTeacher" = "University teacher",
+    "SecondarySchoolTeacher" = "Secondary school teacher",
+    "PrimarySchoolTeacher" = "Primary school teacher",
+    "PoliceOfficer" = "Police officer"
+  ) 
 
 
 # load WDI metadata, main 'micro' data
@@ -287,6 +307,52 @@ subset2 <- wwbi %>%
   group_by(ctyname) %>%
   filter(row_number() <= 3)
 
+
+
+
+
+
+
+
+
+                                # wrangling the cross country comparison # ----
+# for the heatmap we have to have in long format 
+varlist1 <- c("SeniorOfficial", "Judge", "HospitalDoctor", "HospitalNurse",
+              "GovernmentEconomist", "UniversityTeacher", "SecondarySchoolTeacher",
+              "PrimarySchoolTeacher", "PoliceOfficer") # abbreviations are wonderful
+
+# create n miss by variable tibble.
+n.miss <- as.data.frame(colSums(is.na(wwbi_x))) %>%
+  mutate(
+    var = rownames(.)
+  ) %>%
+  rename(nmiss = "colSums(is.na(wwbi_x))") %>%
+  as.tibble() %>%
+  filter(row_number() >= 5) %>%
+  arrange(nmiss)
+
+
+wwbi_hmp <- wwbi_x %>%
+  mutate( # generate total
+    total = rowSums(.[5:13], na.rm = TRUE)
+  ) %>%
+  pivot_longer(
+    cols = varlist1,
+    names_to = "indicator"
+  ) %>%
+  filter(!is.na(value)) %>% # remove rows with missing values
+  arrange(-total)
+
+wwbi_hmp %>%
+  group_by(indicator) %>%
+  dplyr::summarize(sum(is.na(wwbi_hmp$value)))
+
+# rescale 'value' to have 1 as midpoint (1 indicates global average)
+  wwbi_hmp <- wwbi_hmp %>%
+  mutate(
+    value_scl = rescale_mid(wwbi_hmp$value, to = c(0,2), mid = 1)
+    
+  )
 
 
 

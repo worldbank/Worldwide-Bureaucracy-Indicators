@@ -71,9 +71,9 @@ if (graphs == 1) {
 # knit rmd document to html 
 if (knit == 1) {
   rmarkdown::render(
-    input = file.path(repo, "sample-wwbi-v1_1.Rmd"),
+    input = file.path(repo, "sample-wwbi-v1_2.Rmd"),
     output_format = 'html_document',
-    output_file = file.path(wwbi_out, "wwbi-v1-1.html"),
+    output_file = file.path(wwbi_out, "wwbi-v1-2.html"),
     quiet = FALSE
   )
 }
@@ -96,8 +96,5 @@ if (coffee == 1) {
 # http://stackoverflow.com/questions/35090883/ddg#35090981
 # https://stackoverflow.com/questions/7455046/how-to-make-graphics-with-transparent-background-in-r-using-ggplot2
 # http://stackoverflow.com/questions/49428073/ddg#49434520
-# 
-
-
-
-
+# https://stackoverflow.com/questions/41895432/mutating-column-in-dplyr-using-rowsums
+# https://stackoverflow.com/questions/52288525/change-tick-mark-labels-to-specific-strings-in-plotly

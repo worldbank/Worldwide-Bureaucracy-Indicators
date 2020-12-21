@@ -1,0 +1,61 @@
+---
+title: "WWBI Graphs"
+author: "Bureaucracy Lab"
+date: "9 December, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(plotly)
+library(rmarkdown)
+library(RColorBrewer)
+knitr::opts_chunk$set(
+  echo = FALSE, warning = FALSE, fig.width = 10, fig.height = 10)
+
+
+wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+
+load(file = file.path(wwbi_dat, "wwbi.Rdata"))
+
+```
+
+# Introduction
+
+This document presents draft figures of the Worldwide Bureaucracy Indicators for potential use in future, public-facing digital mediums. In constructing the images, we prioritized user functionality and transparency. The figures contain features that most users expect nowadays from high-quality websites, including including hovertext and legend interactivity, as well as the ability to download the image directly from the browser. Furthermore, the figures use publicly-available data and can be reproduced with code from the WWBI GitHub [repository](https://github.com/worldbank/Worldwide-Bureaucracy-Indicators) so that researchers or more curious users can see eactly how the graphs were developed.
+
+
+
+# Graphs 
+
+## Figure 1
+```{r}
+f1
+```
+
+## Figure 2.1
+```{r}
+f2.1
+```
+
+
+## Figure 2.2
+```{r}
+f2.2
+```
+
+## Figure 2.3
+```{r}
+f2.3
+```
+
+## Figure 3
+```{r}
+f3
+```
+
+## Figure 4
+```{r, fig.height=18} 
+hmp
+```
+
+Note: The figure presents the ratio of public sector wages for specific occupations within a country/economy to the global median – taken as 1.  Ratio’s above 1 indicate a cross-country premium for the indexed occupation compared to the global median (shaded X) while ratio’s below 1 indicate a negative cross-country premium (shaded Y). Blank cells show no available data.
