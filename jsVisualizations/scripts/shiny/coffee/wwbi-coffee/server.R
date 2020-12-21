@@ -97,14 +97,16 @@ shinyServer(function(input, output) {
   
 
   #### map ####
-  output$map <- renderLeaflet({
-    
-    ## build base map base
+  
+  # build a basemap
+  basemap <- reactive({
     leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 3, lat = 0, lng = 0) %>%
       addTiles(options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) 
-     
+    
   })
+    
+  output$map <- renderLeaflet({ basemap() })
   
 
   
@@ -148,31 +150,27 @@ shinyServer(function(input, output) {
   
   # dynamic map view as viewed by user ----
   
- #  # set empty reactive values object 
- #  vals <- reactiveValues()
- #  
- # # vals$base <- output$map
- #  
- #  observeEvent({
- #    input$map_zoom
- #    input$map_center},
- #               {vals$current <- vals$base # store current map layer, adjusting the zoom, but can't read from output ob
- #                 # setView(zoom = input$map_zoom, # set zoom level to that of current view
- #                 #         lat  = input$map_center$lat, # set the lat to the center lat coord of current view
- #                 #         lng  = input$map_center$lng
- #                #         ) # set the lng to the center lng coord of current view
- #               })
- #  
- #  output$dl <- downloadHandler(filename = "WWBI_Map.png",
- #                              content = function(file) {
- #                                mapshot(x = vals$current(), # defined above
- #                                        file = file)
- #                              } )
+  # set empty reactive values object
+  user.map <- reactive({
+    basemap() %>%
+      setView(zoom = input$map_zoom, # set zoom level to that of current view
+              lat  = input$map_center$lat, # set the lat to the center lat coord of current view
+              lng  = input$map_center$lng
+      ) # set the lng to the center lng coord of current view
+      
+  })
 
-  
-  #### Map subplots ---- 
+
+  output$dl <- downloadHandler(filename = "WWBI_Map.png",
+                               content = function(file) {
+                                 mapshot(x = user.map(), # defined above
+                                        file = file)
+                              } )
+
+
+  #### Map subplots ----
   #output$clickplot <- renderText({as.character(input$map_shape_click$id) })
-  
+
   
   
   
@@ -219,6 +217,8 @@ shinyServer(function(input, output) {
       scale_color_manual(values = c("#00bfff", "World Average" = "#708090"))
 
   })
+  
+  output$list <- renderPrint({reactiveValuesToList(input)})
   
   
   

@@ -52,7 +52,7 @@ shinyUI(
     tabPanel("Map",
              
       #  tags$style(type = 'text/css', 'html, body {width:100%;height:100%}'),
-        
+        verbatimTextOutput('list'),
       # map   
       leafletOutput('map', height = '800px', width = '100%'),
       
