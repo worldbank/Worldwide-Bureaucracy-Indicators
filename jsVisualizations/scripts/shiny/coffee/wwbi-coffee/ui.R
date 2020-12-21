@@ -48,7 +48,7 @@ choices <- setNames(names_all$indcode, names_all$indname)
 
 #       -           -       -     -   -   -   UI - - - ---- 
 shinyUI(
-  navbarPage( "Coffee Table",
+  navbarPage( "WWBI Data Explorer",
     tabPanel("Map",
              
       #  tags$style(type = 'text/css', 'html, body {width:100%;height:100%}'),
@@ -119,7 +119,9 @@ shinyUI(
         tags$h4(tags$b("Options")),
         
         materialSwitch("plot", "Show Plot",status = 'primary', TRUE, right = T),
-        materialSwitch("legend", "Show Legend",status = 'primary', TRUE, right = T)
+        materialSwitch("legend", "Show Legend",status = 'primary', TRUE, right = T),
+        
+        downloadButton('dl', "Download Current Map")
         
       )) # end absolute panel; wellpanel
       

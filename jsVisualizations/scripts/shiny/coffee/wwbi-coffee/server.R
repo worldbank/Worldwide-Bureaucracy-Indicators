@@ -28,15 +28,15 @@ shinyServer(function(input, output) {
   
   
   # filter WWBI variables 
-  wwbiVars <- reactive({
-    names_all %>%
-      filter(across(all_of(input$filter)), ~ .x == TRUE)
-  }) 
+  # wwbiVars <- reactive({
+  #   names_all %>%
+  #     filter(across(all_of(input$filter)), ~ .x == TRUE)
+  # }) 
   
-  observeEvent(wwbiVars(), {
-    choices <- wbbiVars()
-    updatePickerInput(session = session, 'in.mapfill', choices = choices)
-  })
+  # observeEvent(wwbiVars(), {
+  #   choices <- wbbiVars()
+  #   updatePickerInput(session = session, 'in.mapfill', choices = choices)
+  # })
   
 
   

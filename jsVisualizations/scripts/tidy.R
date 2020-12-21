@@ -144,7 +144,18 @@ names_all <- wwbi_raw %>%
     privsec = if_else(str_detect(indcode, ".PRVS."),
                       true = TRUE,
                       false= FALSE)
-        )  # end mutate
+        ) %>% # end mutate
+  arrange(indcode) %>% # alpha sort by indcode 
+  mutate(id = row_number()) %>%
+  select(id, everything()) # put id column first 
+  # mutate(
+  #   category = case_when(id>=1 & id <=13 ~ "Public Employment",
+  #                        id>=15 & id <=18 ~ "Age",
+  #                       id=                  ~ "Gender: Public Sector",
+  #                                         ~ "Gender: Private Sector",
+  #                        )
+  # )
+
 
 
 
