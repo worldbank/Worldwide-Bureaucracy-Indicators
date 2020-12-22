@@ -106,7 +106,9 @@ shinyServer(function(input, output) {
       addEasyButton(easyButton(
         icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
       ))
-    
+    # to use a non-labeld map, from ESRI, use this call. But we have to register for free in their database before we
+    # use. 
+    # leaflet(data = world_geo) %>% addProviderTiles(providers$Esri.WorldShadedRelief)
   })
     
   output$map <- renderLeaflet({ basemap() })
