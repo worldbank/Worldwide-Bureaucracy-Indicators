@@ -103,7 +103,6 @@ shinyUI(
         tags$h4(tags$b("Year")),
         switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'small'),
         
-        #tags$h5("Select Year"),
         conditionalPanel(
           condition = "input.recent == false",
           sliderInput(

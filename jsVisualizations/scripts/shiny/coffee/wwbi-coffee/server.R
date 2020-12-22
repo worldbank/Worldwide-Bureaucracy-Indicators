@@ -101,8 +101,11 @@ shinyServer(function(input, output) {
   # build a basemap
   basemap <- reactive({
     leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
-      setView(zoom = 3, lat = 0, lng = 0) %>%
-      addTiles(options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) 
+      setView(zoom = 2, lat = 0, lng = 0) %>%
+      addTiles(options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
+      addEasyButton(easyButton(
+        icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
+      ))
     
   })
     
