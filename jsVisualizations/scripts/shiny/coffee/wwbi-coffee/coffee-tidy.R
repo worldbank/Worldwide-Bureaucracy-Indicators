@@ -37,7 +37,7 @@ world_sf     <-   # working version
   select(worldVars)  
 
 world_geo    <- world_sf %>%
-  select("ISO_A3", "geometry")
+  select("ISO_A3", "NAME_EN", "geometry")
 
 
 
