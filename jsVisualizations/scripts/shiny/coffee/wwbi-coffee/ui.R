@@ -52,7 +52,7 @@ shinyUI(
     tabPanel("Map",
              
       #  tags$style(type = 'text/css', 'html, body {width:100%;height:100%}'),
-        
+     #   verbatimTextOutput('list'),
       # map   
       leafletOutput('map', height = '800px', width = '100%'),
       
@@ -103,7 +103,6 @@ shinyUI(
         tags$h4(tags$b("Year")),
         switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'small'),
         
-        #tags$h5("Select Year"),
         conditionalPanel(
           condition = "input.recent == false",
           sliderInput(

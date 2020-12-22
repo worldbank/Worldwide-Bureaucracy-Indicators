@@ -97,15 +97,20 @@ shinyServer(function(input, output) {
   
 
   #### map ####
-  output$map <- renderLeaflet({
-    
-    ## build base map base
-      leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
-      setView(zoom = 3, lat = 0, lng = 0) %>%
-      addTiles()
-     # tileOptions(minZoom = 4, maxZoom = 12, noWrap = TRUE, detectRetina = TRUE)
-     
+  
+  # build a basemap
+  basemap <- reactive({
+    leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
+      setView(zoom = 2, lat = 0, lng = 0) %>%
+      addProviderTiles(
+        'CartoDB.VoyagerNoLabels', # this map is free to use for non-commerical purposes, we must also keep citation
+        options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
+      addEasyButton(easyButton(
+        icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
+      ))
   })
+    
+  output$map <- renderLeaflet({ basemap() })
   
 
   
@@ -115,15 +120,17 @@ shinyServer(function(input, output) {
     
     leafletProxy("map", data = data()) %>%
       clearShapes() %>%
+      addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1,
+                  label = ~paste0(NAME_EN, ": Not in WWBI")) %>% # all countries
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
-                  weight = 0.5, 
+                  weight = 0.5,
                   layerId = ~iso3c,
                   label = ~paste0(ctyname,
                                   " (", year, ")",
-                                  ": ", 
+                                  ": ",
                                   prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
                                                                big.mark = ',' ))
-      ) 
+      )
 
   })
   
@@ -148,28 +155,29 @@ shinyServer(function(input, output) {
   
   # dynamic map view as viewed by user ----
   
-  # set empty reactive values object 
-  vals <- reactiveValues()
-  
-  observeEvent({
-    input$map_zoom
-    input$map_center},
-               {vals$current <- getMapData(map) %>% # store current map layer, adjusting the zoom, but can't read from output ob
-                 setView(zoom = input$map_zoom,
-                         lat  = input$map_center$lat,
-                         lng  = input$map_center$lng)
-               })
-  
-  output$dl <- downloadHandler(filename = "WWBI_Map.png",
-                              content = function(file) {
-                                mapshot(x = vals$current, # defined above
-                                        file = file)
+  # set empty reactive values object
+  user.map <- reactive({
+    basemap() %>%
+      setView(zoom = input$map_zoom, # set zoom level to that of current view
+              lat  = input$map_center$lat, # set the lat to the center lat coord of current view
+              lng  = input$map_center$lng
+      ) # set the lng to the center lng coord of current view
+      
+  })
+
+
+  output$dl <- downloadHandler(
+    filename = function() {
+      paste0(input$in.mapfill, ".png")
+    },
+     content = function(file) {
+       mapshot(basemap(), file, cliprect = "viewport", selfcontained = FALSE, debug = TRUE)
                               } )
 
-  
-  #### Map subplots ---- 
+
+  #### Map subplots ----
   #output$clickplot <- renderText({as.character(input$map_shape_click$id) })
-  
+
   
   
   
@@ -216,6 +224,8 @@ shinyServer(function(input, output) {
       scale_color_manual(values = c("#00bfff", "World Average" = "#708090"))
 
   })
+  
+  output$list <- renderPrint({reactiveValuesToList(input)})
   
   
   
