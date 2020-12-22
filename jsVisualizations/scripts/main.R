@@ -99,4 +99,5 @@ if (coffee == 1) {
 # https://stackoverflow.com/questions/41895432/mutating-column-in-dplyr-using-rowsums
 # https://stackoverflow.com/questions/52288525/change-tick-mark-labels-to-specific-strings-in-plotly
 # https://stackoverflow.com/questions/36365897/r-leaflet-zoomcontrol-option
+# https://go.carto.com/hubfs/CARTO-Free-Basemaps-Terms-of-Service.pdf
 # 

@@ -102,7 +102,9 @@ shinyServer(function(input, output) {
   basemap <- reactive({
     leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 2, lat = 0, lng = 0) %>%
-      addTiles(options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
+      addProviderTiles(
+        'CartoDB.VoyagerNoLabels', # this map is free to use for non-commerical purposes, we must also keep citation
+        options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
       addEasyButton(easyButton(
         icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
       ))
@@ -121,7 +123,8 @@ shinyServer(function(input, output) {
     
     leafletProxy("map", data = data()) %>%
       clearShapes() %>%
-      addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1) %>% # all countries
+      addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1,
+                  label = ~ISO_A3) %>% # all countries
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
                   weight = 0.5,
                   layerId = ~iso3c,
