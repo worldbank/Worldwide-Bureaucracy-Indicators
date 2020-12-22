@@ -36,14 +36,16 @@ crxcountry<- file.path(wwbi_dat, "Cross-country wage comparison data.xlsx") # po
 
 }
 
-# for ??
+# for User 2
 if (user == 2) {
   # scripts
   code_top <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators"
-  repo <- file.path(code_top, "jsVisualizations/scripts")
+  repo     <- file.path(code_top, "Visuals")
   # data 
-  wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+  wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi" # points eventually to wwbi version 2.0
   wwbi_out <- file.path(wwbi_dat, "output")
+  crxcountry<- file.path(wwbi_dat, "Cross-country wage comparison data.xlsx") # points to cross comparison version 2.0
+
 }
 
 
@@ -51,12 +53,12 @@ if (user == 2) {
 
     # toggles # 
 
-tidy    = 1
-graphs  = 1
-knit    = 1
+tidy    = 0
+graphs  = 0
+knit    = 0
 
 # shiny 
-coffee  = 0
+coffee  = 1
 
 
     # run scripts #
@@ -83,7 +85,7 @@ if (knit == 1) {
 
 # shiny 
 if (coffee == 1) {
-  source(file = file.path(repo, "Dashboards/wwbiV2/MAIN-coffee.R"))
+  source(file = file.path(repo, "Dashboards/wwbiV2/MAIN-wwbiV2.R"))
 }
 
 
