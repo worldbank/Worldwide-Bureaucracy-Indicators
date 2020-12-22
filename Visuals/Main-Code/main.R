@@ -1,7 +1,15 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 # main.R
-# runs all disparate scripts for bl-data-vis graphs
+# runs all scripts for data wrangling, graph objects, shiny data, etc
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+
+
+          # Description:
+# This main script runs all post-processing for the WWBI after the construction of the
+# main dataset, including:
+#   - joining the WWBI with WDI information, and WB polygon info
+#   - generating the graph objects for the static visuals in Visuals/jsVisualzations
+#   - generating the data objects that feed into the WWBI shiny app in Visuals/Dashboards 
 
 
 library(tidyverse)
