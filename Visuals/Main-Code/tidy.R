@@ -21,7 +21,7 @@ library(sjmisc)
 
 # load cross-country comparison data
 wwbi_x <- read_xlsx(
-  path = file.path(wwbi_dat, "Cross-country wage comparison data.xlsx"),
+  path = crxcountry,
   na = ""
 ) %>%
   rename(
@@ -41,7 +41,7 @@ wwbi_x <- read_xlsx(
 
 
 # load WDI metadata, main 'micro' data
-wdi_meta <- WDI_data
+wdi_meta <- WDI::WDI_data
 wdi_dny  <- as_tibble(wdi_meta$country)
 
 
@@ -66,10 +66,11 @@ wdi <-
 
 
 # load previously-made wwbi-wdi country dictionary to retreive regions etc 
-extra <-
-  read_dta(
-    file = "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/WDI/WDI_country_names.dta"
-    )
+# Not needed?
+# extra <-
+#   read_dta(
+#     file = "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/WDI/WDI_country_names.dta"
+#     )
 
 
 # load wwbi, change names, get rid of "...24"
