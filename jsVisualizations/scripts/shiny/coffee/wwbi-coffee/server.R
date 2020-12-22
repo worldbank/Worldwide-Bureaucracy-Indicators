@@ -171,9 +171,7 @@ shinyServer(function(input, output) {
       paste0(input$in.mapfill, ".png")
     },
      content = function(file) {
-       mapshot(basemap(), file)
-                                        # vwidth = input$dimension[1],
-                                        # vheight= input$dimension[2])
+       mapshot(basemap(), file, cliprect = "viewport", selfcontained = FALSE, debug = TRUE)
                               } )
 
 
