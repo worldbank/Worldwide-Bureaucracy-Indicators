@@ -68,7 +68,7 @@ if (tidy == 1) {
 
 # generate graphs
 if (graphs == 1) {
-  source(file = file.path(repo, "jsVisualizations/graphs.R"))
+  source(file = file.path(repo, "Main-Code/graphs.R"))
 }
 
 # knit rmd document to html 
