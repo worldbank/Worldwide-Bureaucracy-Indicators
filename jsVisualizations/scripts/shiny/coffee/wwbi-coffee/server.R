@@ -166,10 +166,14 @@ shinyServer(function(input, output) {
   })
 
 
-  output$dl <- downloadHandler(filename = "WWBI_Map.png",
-                               content = function(file) {
-                                 mapshot(x = user.map(), # defined above
-                                        file = file)
+  output$dl <- downloadHandler(
+    filename = function() {
+      paste0(input$in.mapfill, ".png")
+    },
+     content = function(file) {
+       mapshot(basemap(), file)
+                                        # vwidth = input$dimension[1],
+                                        # vheight= input$dimension[2])
                               } )
 
 
