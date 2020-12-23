@@ -176,10 +176,8 @@ shinyServer(function(input, output) {
 
 
   #### Map subplots ----
-  #output$clickplot <- renderText({as.character(input$map_shape_click$id) })
 
-  
-  
+
   
   ## subset main dataframe with coords from click
   
@@ -200,8 +198,34 @@ shinyServer(function(input, output) {
   
   # generate a little ggplot
   output$clickplot <- renderPlot({
+    # generate the base graph 
+    ggbase <- 
+      ggplot(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
+             aes(year, eval(as.symbol(input$in.mapfill)), color = ctyname)) +
+      geom_point() + # color = '#708090'
+      stat_smooth(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
+                  aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
+                  method = 'loess', # , color = '#000000'
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
+      labs(y = "", x = "" , color = "") +
+      theme_classic() +
+      theme(panel.background = element_rect(fill = 'transparent', color = NA),
+            plot.background = element_rect(fill = 'transparent', color = NA),
+            legend.position = 'top',
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank()) +
+      scale_color_manual(values = c("World Average" = "#708090"))
+      
+      
+      
+      
+      
+    # if no click, generate the world average of the default variable
     if (is.null(countryclick() ))
-      return(NULL)
+      return(
+          ggbase
+      )
+    #otherwise return the average with the element selected
     ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill)), color = ctyname)) +
       geom_point() + #  color = '#00bfff'
       stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), span = span),

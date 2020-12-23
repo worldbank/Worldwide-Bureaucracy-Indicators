@@ -65,7 +65,7 @@ shinyUI(
 
         
           
-        # clickplot 
+        # clickplot
         conditionalPanel(
           condition = "input.plot == true",
           plotOutput('clickplot', height = 200, width = 250)
