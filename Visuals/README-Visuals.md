@@ -1,0 +1,2 @@
+# README-Visuals.md
+The `Visuals` folder contains all the javascript-based and shiny-based visualizations for the WWBI. The folder also includes the code necessary for creating these visuals. The generalized code for all post-WWBI processing is under `~/Visuals/Main-Code` and code that is relevant only to specific projects is located in the relevant folder. Note though, that all code can be called from the main script `~/Visuals/Main-Code/main.R`.
