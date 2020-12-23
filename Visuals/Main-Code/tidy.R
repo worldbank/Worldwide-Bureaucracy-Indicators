@@ -65,13 +65,6 @@ wdi <-
 
 
 
-# load previously-made wwbi-wdi country dictionary to retreive regions etc 
-# Not needed?
-# extra <-
-#   read_dta(
-#     file = "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/WDI/WDI_country_names.dta"
-#     )
-
 
 # load wwbi, change names, get rid of "...24"
 wwbi_raw <- read_xlsx(
@@ -166,21 +159,30 @@ names_all <- wwbi_raw %>%
                       true = TRUE,
                       false= FALSE)
         ) %>% # end mutate
+  separate(.,
+    col = indcode, 
+    into = c("cat1", "cat2", "cat3", "cat4", "cat5"),
+    sep = "\\.",
+    remove = FALSE
+  ) %>%
   arrange(indcode) %>% # alpha sort by indcode 
   mutate(id = row_number()) %>%
   select(id, everything()) # put id column first 
-  # mutate(
-  #   category = case_when(id>=1 & id <=13 ~ "Public Employment",
-  #                        id>=15 & id <=18 ~ "Age",
-  #                       id=                  ~ "Gender: Public Sector",
-  #                                         ~ "Gender: Private Sector",
-  #                        )
-  # )
-
-
-
-
-
+  
+# names_fltr <- names_all %>%
+#   select(indname, indcode, starts_with("cat")) %>%
+#   pivot_longer(cols= starts_with("cat"),
+#                values_to = "tags"
+#                ) 
+# 
+# names_fltr %>% filter()
+# 
+# names_all %>% filter(across(starts_with("cat"), ~ str_detect(.x, "WAG") == TRUE )) #  !is.na(.x) 
+# 
+# str_detect(names_all$cat2, "WAG")
+# 
+# # but the problem is that this may work for one indicator but if we include multiple options this logic
+# # won't be able to filter multile entries sepearated by a character.
 
 # generate a category variable 
 

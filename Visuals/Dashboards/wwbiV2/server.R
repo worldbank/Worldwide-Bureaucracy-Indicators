@@ -86,6 +86,7 @@ shinyServer(function(input, output) {
   
   # aesthetics ----
   
+
   # color pallete
   colorpal <- reactive({
     colorNumeric("YlOrRd", NULL)
@@ -207,7 +208,8 @@ shinyServer(function(input, output) {
                   aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
                   method = 'loess', # , color = '#000000'
                   linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
-      labs(y = "", x = "" , color = "") +
+      labs(title = "",
+           y = "", x = "" , color = "") +
       theme_classic() +
       theme(panel.background = element_rect(fill = 'transparent', color = NA),
             plot.background = element_rect(fill = 'transparent', color = NA),
