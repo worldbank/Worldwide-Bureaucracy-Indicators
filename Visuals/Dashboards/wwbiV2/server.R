@@ -15,7 +15,7 @@ span = 0.8
 #choices <- setNames(names_all$indcode, names_all$indname)
 
 #       -           -       -     -   -   -   SERVER - - - ---- 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
 
     # reactive values ----
   year <- reactive({input$in.year})
@@ -29,14 +29,31 @@ shinyServer(function(input, output) {
   
   # filter WWBI variables 
   # wwbiVars <- reactive({
-  #   names_all %>%
-  #     filter(across(all_of(input$filter)), ~ .x == TRUE)
-  # }) 
-  
-  # observeEvent(wwbiVars(), {
-  #   choices <- wbbiVars()
-  #   updatePickerInput(session = session, 'in.mapfill', choices = choices)
+  #   table.filter <-
+  #     names_all %>%
+  #       filter_at(vars(starts_with("cat")),
+  #                 any_vars(. %in% input$filter ))
+  #   
+  #   name.filter <-setNames(table.filter$indcode, table.filter$indname)
+  #   
+  #   return(name.filter)
   # })
+  
+  observeEvent(input$filter, {
+    
+      table.filter <-
+        names_all %>%
+        filter_at(vars(starts_with("cat")),
+                  any_vars(. %in% input$filter ))
+      
+      name.filter <- setNames(table.filter$indcode, table.filter$indname)
+      
+    
+    
+    updatePickerInput(session = session, inputId = 'in.mapfill', 
+                      choices = name.filter)
+    
+  })
   
 
   

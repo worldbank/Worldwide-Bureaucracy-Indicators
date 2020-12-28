@@ -37,7 +37,8 @@ mapfill.choices <-
     "Females, as a share of public paid employees" = "BI.PWK.PUBS.FE.ZS"
   )
 
-choices <- setNames(names_all$indcode, names_all$indname)
+choices       <- setNames(names_all$indcode, names_all$indname)
+filterChoices <- c("FRML", "TOTL", "PWK", "EMP", "AGES") # later, gather names in one col, distinct, set names
 
 
 ## define wellPanel options
@@ -81,16 +82,7 @@ shinyUI(
         ## filter
         pickerInput(
           'filter', "Categories",
-          choices = c(
-            "Wages" = 'wage',
-            "Employment" = 'employment',
-            "Paid Work" = 'paidwork',
-            "Gender" = 'gender',
-            "Wage Premium" = 'wagepremium',
-            "Age" = 'age',
-            "Public Sector" = 'publicsec',
-            "Private Sector" = 'privsec'
-          ),
+          choices = filterChoices,
           multiple = TRUE
         ),
         

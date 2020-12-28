@@ -61,7 +61,7 @@ if (user == 2) {
 
     # toggles # 
 
-tidy    = 0
+tidy    = 1
 graphs  = 0
 knit    = 0
 
