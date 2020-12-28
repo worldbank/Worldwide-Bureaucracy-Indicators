@@ -87,7 +87,11 @@ shinyUI(
         pickerInput(
           'filter', "Categories",
           choices = filterChoices,
-          multiple = TRUE
+          selected = NULL,
+          multiple = TRUE,
+          width = '250px',
+          options = list(
+                         `deselectAllText` = TRUE)
         ),
         
         pickerInput(
@@ -96,7 +100,8 @@ shinyUI(
           selected = "BI.WAG.TOTL.GD.ZS",
           multiple = FALSE,
           width = '250px',
-          options = list(`live-search` = TRUE, `mobile` = FALSE, `dropupAuto` = TRUE, `size` = 10)
+          options = list(`live-search` = TRUE, `mobile` = FALSE,
+                         `dropupAuto` = TRUE, `size` = 10)
         ),
         
         tags$h4(tags$b("Year")),

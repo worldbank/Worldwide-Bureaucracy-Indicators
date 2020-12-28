@@ -202,30 +202,29 @@ filter_tags <-
                names_to  = "tagno",
                values_to = "tag")
 
-filter_table <- as.tibble(unique(tags$tag)) %>%
+filter_table <- as.tibble(unique(filter_tags$tag)) %>%
   rename(tag = value) %>%
   mutate(
     desc = 
       case_when(tag == "EMP"  ~ "Employment", # add abitger column
                 tag == "FRML" ~ "Formal Employment",
-                tag == "PB"   ~ "Public Sector",
+                tag == "TOTL" ~ "Total Employment",
                 tag == "PW" ~ "Paid Employment",
+                
+                tag == "PB"   ~ "Public Sector",
+                tag == "PRVS"  ~ "Private Sector",
+                
                 tag == "GEN"  ~ "Gender",
                 tag == "RU"   ~ "Rural",
                 tag == "UR"   ~ "Urban",
-                tag == "TOTL" ~ "Total Employment",
                 
-                tag == "FRML" ~ "Formal Employment",
-                tag == "PB"   ~ "Public Sector Emp",
-                tag == "EMP"  ~ "Employment",
-                tag == "FRML" ~ "Formal Employment",
                 tag == "AGES"   ~ "Age",
                 
-                tag == "PRVS"  ~ "Private Sector",
                 tag == "HS"   ~ "Health",
+                tag == "EDU"  ~ "Education",
+                
                 tag == "SN"  ~ "Senior Officials",
                 tag == "PREM" ~ "Wage Premium",
-                tag == "EDU"  ~ "Education",
                 
                 tag == "GD"   ~ "GDP"
       )
