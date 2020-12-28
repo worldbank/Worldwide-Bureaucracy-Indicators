@@ -84,6 +84,7 @@ shinyUI(
         tags$h4(tags$b("Fill Variable")),
         
         ## filter
+        
         pickerInput(
           'filter', "Categories",
           choices = filterChoices,
@@ -137,9 +138,27 @@ shinyUI(
     ), # end boostrap page / Map panel,
     
     tabPanel("table",
-             tags$h4("Future home of browsable WWBI data table"), tags$br() 
-            # dataTableOutput()
-             ), # end data table page 
+             
+             sidebarLayout(
+               sidebarPanel(
+                 selectizeGroupUI(
+                   id = 'my-filters',
+                   inline = FALSE,
+                   params = list(
+                     var_one = list(
+                       inputId = "tag", title = "Select Variable 1", placeholder = "select"
+                     ),
+                     var_two = list(
+                       inputId = "indname", title = "Select Variable 2", placeholder = "select"
+                     )
+                   )
+                 )
+               ),
+               
+             mainPanel(
+             tags$h4("Future home of browsable WWBI data table"), tags$br(),
+            tableOutput('table4')
+             ))), # end data table page 
     
     
     

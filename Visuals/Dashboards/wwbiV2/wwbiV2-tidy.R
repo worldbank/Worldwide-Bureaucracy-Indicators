@@ -139,7 +139,7 @@ save(
   world_geo,
   world_sf,
   world_sf_raw,
-  filter_table,
+  filter_table, filter_tags,
   file = file.path(cafe, "data/data.Rdata")
 )
 
