@@ -165,24 +165,79 @@ names_all <- wwbi_raw %>%
     sep = "\\.",
     remove = FALSE
   ) %>%
+  mutate( # add a manual column for indicator initials that are dif but mean same
+    cat6 =
+      case_when(cat4 == "PV"  ~ "PRVS",
+                cat5 == "PV"  ~ "PRVS",
+                cat3 == "PWK" ~ "PWRK",
+                cat4 == "TT"  ~ "EDU",
+                cat4 == "SG"  ~ "EDU",
+                cat4 == "PN"  ~ "EDU",
+                cat4 == "NN"  ~ "EDU",
+                cat5 == "TT"  ~ "EDU",
+                cat5 == "SG"  ~ "EDU",
+                cat5 == "PN"  ~ "EDU",
+                cat5 == "NN"  ~ "EDU",
+                cat5 == "ED"  ~ "EDU",
+                
+                cat4 == "MA"  ~ "GEN",
+                cat4 == "FE"  ~ "GEN",
+                cat4 == "FM"  ~ "GEN",
+                cat5 == "MA"  ~ "GEN",
+                cat5 == "FE"  ~ "GEN",
+                cat5 == "FM"  ~ "GEN"
+                )
+  ) %>%
   arrange(indcode) %>% # alpha sort by indcode 
   mutate(id = row_number()) %>%
   select(id, everything()) # put id column first 
   
-# names_fltr <- names_all %>%
-#   select(indname, indcode, starts_with("cat")) %>%
-#   pivot_longer(cols= starts_with("cat"),
-#                values_to = "tags"
-#                ) 
-# 
-# names_fltr %>% filter()
-# 
-# names_all %>% filter(across(starts_with("cat"), ~ str_detect(.x, "WAG") == TRUE )) #  !is.na(.x) 
-# 
-# str_detect(names_all$cat2, "WAG")
-# 
-# # but the problem is that this may work for one indicator but if we include multiple options this logic
-# # won't be able to filter multile entries sepearated by a character.
+
+# generate a tag and filter table 
+
+filter_tags <- 
+  names_all %>%
+  select(indname, indcode, cat2, cat3, cat4, cat5, cat6) %>%
+  pivot_longer(cols = c(cat2, cat3, cat4, cat5, cat6),
+               names_to  = "tagno",
+               values_to = "tag")
+
+filter_table <- as.tibble(unique(tags$tag)) %>%
+  rename(tag = value) %>%
+  mutate(
+    desc = 
+      case_when(tag == "EMP"  ~ "Employment", # add abitger column
+                tag == "FRML" ~ "Formal Employment",
+                tag == "PB"   ~ "Public Sector",
+                tag == "PW" ~ "Paid Employment",
+                tag == "GEN"  ~ "Gender",
+                tag == "RU"   ~ "Rural",
+                tag == "UR"   ~ "Urban",
+                tag == "TOTL" ~ "Total Employment",
+                
+                tag == "FRML" ~ "Formal Employment",
+                tag == "PB"   ~ "Public Sector Emp",
+                tag == "EMP"  ~ "Employment",
+                tag == "FRML" ~ "Formal Employment",
+                tag == "AGES"   ~ "Age",
+                
+                tag == "PRVS"  ~ "Private Sector",
+                tag == "HS"   ~ "Health",
+                tag == "SN"  ~ "Senior Officials",
+                tag == "PREM" ~ "Wage Premium",
+                tag == "EDU"  ~ "Education",
+                
+                tag == "GD"   ~ "GDP"
+      )
+  ) %>%
+  filter_all(all_vars(!is.na(.)))
+
+
+
+
+
+
+
 
 # generate a category variable 
 

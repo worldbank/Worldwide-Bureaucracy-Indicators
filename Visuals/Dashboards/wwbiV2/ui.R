@@ -32,13 +32,17 @@ library(leafpop)
 load("data/ui-data.Rdata")
 
 ## define dropdown choices
-mapfill.choices <- 
-  c("GDP Per Capita" = "gdp_pc2017",
-    "Females, as a share of public paid employees" = "BI.PWK.PUBS.FE.ZS"
-  )
+# mapfill.choices <- 
+#   c("GDP Per Capita" = "gdp_pc2017",
+#     "Females, as a share of public paid employees" = "BI.PWK.PUBS.FE.ZS"
+#   )
+
+# filter choices 
+
+
 
 choices       <- setNames(names_all$indcode, names_all$indname)
-filterChoices <- c("FRML", "TOTL", "PWK", "EMP", "AGES") # later, gather names in one col, distinct, set names
+filterChoices <- setNames(filter_table$tag, filter_table$desc) 
 
 
 ## define wellPanel options
