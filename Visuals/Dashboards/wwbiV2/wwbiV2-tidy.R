@@ -129,7 +129,7 @@ ctynames <- unique(wwbi_geo$ctyname)
 
 
 
-
+# to Server
 save(
   # final wwbi files
   wwbi_geo,
@@ -139,10 +139,12 @@ save(
   world_geo,
   world_sf,
   world_sf_raw,
-  filter_table, filter_tags,
+  filter_table, filter_tags, tag_grid,
   file = file.path(cafe, "data/data.Rdata")
 )
 
+
+# to UI
 save(names_all, filter_table,
      ctynames,
      wwbiMinYr, wwbiMaxYr, 

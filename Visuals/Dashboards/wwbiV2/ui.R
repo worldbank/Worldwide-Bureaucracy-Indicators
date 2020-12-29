@@ -149,7 +149,7 @@ shinyUI(
                        inputId = "tag", title = "Select Variable 1", placeholder = "select"
                      ),
                      var_two = list(
-                       inputId = "indname", title = "Select Variable 2", placeholder = "select"
+                       inputId = "tag2", title = "Select Variable 2", placeholder = "select"
                      )
                    )
                  )
@@ -157,7 +157,7 @@ shinyUI(
                
              mainPanel(
              tags$h4("Future home of browsable WWBI data table"), tags$br(),
-            tableOutput('table4')
+           # tableOutput('table4')
              ))), # end data table page 
     
     

@@ -167,10 +167,11 @@ names_all <- wwbi_raw %>%
   ) %>%
   mutate( # add a manual column for indicator initials that are dif but mean same
     cat6 =
-      case_when(cat4 == "PV"  ~ "PRVS",
+      case_when(cat4 == "PV"  ~ "PRVS", # privcate sector tag
                 cat5 == "PV"  ~ "PRVS",
-                cat3 == "PWK" ~ "PWRK",
-                cat4 == "TT"  ~ "EDU",
+                cat3 == "PWK" ~ "PWRK"), # duplicate tag
+    cat7 = # education 
+      case_when(cat4 == "TT"  ~ "EDU", # education tag
                 cat4 == "SG"  ~ "EDU",
                 cat4 == "PN"  ~ "EDU",
                 cat4 == "NN"  ~ "EDU",
@@ -178,52 +179,65 @@ names_all <- wwbi_raw %>%
                 cat5 == "SG"  ~ "EDU",
                 cat5 == "PN"  ~ "EDU",
                 cat5 == "NN"  ~ "EDU",
-                cat5 == "ED"  ~ "EDU",
-                
-                cat4 == "MA"  ~ "GEN",
+                cat5 == "ED"  ~ "EDU"),
+    cat8 = #gender 
+      case_when(cat4 == "MA"  ~ "GEN",
                 cat4 == "FE"  ~ "GEN",
                 cat4 == "FM"  ~ "GEN",
                 cat5 == "MA"  ~ "GEN",
                 cat5 == "FE"  ~ "GEN",
-                cat5 == "FM"  ~ "GEN"
-                )
+                cat5 == "FM"  ~ "GEN"),
+    cat9 = #rurality
+      case_when(cat4 == "RU"  ~ "RUUR",
+                cat5 == "RU"  ~ "RUUR",
+                cat4 == "UR"  ~ "RUUR",
+                cat5 == "UR"  ~ "RUUR")
+                
   ) %>%
   arrange(indcode) %>% # alpha sort by indcode 
   mutate(id = row_number()) %>%
   select(id, everything()) # put id column first 
   
 
-# generate a tag and filter table 
+# generate a tag and filter tables
+
 
 filter_tags <- 
   names_all %>%
-  select(indname, indcode, cat2, cat3, cat4, cat5, cat6) %>%
-  pivot_longer(cols = c(cat2, cat3, cat4, cat5, cat6),
+  select(indname, indcode, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9) %>%
+  pivot_longer(cols = c(cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9),
                names_to  = "tagno",
                values_to = "tag")
 
+
+# all tags in use and description (14 x 2)
 filter_table <- as.tibble(unique(filter_tags$tag)) %>%
   rename(tag = value) %>%
   mutate(
     desc = 
       case_when(tag == "EMP"  ~ "Employment", # add abitger column
-                tag == "FRML" ~ "Formal Employment",
-                tag == "TOTL" ~ "Total Employment",
-                tag == "PW" ~ "Paid Employment",
+                tag == "PWK" ~ "Paid Work",
+                tag == "WAG" ~ "Wages",
+                # misc 
+                #tag == "POP" ~ "Sample Size",
+                #tag == "FRML" ~ "Formal Employment",
+                #tag == "TOTL" ~ "Total Employment",
+                #tag == "PW" ~ "Paid Employment",
                 
                 tag == "PB"   ~ "Public Sector",
                 tag == "PRVS"  ~ "Private Sector",
                 
                 tag == "GEN"  ~ "Gender",
-                tag == "RU"   ~ "Rural",
-                tag == "UR"   ~ "Urban",
+                tag == "RUUR" ~ "Rurality",
+                # tag == "RU"   ~ "Rural",
+                # tag == "UR"   ~ "Urban",
                 
                 tag == "AGES"   ~ "Age",
                 
                 tag == "HS"   ~ "Health",
                 tag == "EDU"  ~ "Education",
                 
-                tag == "SN"  ~ "Senior Officials",
+               # tag == "SN"  ~ "Senior Officials",
                 tag == "PREM" ~ "Wage Premium",
                 
                 tag == "GD"   ~ "GDP"
@@ -231,14 +245,26 @@ filter_table <- as.tibble(unique(filter_tags$tag)) %>%
   ) %>%
   filter_all(all_vars(!is.na(.)))
 
+# expanded grid (many obs x 3)
+## make a shorted name table 
+names_all_short <- names_all %>% select(indname, indcode)
 
 
-
-
-
-
-
-# generate a category variable 
+tag_grid <-
+  filter_tags %>% 
+  filter(!is.na(tag)) %>%
+  filter(tag %in% filter_table$tag) %>%  # keep only the tags we want
+  select(indcode, tag) %>% # keep only the code name and tags
+  mutate(tag2 = tag) %>% 
+  expand.grid() %>% # expand to all possible combinations
+  dplyr::distinct(indcode, tag, tag2, .keep_all = TRUE) %>%
+  mutate(same = case_when(tag == tag2 ~ TRUE)) %>% # create filter if two tags are same
+  filter(is.na(same)) %>% # remove the cases where the are the same
+  select(-same) %>%
+  left_join(names_all_short, by = "indcode") # wait but we lose 2 indicators...
+  
+# check to make sure we didn't lose indicators 
+assert_that(n_distinct(tag_grid$indcode) == n_distinct(names_all$indcode))
 
 
 

@@ -44,8 +44,8 @@ shinyServer(function(input, output, session) {
   res_mod <- callModule(
     module = selectizeGroupServer,
     id = "my-filters",
-    data = filter_tags,
-    vars = c("tag", "indname")
+    data = tag_grid,
+    vars = c("tag", "tag2")
   )
   
   output$table4 <- renderTable({ res_mod() }) 
