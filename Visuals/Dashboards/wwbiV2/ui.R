@@ -89,20 +89,10 @@ shinyUI(
           'filter', "Categories",
           choices = filterChoices,
           selected = NULL,
-          multiple = FALSE,
+          multiple = TRUE,
           width = '250px',
           options = list(
                          `deselectAllText` = TRUE)
-        ),
-        
-        pickerInput(
-          'filter2', "Categories",
-          choices = filterChoices,
-          selected = NULL,
-          multiple = FALSE,
-          width = '250px',
-          options = list(
-            `deselectAllText` = TRUE)
         ),
         
         pickerInput(
@@ -159,7 +149,7 @@ shinyUI(
                        inputId = "tag", title = "Select Variable 1", placeholder = "select"
                      ),
                      var_two = list(
-                       inputId = "tag2", title = "Select Variable 2", placeholder = "select"
+                       inputId = "indname", title = "Select Variable 2", placeholder = "select"
                      )
                    )
                  )
