@@ -200,7 +200,14 @@ filter_tags <-
   select(indname, indcode, cat2, cat3, cat4, cat5, cat6) %>%
   pivot_longer(cols = c(cat2, cat3, cat4, cat5, cat6),
                names_to  = "tagno",
-               values_to = "tag")
+               values_to = "tag") 
+
+test <- 
+  names_all %>%
+  select(starts_with("cat"), indcode) %>%
+  select(-cat1) %>%
+  filter_at(vars(starts_with("cat")), any_vars(. %in% "TOTL")) %>%
+  expand.grid()
 
 filter_table <- as.tibble(unique(filter_tags$tag)) %>%
   rename(tag = value) %>%

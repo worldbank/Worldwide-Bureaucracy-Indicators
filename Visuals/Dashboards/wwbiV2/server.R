@@ -27,25 +27,34 @@ shinyServer(function(input, output, session) {
   #### Data control ----
   
   
-  # filter WWBI variables 
-  # wwbiVars <- reactive({
-  #   table.filter <-
-  #     names_all %>%
-  #       filter_at(vars(starts_with("cat")),
-  #                 any_vars(. %in% input$filter ))
-  #   
-  #   name.filter <-setNames(table.filter$indcode, table.filter$indname)
-  #   
-  #   return(name.filter)
-  # })
-  # 
+ # filter WWBI variables
+ 
+  
+  
+  
+  df1 <- reactive({
+    table.filter <-
+      names_all %>%
+      filter_at(vars(starts_with("cat")),
+                  any_vars(. %in% input$filter ))
+    
+    return(table.filter)
+
+  })
+
+  wwbiVars <- reactive({
+      df1() %>%
+      filter_at(vars(starts_with("cat")),
+                any_vars(. %in% input$filter2 ))
+    
+  })
   
   # res module
   res_mod <- callModule(
     module = selectizeGroupServer,
     id = "my-filters",
     data = filter_tags,
-    vars = c("tag", "indname")
+    vars = c("tag", "tag2")
   )
   
   output$table4 <- renderTable({ res_mod() }) 
@@ -58,13 +67,34 @@ shinyServer(function(input, output, session) {
                   any_vars(. %in% input$filter ))
       
       name.filter <- setNames(table.filter$indcode, table.filter$indname)
-      
+    
     
     
     updatePickerInput(session = session, inputId = 'in.mapfill', 
                       choices = name.filter)
     
   })
+  
+  
+  observeEvent(input$filter2, {
+    
+    table.filter <-
+      names_all %>%
+      filter_at(vars(starts_with("cat")),
+                any_vars(. %in% input$filter )) %>%
+      filter_at(vars(starts_with("cat")),
+                any_vars(. %in% input$filter2 ))
+    
+    name.filter <- setNames(table.filter$indcode, table.filter$indname)
+    
+    
+    
+    updatePickerInput(session = session, inputId = 'in.mapfill', 
+                      choices = name.filter)
+    
+  })
+  
+  
   
 
   
