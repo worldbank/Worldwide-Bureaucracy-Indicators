@@ -114,7 +114,7 @@ shinyServer(function(input, output, session) {
   #### map ####
 
   # build a basemap
-  basemap <- reactive({
+  basemap <- 
     leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
       setView(zoom = 2, lat = 0, lng = 0) %>%
       addProviderTiles(
@@ -122,10 +122,12 @@ shinyServer(function(input, output, session) {
         options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
       addEasyButton(easyButton(
         icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
-      ))
-  })
+      )) %>%
+      addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1, group = "base",
+                  label = ~paste0(NAME_EN, ": Not in WWBI"))  # all countries
+  
 
-  output$map <- renderLeaflet({ basemap() })
+  output$map <- renderLeaflet({ basemap })
 
 
 
@@ -134,12 +136,11 @@ shinyServer(function(input, output, session) {
     pal <- colorpal()
 
     leafletProxy("map", data = data()) %>%
-      clearShapes() %>%
-      addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1,
-                  label = ~paste0(NAME_EN, ": Not in WWBI")) %>% # all countries
+      clearGroup(group = "iso3c") %>%
       addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
-                  weight = 0.5,
+                  weight = 0.5, 
                   layerId = ~iso3c,
+                  group = "fill",
                   label = ~paste0(ctyname,
                                   " (", year, ")",
                                   ": ",
