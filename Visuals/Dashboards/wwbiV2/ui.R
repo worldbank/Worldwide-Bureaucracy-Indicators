@@ -100,7 +100,7 @@ shinyUI(
         
         pickerInput(
           'in.mapfill',
-          choices = choices,
+          choices = setNames(names_all$indcode, names_all$indname), # formerly choices
           selected = "BI.WAG.TOTL.GD.ZS",
           multiple = FALSE,
           width = '250px',

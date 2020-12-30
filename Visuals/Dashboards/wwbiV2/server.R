@@ -52,228 +52,234 @@ shinyServer(function(input, output, session) {
   
   observeEvent(res_mod(), {
 
-    name.filter <- setNames(res_mod()$indcode, res_mod()$indname)
+    name.filter <- 
+      res_mod() %>%
+      distinct(indcode, indname) %>% # remove dups 
+      select(indcode, indname) # rearrange order
+      
+    update.inputNames <- setNames(name.filter$indcode, name.filter$indname)
+      #setNames(nm = c(res_mod()$indcode))
 
 
 
     updatePickerInput(session = session, inputId = 'in.mapfill',
-                      choices = name.filter)
+                      choices = update.inputNames)
 
   })
   
 
+#setNames(1:3, c('foo', 'bar', 'baz'))
+  
+  
+  # filter dataset by year
+  data_yr <- reactive({
+    if (input$recent == TRUE) {
+      return()
+    } else {
+      wwbi_geo %>%
+        filter(year == input$in.year )
+    }
 
-  
-  
-  # filter dataset by year 
-  # data_yr <- reactive({
-  #   if (input$recent == TRUE) {
-  #     return()
-  #   } else {
-  #     wwbi_geo %>%
-  #       filter(year == input$in.year )
-  #   }
-  # 
-  # }) 
-  # 
-  # # most recent dataset yet 
-  # data_rcnt <- reactive({
-  #     wwbi_geo %>%
-  #     select(keepvars, input$in.mapfill ) %>% 
-  #     filter(is.na(eval(as.symbol(input$in.mapfill))) == FALSE) %>%   # remove missing values for variable 
-  #     arrange(ctycode, -year) %>% # arrnage by country and year descending
-  #     group_by(ctycode) %>%
-  #     filter(row_number() == 1)
-  # })
-  # 
-  # 
-  # # data switch
-  # data <- reactive({
-  #   if (input$recent == TRUE) {
-  #     data <- data_rcnt()
-  #   } else {
-  #     data <- data_yr()
-  #   }
-  #   return(data)
-  # })
-  # 
-  # 
-  # 
-  # # comparison dataset 
-  # data_comp <- reactive({
-  #   wwbi_geo %>%
-  #     st_drop_geometry() %>% #remove geometry
-  #     filter(ctyname %in% input$comp.country) 
-  # }) 
-  #   
-  # 
-  # 
-  # # aesthetics ----
-  # 
-  # 
-  # # color pallete
-  # colorpal <- reactive({
-  #   colorNumeric("YlOrRd", NULL)
-  # })
-  # 
-  # # alpha 
-  # a.f1.li = 0.6
-  # a.f1    = 0.6
-  # 
-  # 
-  # #### map ####
-  # 
-  # # build a basemap
-  # basemap <- reactive({
-  #   leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
-  #     setView(zoom = 2, lat = 0, lng = 0) %>%
-  #     addProviderTiles(
-  #       'CartoDB.VoyagerNoLabels', # this map is free to use for non-commerical purposes, we must also keep citation
-  #       options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
-  #     addEasyButton(easyButton(
-  #       icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
-  #     ))
-  # })
-  #   
-  # output$map <- renderLeaflet({ basemap() })
-  # 
-  # 
-  # 
-  # # for incremental changes to map
-  # observe({
-  #   pal <- colorpal()
-  #   
-  #   leafletProxy("map", data = data()) %>%
-  #     clearShapes() %>%
-  #     addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1,
-  #                 label = ~paste0(NAME_EN, ": Not in WWBI")) %>% # all countries
-  #     addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
-  #                 weight = 0.5,
-  #                 layerId = ~iso3c,
-  #                 label = ~paste0(ctyname,
-  #                                 " (", year, ")",
-  #                                 ": ",
-  #                                 prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
-  #                                                              big.mark = ',' ))
-  #     )
-  # 
-  # })
-  # 
-  # 
-  # # for incremental changes to legend 
-  # observe({
-  #   proxy <- leafletProxy('map', data = data())
-  #   
-  #   proxy %>% clearControls()
-  #     
-  #    if (input$legend) {
-  #       pal <- colorpal()
-  #       proxy %>% addLegend(position = 'bottomright',
-  #                           pal = pal,
-  #                           values = ~eval(as.symbol(input$in.mapfill)),
-  #                           title = names_all$nameHtml[names_all$indcode %in% as.character(input$in.mapfill)]
-  #                           )
-  #       
-  #    }
-  #   
-  # })
-  # 
-  # # dynamic map view as viewed by user ----
-  # 
-  # # set empty reactive values object
-  # user.map <- reactive({
-  #   basemap() %>%
-  #     setView(zoom = input$map_zoom, # set zoom level to that of current view
-  #             lat  = input$map_center$lat, # set the lat to the center lat coord of current view
-  #             lng  = input$map_center$lng
-  #     ) # set the lng to the center lng coord of current view
-  #     
-  # })
-  # 
-  # 
-  # output$dl <- downloadHandler(
-  #   filename = function() {
-  #     paste0(input$in.mapfill, ".png")
-  #   },
-  #    content = function(file) {
-  #      mapshot(basemap(), file, cliprect = "viewport", selfcontained = FALSE, debug = TRUE)
-  #                             } )
-  # 
-  # 
-  # #### Map subplots ----
-  # 
-  # 
-  # 
-  # ## subset main dataframe with coords from click
-  # 
-  # # determine country id that was clicked
-  # countryclick <- reactive({ 
-  #   if (is.null(input$map_shape_click))
-  #     return(NULL) # world average plot goes here
-  #   input$map_shape_click$id
-  # })
-  # 
-  # 
-  # # filter data based on click
-  # data_clickplot <- reactive({ 
-  #   wwbi_geo %>%
-  #     filter(iso3c %in% countryclick() )
-  # })
-  # 
-  # 
-  # # generate a little ggplot
-  # output$clickplot <- renderPlot({
-  #   # generate the base graph 
-  #   ggbase <- 
-  #     ggplot(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
-  #            aes(year, eval(as.symbol(input$in.mapfill)), color = ctyname)) +
-  #     geom_point() + # color = '#708090'
-  #     stat_smooth(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
-  #                 aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
-  #                 method = 'loess', # , color = '#000000'
-  #                 linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
-  #     labs(title = "",
-  #          y = "", x = "" , color = "") +
-  #     theme_classic() +
-  #     theme(panel.background = element_rect(fill = 'transparent', color = NA),
-  #           plot.background = element_rect(fill = 'transparent', color = NA),
-  #           legend.position = 'top',
-  #           axis.title.x = element_blank(),
-  #           axis.title.y = element_blank()) +
-  #     scale_color_manual(values = c("World Average" = "#708090"))
-  #     
-  #     
-  #     
-  #     
-  #     
-  #   # if no click, generate the world average of the default variable
-  #   if (is.null(countryclick() ))
-  #     return(
-  #         ggbase
-  #     )
-  #   #otherwise return the average with the element selected
-  #   ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill)), color = ctyname)) +
-  #     geom_point() + #  color = '#00bfff'
-  #     stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), span = span),
-  #                 method = 'loess', # color = '#1e90ff'
-  #                 linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
-  #                   labs(y = "", x = "") +
-  #     geom_point(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
-  #                aes(year, eval(as.symbol(input$in.mapfill)) )) + # color = '#708090'
-  #     stat_smooth(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
-  #                 aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
-  #                 method = 'loess', # , color = '#000000'
-  #                 linetype = 1, size = 0.5, se = F, alpha = a.f1.li) + 
-  #     labs(y = "", x = "" , color = "") +
-  #     theme_classic() +
-  #     theme(panel.background = element_rect(fill = 'transparent', color = NA),
-  #           plot.background = element_rect(fill = 'transparent', color = NA),
-  #           legend.position = 'top',
-  #           axis.title.x = element_blank(),
-  #           axis.title.y = element_blank()) +
-  #     scale_color_manual(values = c("#00bfff", "World Average" = "#708090"))
-  # 
-  # })
+  })
+
+  # most recent dataset yet
+  data_rcnt <- reactive({
+      wwbi_geo %>%
+      select(keepvars, input$in.mapfill ) %>%
+      filter(is.na(eval(as.symbol(input$in.mapfill))) == FALSE) %>%   # remove missing values for variable
+      arrange(ctycode, -year) %>% # arrnage by country and year descending
+      group_by(ctycode) %>%
+      filter(row_number() == 1)
+  })
+
+
+  # data switch
+  data <- reactive({
+    if (input$recent == TRUE) {
+      data <- data_rcnt()
+    } else {
+      data <- data_yr()
+    }
+    return(data)
+  })
+
+
+
+  # comparison dataset
+  data_comp <- reactive({
+    wwbi_geo %>%
+      st_drop_geometry() %>% #remove geometry
+      filter(ctyname %in% input$comp.country)
+  })
+
+
+
+  # aesthetics ----
+
+
+  # color pallete
+  colorpal <- reactive({
+    colorNumeric("YlOrRd", NULL)
+  })
+
+  # alpha
+  a.f1.li = 0.6
+  a.f1    = 0.6
+
+
+  #### map ####
+
+  # build a basemap
+  basemap <- reactive({
+    leaflet(data = world_geo ) %>% # use the obejct that contains just the boundary files
+      setView(zoom = 2, lat = 0, lng = 0) %>%
+      addProviderTiles(
+        'CartoDB.VoyagerNoLabels', # this map is free to use for non-commerical purposes, we must also keep citation
+        options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
+      addEasyButton(easyButton(
+        icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
+      ))
+  })
+
+  output$map <- renderLeaflet({ basemap() })
+
+
+
+  # for incremental changes to map
+  observe({
+    pal <- colorpal()
+
+    leafletProxy("map", data = data()) %>%
+      clearShapes() %>%
+      addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1,
+                  label = ~paste0(NAME_EN, ": Not in WWBI")) %>% # all countries
+      addPolygons(fillColor = ~pal(eval(as.symbol(input$in.mapfill))), fillOpacity = 0.8,
+                  weight = 0.5,
+                  layerId = ~iso3c,
+                  label = ~paste0(ctyname,
+                                  " (", year, ")",
+                                  ": ",
+                                  prettyNum(round(eval(as.symbol(input$in.mapfill)), 2),
+                                                               big.mark = ',' ))
+      )
+
+  })
+
+
+  # for incremental changes to legend
+  observe({
+    proxy <- leafletProxy('map', data = data())
+
+    proxy %>% clearControls()
+
+     if (input$legend) {
+        pal <- colorpal()
+        proxy %>% addLegend(position = 'bottomright',
+                            pal = pal,
+                            values = ~eval(as.symbol(input$in.mapfill)),
+                            title = names_all$nameHtml[names_all$indcode %in% as.character(input$in.mapfill)]
+                            )
+
+     }
+
+  })
+
+  # dynamic map view as viewed by user ----
+
+  # set empty reactive values object
+  user.map <- reactive({
+    basemap() %>%
+      setView(zoom = input$map_zoom, # set zoom level to that of current view
+              lat  = input$map_center$lat, # set the lat to the center lat coord of current view
+              lng  = input$map_center$lng
+      ) # set the lng to the center lng coord of current view
+
+  })
+
+
+  output$dl <- downloadHandler(
+    filename = function() {
+      paste0(input$in.mapfill, ".png")
+    },
+     content = function(file) {
+       mapshot(basemap(), file, cliprect = "viewport", selfcontained = FALSE, debug = TRUE)
+                              } )
+
+
+  #### Map subplots ----
+
+
+
+  ## subset main dataframe with coords from click
+
+  # determine country id that was clicked
+  countryclick <- reactive({
+    if (is.null(input$map_shape_click))
+      return(NULL) # world average plot goes here
+    input$map_shape_click$id
+  })
+
+
+  # filter data based on click
+  data_clickplot <- reactive({
+    wwbi_geo %>%
+      filter(iso3c %in% countryclick() )
+  })
+
+
+  # generate a little ggplot
+  output$clickplot <- renderPlot({
+    # generate the base graph
+    ggbase <-
+      ggplot(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
+             aes(year, eval(as.symbol(input$in.mapfill)), color = ctyname)) +
+      geom_point() + # color = '#708090'
+      stat_smooth(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
+                  aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
+                  method = 'loess', # , color = '#000000'
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
+      labs(title = "",
+           y = "", x = "" , color = "") +
+      theme_classic() +
+      theme(panel.background = element_rect(fill = 'transparent', color = NA),
+            plot.background = element_rect(fill = 'transparent', color = NA),
+            legend.position = 'top',
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank()) +
+      scale_color_manual(values = c("World Average" = "#708090"))
+
+
+
+
+
+    # if no click, generate the world average of the default variable
+    if (is.null(countryclick() ))
+      return(
+          ggbase
+      )
+    #otherwise return the average with the element selected
+    ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill)), color = ctyname)) +
+      geom_point() + #  color = '#00bfff'
+      stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), span = span),
+                  method = 'loess', # color = '#1e90ff'
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
+                    labs(y = "", x = "") +
+      geom_point(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
+                 aes(year, eval(as.symbol(input$in.mapfill)) )) + # color = '#708090'
+      stat_smooth(data = wwbi_av[wwbi_av$avtype %in% "World Average",],
+                  aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
+                  method = 'loess', # , color = '#000000'
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
+      labs(y = "", x = "" , color = "") +
+      theme_classic() +
+      theme(panel.background = element_rect(fill = 'transparent', color = NA),
+            plot.background = element_rect(fill = 'transparent', color = NA),
+            legend.position = 'top',
+            axis.title.x = element_blank(),
+            axis.title.y = element_blank()) +
+      scale_color_manual(values = c("#00bfff", "World Average" = "#708090"))
+
+  })
   
   output$list <- renderPrint({reactiveValuesToList(input)})
   

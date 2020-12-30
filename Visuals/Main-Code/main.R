@@ -113,4 +113,5 @@ if (coffee == 1) {
 # https://stackoverflow.com/questions/52288525/change-tick-mark-labels-to-specific-strings-in-plotly
 # https://stackoverflow.com/questions/36365897/r-leaflet-zoomcontrol-option
 # https://go.carto.com/hubfs/CARTO-Free-Basemaps-Terms-of-Service.pdf
+# https://stackoverflow.com/questions/30022732/shiny-all-sub-lists-in-choices-must-be-named
 # 
