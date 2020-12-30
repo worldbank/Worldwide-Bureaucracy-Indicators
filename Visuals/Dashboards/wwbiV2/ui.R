@@ -89,10 +89,10 @@ shinyUI(
           inline = FALSE,
           params = list(
             var_one = list(
-              inputId = "tag1", title = "Select Variable 1", placeholder = "select"
+              inputId = "tag1_name", title = "Select Variable 1", placeholder = "select"
             ),
             var_two = list(
-              inputId = "tag2", title = "Select Variable 2", placeholder = "select"
+              inputId = "tag2_name", title = "Select Variable 2", placeholder = "select"
             ),
             var_three = list(
               inputId = "indname", title = "Mapfill",  placeholder = "select"

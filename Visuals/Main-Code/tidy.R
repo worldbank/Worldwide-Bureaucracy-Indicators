@@ -256,8 +256,12 @@ tag_grid <-
   filter(tag1 %in% filter_table$tag1) %>%  # keep only the tags we want
   mutate(tag2 = tag1) %>%
   group_by(indcode) %>%
-  expand(nesting(indname, indcode, tag1), tag2) # remove rows w. options in tag2 not in tag1, by group
-
+  expand(nesting(indname, indcode, tag1), tag2) %>% # generate all iterations
+  left_join(filter_table, by = "tag1", na_matches = "never") %>% # merge to names for tag1
+  rename(tag1_name = desc) %>% # rename desc col
+  left_join(filter_table, by = c("tag2"="tag1"), na_matches = "never") %>% # for tag2
+  rename(tag2_name = desc) # rename desc col
+  
 # check to make sure we didn't lose indicators 
 assert_that(n_distinct(tag_grid$indcode) + 1
             == n_distinct(names_all$indcode)) # All but 1 indicator kept (TOTL)
