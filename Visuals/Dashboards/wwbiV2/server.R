@@ -50,16 +50,16 @@ shinyServer(function(input, output, session) {
   
   output$table4 <- renderTable({ res_mod() }) 
   
-  # observeEvent(, { 
-  # 
-  #   name.filter <- setNames(res_mod()$indcode, res_mod()$indname)
-  # 
-  # 
-  # 
-  #   updatePickerInput(session = session, inputId = 'in.mapfill',
-  #                     choices = name.filter)
-  # 
-  # })
+  observeEvent(res_mod(), {
+
+    name.filter <- setNames(res_mod()$indcode, res_mod()$indname)
+
+
+
+    updatePickerInput(session = session, inputId = 'in.mapfill',
+                      choices = name.filter)
+
+  })
   
 
 

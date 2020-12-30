@@ -98,15 +98,15 @@ shinyUI(
           )
         ),
         
-        # pickerInput(
-        #   'in.mapfill',
-        #   choices = choices,
-        #   selected = "BI.WAG.TOTL.GD.ZS",
-        #   multiple = FALSE,
-        #   width = '250px',
-        #   options = list(`live-search` = TRUE, `mobile` = FALSE,
-        #                  `dropupAuto` = TRUE, `size` = 10)
-        # ),
+        pickerInput(
+          'in.mapfill',
+          choices = choices,
+          selected = "BI.WAG.TOTL.GD.ZS",
+          multiple = FALSE,
+          width = '250px',
+          options = list(`live-search` = TRUE, `mobile` = FALSE,
+                         `dropupAuto` = TRUE, `size` = 10)
+        ),
         
         tags$h4(tags$b("Year")),
         switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'small'),
