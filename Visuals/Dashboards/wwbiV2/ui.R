@@ -84,26 +84,31 @@ shinyUI(
         tags$h4(tags$b("Fill Variable")),
         
         ## filter
-        
-        pickerInput(
-          'filter', "Categories",
-          choices = filterChoices,
-          selected = NULL,
-          multiple = TRUE,
-          width = '250px',
-          options = list(
-                         `deselectAllText` = TRUE)
+        selectizeGroupUI(
+          id = 'my-filters',
+          inline = FALSE,
+          params = list(
+            var_one = list(
+              inputId = "tag", title = "Select Variable 1", placeholder = "select"
+            ),
+            var_two = list(
+              inputId = "tag2", title = "Select Variable 2", placeholder = "select"
+            ),
+            var_three = list(
+              inputId = "indname", title = "Mapfill",  placeholder = "select"
+            )
+          )
         ),
         
-        pickerInput(
-          'in.mapfill',
-          choices = choices,
-          selected = "BI.WAG.TOTL.GD.ZS",
-          multiple = FALSE,
-          width = '250px',
-          options = list(`live-search` = TRUE, `mobile` = FALSE,
-                         `dropupAuto` = TRUE, `size` = 10)
-        ),
+        # pickerInput(
+        #   'in.mapfill',
+        #   choices = choices,
+        #   selected = "BI.WAG.TOTL.GD.ZS",
+        #   multiple = FALSE,
+        #   width = '250px',
+        #   options = list(`live-search` = TRUE, `mobile` = FALSE,
+        #                  `dropupAuto` = TRUE, `size` = 10)
+        # ),
         
         tags$h4(tags$b("Year")),
         switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'small'),
@@ -139,26 +144,27 @@ shinyUI(
     
     tabPanel("table",
              
-             sidebarLayout(
-               sidebarPanel(
-                 selectizeGroupUI(
-                   id = 'my-filters',
-                   inline = FALSE,
-                   params = list(
-                     var_one = list(
-                       inputId = "tag", title = "Select Variable 1", placeholder = "select"
-                     ),
-                     var_two = list(
-                       inputId = "tag2", title = "Select Variable 2", placeholder = "select"
-                     )
-                   )
-                 )
-               ),
-               
-             mainPanel(
-             tags$h4("Future home of browsable WWBI data table"), tags$br(),
-           # tableOutput('table4')
-             ))), # end data table page 
+            #  sidebarLayout(
+            #    sidebarPanel(
+            #      selectizeGroupUI(
+            #        id = 'my-filters',
+            #        inline = FALSE,
+            #        params = list(
+            #          var_one = list(
+            #            inputId = "tag", title = "Select Variable 1", placeholder = "select"
+            #          ),
+            #          var_two = list(
+            #            inputId = "tag2", title = "Select Variable 2", placeholder = "select"
+            #          )
+            #        )
+            #      )
+            #    ),
+            #    
+            #  mainPanel(
+            #  tags$h4("Future home of browsable WWBI data table"), tags$br(),
+            # tableOutput('table4')
+            #  ))
+            ), # end data table page 
     
     
     

@@ -255,9 +255,10 @@ tag_grid <-
   filter(!is.na(tag)) %>%
   filter(tag %in% filter_table$tag) %>%  # keep only the tags we want
   select(indcode, tag) %>% # keep only the code name and tags
-  mutate(tag2 = tag) %>% 
-  expand.grid() %>% # expand to all possible combinations
-  dplyr::distinct(indcode, tag, tag2, .keep_all = TRUE) %>%
+  mutate(tag2 = tag) %>%
+  expand.grid(t1 = tag, t2 = tag2) # expand to all possible combinations, we don't want to include indcode here, adds fake obs
+  # try crossing in tidyr  
+dplyr::distinct(indcode, tag, tag2, .keep_all = TRUE) 
   mutate(same = case_when(tag == tag2 ~ TRUE)) %>% # create filter if two tags are same
   filter(is.na(same)) %>% # remove the cases where the are the same
   select(-same) %>%
@@ -272,10 +273,6 @@ names <- names_all[names_all$indcode %in% codes, ]
 
 ## filter/subset
 wwbi2 <- wwbi_raw[wwbi_raw$indcode %in% codes, ]
-
-
-
-
 
 
 
