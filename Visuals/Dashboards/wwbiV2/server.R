@@ -122,7 +122,7 @@ shinyServer(function(input, output, session) {
       addProviderTiles(
         'CartoDB.VoyagerNoLabels', # this map is free to use for non-commerical purposes, we must also keep citation
         options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
-      addEasyButton(easyButton(
+      addEasyButtonBar(easyButton(
         icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
       )) %>%
       addPolygons(data = world_geo, fillColor = "#dcdcdc", weight = 1, group = "base",
@@ -239,7 +239,7 @@ shinyServer(function(input, output, session) {
             legend.position = 'top',
             axis.title.x = element_blank(),
             axis.title.y = element_blank(),
-            plot.title = element_text(hjust = 0.5, size = 17,
+            plot.title = element_text(hjust = 0.5, size = 16,
                                       face = 'bold', margin =margin(1,1,20,1,'pt'))) +
       scale_color_manual(values = c("World Average" = "#708090"))
 
