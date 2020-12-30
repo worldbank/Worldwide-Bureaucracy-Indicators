@@ -45,10 +45,10 @@ shinyServer(function(input, output, session) {
     module = selectizeGroupServer,
     id = "my-filters",
     data = tag_grid,
-    vars = c("tag1_name", "tag2_name", "indname")
+    vars = c("tag1_name", "tag2_name")
   )
   
- # output$table4 <- renderTable({ res_mod() }) 
+  output$table4 <- renderTable({ res_mod() }) 
   
   # observeEvent(, { 
   # 

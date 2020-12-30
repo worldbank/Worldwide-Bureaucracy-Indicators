@@ -257,10 +257,15 @@ tag_grid <-
   mutate(tag2 = tag1) %>%
   group_by(indcode) %>%
   expand(nesting(indname, indcode, tag1), tag2) %>% # generate all iterations
+  add_count() %>% # add count of n in each group as col
+  mutate(same = if_else((tag1 == tag2) & (n > 1), # if tag is same in tag1 and tag2 and more than 1 pergroup
+                        true = TRUE, false = FALSE)) %>%  #generate same variable
+  filter(same == FALSE) %>%  # remove duplicate tags in tag1 and tag2
   left_join(filter_table, by = "tag1", na_matches = "never") %>% # merge to names for tag1
   rename(tag1_name = desc) %>% # rename desc col
   left_join(filter_table, by = c("tag2"="tag1"), na_matches = "never") %>% # for tag2
-  rename(tag2_name = desc) # rename desc col
+  rename(tag2_name = desc) %>% # rename desc col
+  select(-c(n, same)) # remove n and same cols
   
 # check to make sure we didn't lose indicators 
 assert_that(n_distinct(tag_grid$indcode) + 1
