@@ -26,20 +26,8 @@ shinyServer(function(input, output, session) {
   
   #### Data control ----
   
-  
-  # filter WWBI variables 
-  # wwbiVars <- reactive({
-  #   table.filter <-
-  #     names_all %>%
-  #       filter_at(vars(starts_with("cat")),
-  #                 any_vars(. %in% input$filter ))
-  #   
-  #   name.filter <-setNames(table.filter$indcode, table.filter$indname)
-  #   
-  #   return(name.filter)
-  # })
-  # 
-  
+## WWBI map variables filter
+
   # res module
   res_mod <- callModule(
     module = selectizeGroupServer,
@@ -48,19 +36,17 @@ shinyServer(function(input, output, session) {
     vars = c("tag1_name", "tag2_name")
   )
   
-  output$table4 <- renderTable({ res_mod() }) 
-  
+  # update the content of the dropdown menus
   observeEvent(res_mod(), {
 
+    # generate a filtered, distinct dataframe with no name dups
     name.filter <- 
       res_mod() %>%
       distinct(indcode, indname) %>% # remove dups 
       select(indcode, indname) # rearrange order
       
+    # set the names for the input menu
     update.inputNames <- setNames(name.filter$indcode, name.filter$indname)
-      #setNames(nm = c(res_mod()$indcode))
-
-
 
     updatePickerInput(session = session, inputId = 'in.mapfill',
                       choices = update.inputNames)
@@ -68,9 +54,6 @@ shinyServer(function(input, output, session) {
   })
   
 
-#setNames(1:3, c('foo', 'bar', 'baz'))
-  
-  
   # filter dataset by year
   data_yr <- reactive({
     if (input$recent == TRUE) {
@@ -82,6 +65,7 @@ shinyServer(function(input, output, session) {
 
   })
 
+  
   # most recent dataset yet
   data_rcnt <- reactive({
       wwbi_geo %>%
@@ -286,108 +270,108 @@ shinyServer(function(input, output, session) {
   
   
   ##### Comparison tab #### 
-  # 
-  # # graph1: gdp_pc (x) vs formal, paid, all employment (y)
-  # output$comp1 <- renderPlotly({
-  #   
-  #   f1 <-
-  #     ggplot(data_comp(), aes(x = gdp_pc2017)) +
-  #     # Total Employment
-  #     geom_point(aes(y = BI.EMP.TOTL.PB.ZS, color = '#1B9E77',
-  #                    text = paste0(ctyname, ', ', year,
-  #                                  "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-  #                                  "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2))),
-  #                alpha = a.f1) +
-  #     stat_smooth(aes(y =BI.EMP.TOTL.PB.ZS, color = '#1B9E77', span = span), method = 'loess',
-  #                 linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-  #     # Paid Employment
-  #     geom_point(aes(y = BI.EMP.PWRK.PB.ZS, color = '#D95F02',
-  #                    text = paste0(ctyname, ', ', year,
-  #                                  "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-  #                                  "<br>Public Employment Share: ", round(BI.EMP.PWRK.PB.ZS, 2))),
-  #                alpha = a.f1) +
-  #     stat_smooth(aes(y =BI.EMP.PWRK.PB.ZS, color = '#D95F02', span = span), method = 'loess',
-  #                 linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-  #     # Formal Employment
-  #     geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = '#7570B3', 
-  #                    text = paste0(ctyname, ', ', year,
-  #                                  "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
-  #                                  "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2))),
-  #                alpha = a.f1) +
-  #     stat_smooth(aes(y =BI.EMP.FRML.PB.ZS, color = '#7570B3', span = span), method = 'loess',
-  #                 linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-  #     scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
-  #     scale_color_manual(name = '',
-  #                        labels = c("Total Employment", "Paid Employment", "Formal Employment"),
-  #                        values = c("#1B9E77", "#D95F02", "#7570B3")) +
-  #     theme_classic() +
-  #     theme(legend.position = 'bottom') +
-  #     labs(title = "",
-  #          x = "GDP per Capita (in constant 2017 dollars)",
-  #          y = "Public Employment (Share of Country-wide Employment)",
-  #          color = "Measure of Country-wide Employment")
-  #   
-  #   f1 <- ggplotly(f1, tooltip = c('text')) %>%
-  #     style(name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
-  #     style(name = 'Paid Employment', traces = c(3,4)) %>%
-  #     style(name = 'Formal Employment', traces = c(5,6)) %>%
-  #     layout(
-  #       title = list(
-  #         text = "<b>Public Employment as a Share of Country-wide Employment</b>",
-  #         y = 0.98
-  #       ),
-  #       yaxis = list(range = c(0,0.8), tickmode = 'auto'),
-  #       legend = list(title = list(text = '<b>Measures of Public Employment</b>')),
-  #       modebar = list(orientation = 'v')
-  #     ) %>%
-  #     config(modeBarButtons = list(list('hoverClosestCartesian'), list('hoverCompareCartesian')))
-  # 
-  #   
-  #   return(f1)
-  #   
-  # })
-  # 
-  # 
-  # # graph2: year (x) vs 3 types of employment (y)
-  # 
-  # output$comp2 <- renderPlotly({
-  #   
-  #   f2 <-
-  #     ggplot(data_comp(), aes(x = year)) +
-  #     # Total Employment
-  #     geom_point(aes(y = eval(as.symbol(input$comp.c2)), color = ctyname,
-  #                    text = paste0(ctyname, ', ', year,
-  #                                  "<br>GDP pc: ", "$", prettyNum(round(year), big.mark = ','),
-  #                                  "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2))),
-  #                alpha = a.f1) +
-  #     stat_smooth(aes(y = eval(as.symbol(input$comp.c2)), color = ctyname, span = span), method = 'loess',
-  #                 linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-  #     theme_classic() +
-  #     theme(legend.position = 'bottom') +
-  #     labs(title = "",
-  #          x = "Year",
-  #          y = paste0("Public Employment:", as.character(input$comp.c2)),
-  #          color = "")
-  #   
-  #   f2 <- ggplotly(f2, tooltip = c('text')) %>%
-  #     # style(name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
-  #     # style(name = 'Paid Employment', traces = c(3,4)) %>%
-  #     # style(name = 'Formal Employment', traces = c(5,6)) %>%
-  #     layout(
-  #       title = list(
-  #         text = "<b>Public Employment as a Share of Country-wide Employment</b>",
-  #         y = 0.98
-  #       ),
-  #       yaxis = list(range = c(0,0.8), tickmode = 'auto'),
-  #       legend = list(title = list(text = '<b>Countries</b>')),
-  #       modebar = list(orientation = 'v')
-  #     ) %>%
-  #     config(modeBarButtons = list(list('hoverClosestCartesian'), list('hoverCompareCartesian')))
-  #   
-  #   return(f2)
-  #   
-  #   
-  # })
+
+  # graph1: gdp_pc (x) vs formal, paid, all employment (y)
+  output$comp1 <- renderPlotly({
+
+    f1 <-
+      ggplot(data_comp(), aes(x = gdp_pc2017)) +
+      # Total Employment
+      geom_point(aes(y = BI.EMP.TOTL.PB.ZS, color = '#1B9E77',
+                     text = paste0(ctyname, ', ', year,
+                                   "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
+                                   "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2))),
+                 alpha = a.f1) +
+      stat_smooth(aes(y =BI.EMP.TOTL.PB.ZS, color = '#1B9E77', span = span), method = 'loess',
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
+      # Paid Employment
+      geom_point(aes(y = BI.EMP.PWRK.PB.ZS, color = '#D95F02',
+                     text = paste0(ctyname, ', ', year,
+                                   "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
+                                   "<br>Public Employment Share: ", round(BI.EMP.PWRK.PB.ZS, 2))),
+                 alpha = a.f1) +
+      stat_smooth(aes(y =BI.EMP.PWRK.PB.ZS, color = '#D95F02', span = span), method = 'loess',
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
+      # Formal Employment
+      geom_point(aes(y = BI.EMP.FRML.PB.ZS, color = '#7570B3',
+                     text = paste0(ctyname, ', ', year,
+                                   "<br>GDP pc: ", "$", prettyNum(round(gdp_pc2017), big.mark = ','),
+                                   "<br>Public Employment Share: ", round(BI.EMP.FRML.PB.ZS, 2))),
+                 alpha = a.f1) +
+      stat_smooth(aes(y =BI.EMP.FRML.PB.ZS, color = '#7570B3', span = span), method = 'loess',
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
+      scale_x_log10(n.breaks = 6, labels = scales::label_number(accuracy=1,suffix='k',scale=1e-3)) +
+      scale_color_manual(name = '',
+                         labels = c("Total Employment", "Paid Employment", "Formal Employment"),
+                         values = c("#1B9E77", "#D95F02", "#7570B3")) +
+      theme_classic() +
+      theme(legend.position = 'bottom') +
+      labs(title = "",
+           x = "GDP per Capita (in constant 2017 dollars)",
+           y = "Public Employment (Share of Country-wide Employment)",
+           color = "Measure of Country-wide Employment")
+
+    f1 <- ggplotly(f1, tooltip = c('text')) %>%
+      style(name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
+      style(name = 'Paid Employment', traces = c(3,4)) %>%
+      style(name = 'Formal Employment', traces = c(5,6)) %>%
+      layout(
+        title = list(
+          text = "<b>Public Employment as a Share of Country-wide Employment</b>",
+          y = 0.98
+        ),
+        yaxis = list(range = c(0,0.8), tickmode = 'auto'),
+        legend = list(title = list(text = '<b>Measures of Public Employment</b>')),
+        modebar = list(orientation = 'v')
+      ) %>%
+      config(modeBarButtons = list(list('hoverClosestCartesian'), list('hoverCompareCartesian')))
+
+
+    return(f1)
+
+  })
+
+
+  # graph2: year (x) vs 3 types of employment (y)
+
+  output$comp2 <- renderPlotly({
+
+    f2 <-
+      ggplot(data_comp(), aes(x = year)) +
+      # Total Employment
+      geom_point(aes(y = eval(as.symbol(input$comp.c2)), color = ctyname,
+                     text = paste0(ctyname, ', ', year,
+                                   "<br>GDP pc: ", "$", prettyNum(round(year), big.mark = ','),
+                                   "<br>Public Employment Share: ", round(BI.EMP.TOTL.PB.ZS, 2))),
+                 alpha = a.f1) +
+      stat_smooth(aes(y = eval(as.symbol(input$comp.c2)), color = ctyname, span = span), method = 'loess',
+                  linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
+      theme_classic() +
+      theme(legend.position = 'bottom') +
+      labs(title = "",
+           x = "Year",
+           y = paste0("Public Employment:", as.character(input$comp.c2)),
+           color = "")
+
+    f2 <- ggplotly(f2, tooltip = c('text')) %>%
+      # style(name ='Total Employment', traces = c(1,2)) %>% # hovertemplate = htf1,
+      # style(name = 'Paid Employment', traces = c(3,4)) %>%
+      # style(name = 'Formal Employment', traces = c(5,6)) %>%
+      layout(
+        title = list(
+          text = "<b>Public Employment as a Share of Country-wide Employment</b>",
+          y = 0.98
+        ),
+        yaxis = list(range = c(0,0.8), tickmode = 'auto'),
+        legend = list(title = list(text = '<b>Countries</b>')),
+        modebar = list(orientation = 'v')
+      ) %>%
+      config(modeBarButtons = list(list('hoverClosestCartesian'), list('hoverCompareCartesian')))
+
+    return(f2)
+
+
+  })
 
   
   

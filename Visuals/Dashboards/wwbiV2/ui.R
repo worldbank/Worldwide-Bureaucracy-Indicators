@@ -142,26 +142,6 @@ shinyUI(
     
     tabPanel("table",
              
-            #  sidebarLayout(
-            #    sidebarPanel(
-            #      selectizeGroupUI(
-            #        id = 'my-filters',
-            #        inline = FALSE,
-            #        params = list(
-            #          var_one = list(
-            #            inputId = "tag", title = "Select Variable 1", placeholder = "select"
-            #          ),
-            #          var_two = list(
-            #            inputId = "tag2", title = "Select Variable 2", placeholder = "select"
-            #          )
-            #        )
-            #      )
-            #    ),
-            #    
-            #  mainPanel(
-            #  tags$h4("Future home of browsable WWBI data table"), tags$br(),
-             tableOutput('table4')
-            #  ))
             ), # end data table page 
     
     
