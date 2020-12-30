@@ -114,4 +114,6 @@ if (coffee == 1) {
 # https://stackoverflow.com/questions/36365897/r-leaflet-zoomcontrol-option
 # https://go.carto.com/hubfs/CARTO-Free-Basemaps-Terms-of-Service.pdf
 # https://stackoverflow.com/questions/30022732/shiny-all-sub-lists-in-choices-must-be-named
+# https://stackoverflow.com/questions/16074440/r-ggplot2-center-align-a-multi-line-title#16074618
+# https://stackoverflow.com/questions/28243514/ggplot2-change-title-size
 # 

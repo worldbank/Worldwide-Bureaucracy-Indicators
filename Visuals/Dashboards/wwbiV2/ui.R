@@ -63,21 +63,41 @@ shinyUI(
       # map   
       leafletOutput('map', height = '800px', width = '100%'),
       
-      # panel select
+      # panel select, inside dropdown button
+     
+        
+      
       absolutePanel(
         
+        
         ## panel settings
-        left = 20, bottom = 20, draggable = TRUE, 
+        left = 20, bottom = 30, draggable = TRUE, 
         wellPanel(
          style = "background: #ffffff; opacity: 0.8",
+         
+         
+         # clickplot
+         ## title 
+         # make the title render based on input text
+         #textOutput('title'),
+         conditionalPanel(
+           condition = "input.plot == true",
+           plotOutput('clickplot', height = 250, width = 250)
+         ),
+         tags$br(),
+         # setup dropdown menu
+         dropdown(
+           size = 'md',
+           icon = icon("gear"),
+           label = "Map Settings",
+           tooltip = "Adjust Map Settings",
+           right = FALSE,
+           up = TRUE,
+           width = '350px',
+           
 
-        
           
-        # clickplot
-        conditionalPanel(
-          condition = "input.plot == true",
-          plotOutput('clickplot', height = 200, width = 250)
-        ),
+        
         
           
         # contents of panel
@@ -107,10 +127,11 @@ shinyUI(
           choices = setNames(names_all$indcode, names_all$indname), # formerly choices
           selected = "BI.WAG.TOTL.GD.ZS",
           multiple = FALSE,
-          width = '250px',
+          width = '300px',
           options = list(`live-search` = TRUE, `mobile` = FALSE,
                          `dropupAuto` = TRUE, `size` = 10, `select-On-Tab` = T)
         ),
+        tags$br(),
         
         tags$h4(tags$b("Year")),
         switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'small'),
@@ -134,7 +155,7 @@ shinyUI(
         
         downloadButton('dl', "Download Current Map")
         
-      )) # end absolute panel; wellpanel
+      ))) # end absolute panel; wellpanel; dropdown button
       
              
              

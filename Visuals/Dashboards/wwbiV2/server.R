@@ -213,7 +213,13 @@ shinyServer(function(input, output, session) {
       filter(iso3c %in% countryclick() )
   })
 
-
+  
+  
+  # generate a reactive string output on input var 
+  output$title <- 
+    renderText(as.character(names_all$namegg[names_all$indcode %in% as.character(input$in.mapfill)]))
+  
+  
   # generate a little ggplot
   output$clickplot <- renderPlot({
     # generate the base graph
@@ -225,14 +231,16 @@ shinyServer(function(input, output, session) {
                   aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
                   method = 'loess', # , color = '#000000'
                   linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-      labs(title = "",
+      labs(title = as.character(names_all$namegg[names_all$indcode %in% as.character(input$in.mapfill)]),
            y = "", x = "" , color = "") +
       theme_classic() +
       theme(panel.background = element_rect(fill = 'transparent', color = NA),
             plot.background = element_rect(fill = 'transparent', color = NA),
             legend.position = 'top',
             axis.title.x = element_blank(),
-            axis.title.y = element_blank()) +
+            axis.title.y = element_blank(),
+            plot.title = element_text(hjust = 0.5, size = 17,
+                                      face = 'bold', margin =margin(1,1,20,1,'pt'))) +
       scale_color_manual(values = c("World Average" = "#708090"))
 
 

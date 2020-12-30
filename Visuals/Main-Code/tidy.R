@@ -134,30 +134,7 @@ names_all <- wwbi_raw %>%
                                                      indname) # 3 breaks 
                                         ) #end 2nd ifelse
                                   ), #end 1st ifelse 
-    wage = if_else(str_detect(indcode, "BI.WAG"),
-                   true = TRUE,
-                   false= FALSE),
-    employment = if_else(str_detect(indcode, "BI.EMP"),
-                         true = TRUE,
-                         false= FALSE),
-    paidwork = if_else(str_detect(indcode, "BI.PWK"),
-                       true = TRUE,
-                       false= FALSE),
-    gender = if_else(str_detect(indcode, ".FE."),
-                     true = TRUE,
-                     false= FALSE),
-    wagepremium = if_else(str_detect(indcode, "BI.WAG.PREM"),
-                          true = TRUE,
-                          false= FALSE),
-    age = if_else(str_detect(indcode, "AGES"),
-                  true = TRUE,
-                  false= FALSE),
-    publicsec = if_else(str_detect(indcode, ".PUBS."),
-                        true = TRUE,
-                        false= FALSE),
-    privsec = if_else(str_detect(indcode, ".PRVS."),
-                      true = TRUE,
-                      false= FALSE)
+    namegg = gsub( '<br>', '\\\n', nameHtml) #end 1st ifelse 
         ) %>% # end mutate
   separate(.,
     col = indcode, 
@@ -246,9 +223,6 @@ filter_table <- as.tibble(unique(filter_tags$tag1)) %>%
   filter_all(all_vars(!is.na(.)))
 
 # expanded grid (many obs x 3)
-## make a shorted name table 
-names_all_short <- names_all %>% select(indname, indcode)
-
 
 tag_grid <-
   filter_tags %>% 
