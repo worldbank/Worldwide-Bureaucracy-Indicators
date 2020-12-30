@@ -81,31 +81,35 @@ shinyUI(
         
           
         # contents of panel
-        tags$h4(tags$b("Fill Variable")),
+        tags$h4(tags$b("Map Fill")),
+        helpText("Select an indicator",
+                 "or refine by category"),
         
         ## filter
         selectizeGroupUI(
           id = 'my-filters',
           inline = FALSE,
+          btn_label = "Reset",
           params = list(
             var_one = list(
-              inputId = "tag1_name", title = "Select Variable 1", placeholder = "select"
+              inputId = "tag1_name", title = "", placeholder = "Filter 1"
             ),
             var_two = list(
-              inputId = "tag2_name", title = "Select Variable 2", placeholder = "select"
+              inputId = "tag2_name", title = "", placeholder = "Filter 2"
             )
             
           )
         ),
+        tags$br(),
         
         pickerInput(
-          'in.mapfill',
+          'in.mapfill', "Map Fill Indicator",
           choices = setNames(names_all$indcode, names_all$indname), # formerly choices
           selected = "BI.WAG.TOTL.GD.ZS",
           multiple = FALSE,
           width = '250px',
           options = list(`live-search` = TRUE, `mobile` = FALSE,
-                         `dropupAuto` = TRUE, `size` = 10)
+                         `dropupAuto` = TRUE, `size` = 10, `select-On-Tab` = T)
         ),
         
         tags$h4(tags$b("Year")),
@@ -140,7 +144,7 @@ shinyUI(
              
     ), # end boostrap page / Map panel,
     
-    tabPanel("table",
+    tabPanel("table"
              
             ), # end data table page 
     

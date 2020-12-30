@@ -48,8 +48,10 @@ shinyServer(function(input, output, session) {
     # set the names for the input menu
     update.inputNames <- setNames(name.filter$indcode, name.filter$indname)
 
-    updatePickerInput(session = session, inputId = 'in.mapfill',
+    updatePickerInput(session = session,
+                      inputId = 'in.mapfill',
                       choices = update.inputNames)
+            
 
   })
   
