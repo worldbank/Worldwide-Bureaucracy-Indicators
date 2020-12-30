@@ -42,7 +42,7 @@ load("data/ui-data.Rdata")
 
 
 choices       <- setNames(names_all$indcode, names_all$indname)
-filterChoices <- setNames(filter_table$tag, filter_table$desc) 
+filterChoices <- setNames(filter_table$tag1, filter_table$desc) 
 
 
 ## define wellPanel options
@@ -89,7 +89,7 @@ shinyUI(
           inline = FALSE,
           params = list(
             var_one = list(
-              inputId = "tag", title = "Select Variable 1", placeholder = "select"
+              inputId = "tag1", title = "Select Variable 1", placeholder = "select"
             ),
             var_two = list(
               inputId = "tag2", title = "Select Variable 2", placeholder = "select"

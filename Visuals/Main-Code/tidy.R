@@ -207,40 +207,40 @@ filter_tags <-
   select(indname, indcode, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9) %>%
   pivot_longer(cols = c(cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9),
                names_to  = "tagno",
-               values_to = "tag")
+               values_to = "tag1")
 
 
 # all tags in use and description (14 x 2)
-filter_table <- as.tibble(unique(filter_tags$tag)) %>%
-  rename(tag = value) %>%
+filter_table <- as.tibble(unique(filter_tags$tag1)) %>%
+  rename(tag1 = value) %>%
   mutate(
     desc = 
-      case_when(tag == "EMP"  ~ "Employment", # add abitger column
-                tag == "PWK" ~ "Paid Work",
-                tag == "WAG" ~ "Wages",
+      case_when(tag1 == "EMP"  ~ "Employment", # add abitger column
+                tag1 == "PWK" ~ "Paid Work",
+                tag1 == "WAG" ~ "Wages",
                 # misc 
-                #tag == "POP" ~ "Sample Size",
-                #tag == "FRML" ~ "Formal Employment",
-                #tag == "TOTL" ~ "Total Employment",
-                #tag == "PW" ~ "Paid Employment",
+                #tag1 == "POP" ~ "Sample Size",
+                #tag1 == "FRML" ~ "Formal Employment",
+                #tag1 == "TOTL" ~ "Total Employment",
+                #tag1 == "PW" ~ "Paid Employment",
                 
-                tag == "PB"   ~ "Public Sector",
-                tag == "PRVS"  ~ "Private Sector",
+                tag1 == "PB"   ~ "Public Sector",
+                tag1 == "PRVS"  ~ "Private Sector",
                 
-                tag == "GEN"  ~ "Gender",
-                tag == "RUUR" ~ "Rurality",
-                # tag == "RU"   ~ "Rural",
-                # tag == "UR"   ~ "Urban",
+                tag1 == "GEN"  ~ "Gender",
+                tag1 == "RUUR" ~ "Rurality",
+                # tag1 == "RU"   ~ "Rural",
+                # tag1 == "UR"   ~ "Urban",
                 
-                tag == "AGES"   ~ "Age",
+                tag1 == "AGES"   ~ "Age",
                 
-                tag == "HS"   ~ "Health",
-                tag == "EDU"  ~ "Education",
+                tag1 == "HS"   ~ "Health",
+                tag1 == "EDU"  ~ "Education",
                 
-               # tag == "SN"  ~ "Senior Officials",
-                tag == "PREM" ~ "Wage Premium",
+               # tag1 == "SN"  ~ "Senior Officials",
+                tag1 == "PREM" ~ "Wage Premium",
                 
-                tag == "GD"   ~ "GDP"
+                tag1 == "GD"   ~ "GDP"
       )
   ) %>%
   filter_all(all_vars(!is.na(.)))
@@ -252,20 +252,16 @@ names_all_short <- names_all %>% select(indname, indcode)
 
 tag_grid <-
   filter_tags %>% 
-  filter(!is.na(tag)) %>%
-  filter(tag %in% filter_table$tag) %>%  # keep only the tags we want
-  select(indcode, tag) %>% # keep only the code name and tags
-  mutate(tag2 = tag) %>%
-  expand.grid(t1 = tag, t2 = tag2) # expand to all possible combinations, we don't want to include indcode here, adds fake obs
-  # try crossing in tidyr  
-dplyr::distinct(indcode, tag, tag2, .keep_all = TRUE) 
-  mutate(same = case_when(tag == tag2 ~ TRUE)) %>% # create filter if two tags are same
-  filter(is.na(same)) %>% # remove the cases where the are the same
-  select(-same) %>%
-  left_join(names_all_short, by = "indcode") # wait but we lose 2 indicators...
-  
+  filter(!is.na(tag1)) %>%
+  filter(tag1 %in% filter_table$tag1) %>%  # keep only the tags we want
+  mutate(tag2 = tag1) %>%
+  group_by(indcode) %>%
+  expand(nesting(indname, indcode, tag1), tag2) # remove rows w. options in tag2 not in tag1, by group
+
 # check to make sure we didn't lose indicators 
-assert_that(n_distinct(tag_grid$indcode) == n_distinct(names_all$indcode))
+assert_that(n_distinct(tag_grid$indcode) + 1
+            == n_distinct(names_all$indcode)) # All but 1 indicator kept (TOTL)
+  
 
 
 
