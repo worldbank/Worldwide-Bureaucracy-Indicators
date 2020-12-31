@@ -193,7 +193,7 @@ shinyServer(function(input, output, session) {
                               } )
 
 
-  #### Map subplots ----
+  #### Map: Map subplots ----
 
 
 
@@ -220,7 +220,7 @@ shinyServer(function(input, output, session) {
     renderText(as.character(names_all$namegg[names_all$indcode %in% as.character(input$in.mapfill)]))
   
   
-  # generate a little ggplot
+  # Map: generate little ggplot ----
   output$clickplot <- renderPlot({
     # generate the base graph
     ggbase <-
@@ -237,9 +237,10 @@ shinyServer(function(input, output, session) {
       theme_classic() +
       theme(panel.background = element_rect(fill = 'transparent', color = NA),
             plot.background = element_rect(fill = 'transparent', color = NA),
-            legend.position = 'top',
+            legend.position = 'top', legend.direction = 'vertical', legend.box = 'vertical',
+            legend.text.align = 0,
             axis.title.x = element_blank(),
-            axis.title.y = element_blank(),
+            axis.title.y = element_blank()
             # plot.title = element_text(hjust = 0.5, size = 16,
             #                           face = 'bold', margin =margin(1,1,20,1,'pt'))
             ) +
