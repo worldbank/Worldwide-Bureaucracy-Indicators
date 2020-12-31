@@ -256,7 +256,7 @@ shinyServer(function(input, output, session) {
           ggbase
       )
     #otherwise return the average with the element selected
-    ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill)), color = ctyname)) +
+    ggplot(data = data_clickplot(), aes(year, eval(as.symbol(input$in.mapfill)), color = ctycode)) +
       geom_point() + #  color = '#00bfff'
       stat_smooth(aes(y = eval(as.symbol(input$in.mapfill)), span = span),
                   method = 'loess', # color = '#1e90ff'
