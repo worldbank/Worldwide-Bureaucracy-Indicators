@@ -121,19 +121,35 @@ names_all <- wwbi_raw %>%
   mutate(
     length = str_length(indname),
         # conditional splitting of lines based on length
-    nameHtml = if_else(length <= 40,
-                       true = gsub('^(.{5,20})(\\b)(.+)$',
-                                   '\\1<br>\\3', 
-                                   indname), # 1 break
-                       false = if_else( length >= 41 & length <= 70,
-                                        true = gsub('^(.{5,20})(\\b)(.{10,20})(\\b)(.+)$',
-                                                    '\\1<br>\\3<br>\\5', 
-                                                    indname), # 2 breaks
-                                        false = gsub('^(.{5,20})(\\b)(.{15,25})(\\b)(.{15,25})(\\b)(.+)$',
-                                                     '\\1<br>\\3<br>\\5<br>\\7',
-                                                     indname) # 3 breaks 
-                                        ) #end 2nd ifelse
-                                  ), #end 1st ifelse 
+    nameHtml = case_when(
+      length <= 18 ~ indname,
+      length >18 & length <=30 ~ gsub('^(.{10,20})(\\b)(.+)$',
+                                      '\\1<br>\\3', 
+                                      indname), # 1 break
+      length >30 & length <= 60 ~ gsub('^(.{10,20})(\\b)(.{10,20})(\\b)(.+)$',
+                                       '\\1<br>\\3<br>\\5', 
+                                       indname), # 2 breaks,
+      length >60 & length <= 80 ~ gsub('^(.{15,20})(\\b)(.{15,20})(\\b)(.{15,20})(\\b)(.+)$',
+                                               '\\1<br>\\3<br>\\5<br>\\7',
+                                               indname), # 3 breaks
+      length >80 ~ gsub('^(.{10,20})(\\b)(.{15,20})(\\b)(.{15,20})(\\b)(.{15,20})(\\b)(.+)$',
+                                       '\\1<br>\\3<br>\\5<br>\\7<br>\\9',
+                                       indname) # 4 breaks
+      ),
+    
+    # nameHtml = if_else(length <= 40,
+    #                    true = gsub('^(.{5,20})(\\b)(.+)$',
+    #                                '\\1<br>\\3', 
+    #                                indname), # 1 break
+    #                    false = if_else( length >= 41 & length <= 70,
+    #                                     true = gsub('^(.{5,20})(\\b)(.{10,20})(\\b)(.+)$',
+    #                                                 '\\1<br>\\3<br>\\5', 
+    #                                                 indname), # 2 breaks
+    #                                     false = gsub('^(.{5,20})(\\b)(.{15,25})(\\b)(.{15,25})(\\b)(.+)$',
+    #                                                  '\\1<br>\\3<br>\\5<br>\\7',
+    #                                                  indname) # 3 breaks 
+    #                                     ) #end 2nd ifelse
+    #                               ), #end 1st ifelse 
     namegg = gsub( '<br>', '\\\n', nameHtml) #end 1st ifelse 
         ) %>% # end mutate
   separate(.,
