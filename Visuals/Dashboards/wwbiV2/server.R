@@ -121,7 +121,7 @@ shinyServer(function(input, output, session) {
       setView(zoom = 2, lat = 0, lng = 0) %>%
       addProviderTiles(
         'CartoDB.VoyagerNoLabels', # this map is free to use for non-commerical purposes, we must also keep citation
-        options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = TRUE, detectRetina = TRUE)) %>%
+        options = tileOptions(minZoom = 2, maxZoom = 6, noWrap = FALSE, detectRetina = TRUE)) %>%
       addEasyButtonBar(easyButton(
         icon = 'fa-globe', title = "Reset Zoom", onClick = JS('function(btn, map) {map.setZoom(2); }')
       )) %>%
