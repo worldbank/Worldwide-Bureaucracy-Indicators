@@ -165,8 +165,8 @@ shinyUI(
              
     ), # end boostrap page / Map panel,
     
-    tabPanel("table"
-             
+    tabPanel("Data",
+             tags$h5("Future home of browsable datatable")
             ), # end data table page 
     
     
