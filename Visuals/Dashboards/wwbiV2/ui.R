@@ -55,23 +55,21 @@ filterChoices <- setNames(filter_table$tag1, filter_table$desc)
 shinyUI(
   navbarPage( "WWBI Data Explorer",
     tabPanel("Map",
-             
-      #  tags$style(type = 'text/css', 'html, body {width:100%;height:100%}'),
-     #   verbatimTextOutput('list'),
+      # tags$style(type = 'text/css', 'html, body {width:100%;height:100%}'),       
+      #           verbatimTextOutput('list')
+
       
 
       # map   
       leafletOutput('map', height = '800px', width = '100%'),
       
-      # panel select, inside dropdown button
      
-        
       
       absolutePanel(
         
         
         ## panel settings
-        left = 20, bottom = 30, draggable = TRUE, 
+        left = 20, top = 210, draggable = TRUE, 
         wellPanel(
          style = "background: #ffffff; opacity: 0.8",
          
@@ -79,7 +77,6 @@ shinyUI(
          # clickplot
          ## title 
          # make the title render based on input text
-         #textOutput('title'),
          conditionalPanel(
            condition = "input.plot == true",
            plotOutput('clickplot', height = 150, width = 180)
@@ -100,7 +97,7 @@ shinyUI(
         dropdown(
           size = 'md',
           icon = icon("filter"),
-          label = "Fitler Indicators",
+          label = "Filter",
           tooltip = "",
           right = FALSE,
           up = TRUE,
