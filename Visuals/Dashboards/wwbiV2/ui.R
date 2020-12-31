@@ -85,56 +85,59 @@ shinyUI(
            plotOutput('clickplot', height = 150, width = 180)
          ),
          tags$br(),
-         # setup dropdown menu
-         dropdown(
-           size = 'md',
-           icon = icon("gear"),
-           label = "Map Settings",
-           tooltip = "Adjust Map Settings",
-           right = FALSE,
-           up = TRUE,
-           width = '350px',
-           
-
+         
           
         
         
           
         # contents of panel
-        tags$h4(tags$b("Map Fill")),
-        helpText("Select an indicator",
-                 "or refine by category"),
+        tags$h5(tags$b("Map Fill")),
+        # helpText("Select an indicator",
+        #          "or refine by category"),
+        
+        
+        # setup dropdown menu
+        dropdown(
+          size = 'md',
+          icon = icon("filter"),
+          label = "Fitler Indicators",
+          tooltip = "",
+          right = FALSE,
+          up = TRUE,
+          width = '200px',
+
         
         ## filter
         selectizeGroupUI(
           id = 'my-filters',
           inline = FALSE,
           btn_label = "Reset",
+          label = "",
           params = list(
             var_one = list(
-              inputId = "tag1_name", title = "", placeholder = "Filter 1"
+              inputId = "tag1_name", title = "Show Indicators in:", placeholder = "None Selected"
             ),
             var_two = list(
-              inputId = "tag2_name", title = "", placeholder = "Filter 2"
+              inputId = "tag2_name", title = "And also in:", placeholder = "None Selected"
             )
             
           )
-        ),
-        tags$br(),
+        )), # end dropdown
+        #tags$br(),
         
         pickerInput(
-          'in.mapfill', "Map Fill Indicator",
+          'in.mapfill', "",
           choices = setNames(names_all$indcode, names_all$indname), # formerly choices
           selected = "BI.WAG.TOTL.GD.ZS",
           multiple = FALSE,
-          width = '300px',
+          width = '180px',
           options = list(`live-search` = TRUE, `mobile` = FALSE,
                          `dropupAuto` = TRUE, `size` = 10, `select-On-Tab` = T)
         ),
-        tags$br(),
+        #tags$br(),
         
-        tags$h4(tags$b("Year")),
-        switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'small'),
+        tags$h5(tags$b("Year")),
+        switchInput('recent', "", TRUE, offLabel = "Specific Year", onLabel = "Most Recent", size = 'mini'),
         
         conditionalPanel(
           condition = "input.recent == false",
@@ -148,14 +151,14 @@ shinyUI(
             step = 1)
         ),
         
-        tags$h4(tags$b("Options")),
+        tags$h5(tags$b("Options")),
         
         materialSwitch("plot", "Show Plot",status = 'primary', TRUE, right = T),
         materialSwitch("legend", "Show Legend",status = 'primary', TRUE, right = T),
         
         downloadButton('dl', "Download Current Map")
         
-      ))) # end absolute panel; wellpanel; dropdown button
+      )) # end absolute panel; wellpanel; dropdown button
       
              
              
