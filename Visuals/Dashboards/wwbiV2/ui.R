@@ -82,7 +82,7 @@ shinyUI(
          #textOutput('title'),
          conditionalPanel(
            condition = "input.plot == true",
-           plotOutput('clickplot', height = 250, width = 280)
+           plotOutput('clickplot', height = 150, width = 180)
          ),
          tags$br(),
          # setup dropdown menu

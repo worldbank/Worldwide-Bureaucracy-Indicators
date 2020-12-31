@@ -231,7 +231,8 @@ shinyServer(function(input, output, session) {
                   aes(year, eval(as.symbol(input$in.mapfill)),  span = span),
                   method = 'loess', # , color = '#000000'
                   linetype = 1, size = 0.5, se = F, alpha = a.f1.li) +
-      labs(title = as.character(names_all$namegg[names_all$indcode %in% as.character(input$in.mapfill)]),
+      # former title: as.character(names_all$namegg[names_all$indcode %in% as.character(input$in.mapfill)])
+      labs(title = "" ,
            y = "", x = "" , color = "") +
       theme_classic() +
       theme(panel.background = element_rect(fill = 'transparent', color = NA),
@@ -239,8 +240,9 @@ shinyServer(function(input, output, session) {
             legend.position = 'top',
             axis.title.x = element_blank(),
             axis.title.y = element_blank(),
-            plot.title = element_text(hjust = 0.5, size = 16,
-                                      face = 'bold', margin =margin(1,1,20,1,'pt'))) +
+            # plot.title = element_text(hjust = 0.5, size = 16,
+            #                           face = 'bold', margin =margin(1,1,20,1,'pt'))
+            ) +
       scale_color_manual(values = c("World Average" = "#708090"))
 
 
