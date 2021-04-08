@@ -21,7 +21,7 @@ library(sjmisc)
 
 # load cross-country comparison data
 wwbi_x <- read_xlsx(
-  path = file.path(wwbi_dat, "Cross-country wage comparison data.xlsx"),
+  path = crxcountry,
   na = ""
 ) %>%
   rename(
@@ -41,7 +41,7 @@ wwbi_x <- read_xlsx(
 
 
 # load WDI metadata, main 'micro' data
-wdi_meta <- WDI_data
+wdi_meta <- WDI::WDI_data
 wdi_dny  <- as_tibble(wdi_meta$country)
 
 
@@ -64,12 +64,6 @@ wdi <-
   )
 
 
-
-# load previously-made wwbi-wdi country dictionary to retreive regions etc 
-extra <-
-  read_dta(
-    file = "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/WDI/WDI_country_names.dta"
-    )
 
 
 # load wwbi, change names, get rid of "...24"
@@ -140,48 +134,117 @@ names_all <- wwbi_raw %>%
                                                      indname) # 3 breaks 
                                         ) #end 2nd ifelse
                                   ), #end 1st ifelse 
-    wage = if_else(str_detect(indcode, "BI.WAG"),
-                   true = TRUE,
-                   false= FALSE),
-    employment = if_else(str_detect(indcode, "BI.EMP"),
-                         true = TRUE,
-                         false= FALSE),
-    paidwork = if_else(str_detect(indcode, "BI.PWK"),
-                       true = TRUE,
-                       false= FALSE),
-    gender = if_else(str_detect(indcode, ".FE."),
-                     true = TRUE,
-                     false= FALSE),
-    wagepremium = if_else(str_detect(indcode, "BI.WAG.PREM"),
-                          true = TRUE,
-                          false= FALSE),
-    age = if_else(str_detect(indcode, "AGES"),
-                  true = TRUE,
-                  false= FALSE),
-    publicsec = if_else(str_detect(indcode, ".PUBS."),
-                        true = TRUE,
-                        false= FALSE),
-    privsec = if_else(str_detect(indcode, ".PRVS."),
-                      true = TRUE,
-                      false= FALSE)
+    namegg = gsub( '<br>', '\\\n', nameHtml) #end 1st ifelse 
         ) %>% # end mutate
+  separate(.,
+    col = indcode, 
+    into = c("cat1", "cat2", "cat3", "cat4", "cat5"),
+    sep = "\\.",
+    remove = FALSE
+  ) %>%
+  mutate( # add a manual column for indicator initials that are dif but mean same
+    cat6 =
+      case_when(cat4 == "PV"  ~ "PRVS", # privcate sector tag
+                cat5 == "PV"  ~ "PRVS",
+                cat3 == "PWK" ~ "PWRK"), # duplicate tag
+    cat7 = # education 
+      case_when(cat4 == "TT"  ~ "EDU", # education tag
+                cat4 == "SG"  ~ "EDU",
+                cat4 == "PN"  ~ "EDU",
+                cat4 == "NN"  ~ "EDU",
+                cat5 == "TT"  ~ "EDU",
+                cat5 == "SG"  ~ "EDU",
+                cat5 == "PN"  ~ "EDU",
+                cat5 == "NN"  ~ "EDU",
+                cat5 == "ED"  ~ "EDU"),
+    cat8 = #gender 
+      case_when(cat4 == "MA"  ~ "GEN",
+                cat4 == "FE"  ~ "GEN",
+                cat4 == "FM"  ~ "GEN",
+                cat5 == "MA"  ~ "GEN",
+                cat5 == "FE"  ~ "GEN",
+                cat5 == "FM"  ~ "GEN"),
+    cat9 = #rurality
+      case_when(cat4 == "RU"  ~ "RUUR",
+                cat5 == "RU"  ~ "RUUR",
+                cat4 == "UR"  ~ "RUUR",
+                cat5 == "UR"  ~ "RUUR")
+                
+  ) %>%
   arrange(indcode) %>% # alpha sort by indcode 
   mutate(id = row_number()) %>%
   select(id, everything()) # put id column first 
-  # mutate(
-  #   category = case_when(id>=1 & id <=13 ~ "Public Employment",
-  #                        id>=15 & id <=18 ~ "Age",
-  #                       id=                  ~ "Gender: Public Sector",
-  #                                         ~ "Gender: Private Sector",
-  #                        )
-  # )
+  
+
+# generate a tag and filter tables
 
 
+filter_tags <- 
+  names_all %>%
+  select(indname, indcode, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9) %>%
+  pivot_longer(cols = c(cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9),
+               names_to  = "tagno",
+               values_to = "tag1")
 
 
+# all tags in use and description (14 x 2)
+filter_table <- as.tibble(unique(filter_tags$tag1)) %>%
+  rename(tag1 = value) %>%
+  mutate(
+    desc = 
+      case_when(tag1 == "EMP"  ~ "Employment", # add abitger column
+                tag1 == "PWK" ~ "Paid Work",
+                tag1 == "WAG" ~ "Wages",
+                # misc 
+                #tag1 == "POP" ~ "Sample Size",
+                #tag1 == "FRML" ~ "Formal Employment",
+                #tag1 == "TOTL" ~ "Total Employment",
+                #tag1 == "PW" ~ "Paid Employment",
+                
+                tag1 == "PB"   ~ "Public Sector",
+                tag1 == "PRVS"  ~ "Private Sector",
+                
+                tag1 == "GEN"  ~ "Gender",
+                tag1 == "RUUR" ~ "Rurality",
+                # tag1 == "RU"   ~ "Rural",
+                # tag1 == "UR"   ~ "Urban",
+                
+                tag1 == "AGES"   ~ "Age",
+                
+                tag1 == "HS"   ~ "Health",
+                tag1 == "EDU"  ~ "Education",
+                
+               # tag1 == "SN"  ~ "Senior Officials",
+                tag1 == "PREM" ~ "Wage Premium",
+                
+                tag1 == "GD"   ~ "GDP"
+      )
+  ) %>%
+  filter_all(all_vars(!is.na(.)))
 
+# expanded grid (many obs x 3)
 
-# generate a category variable 
+tag_grid <-
+  filter_tags %>% 
+  filter(!is.na(tag1)) %>%
+  filter(tag1 %in% filter_table$tag1) %>%  # keep only the tags we want
+  mutate(tag2 = tag1) %>%
+  group_by(indcode) %>%
+  expand(nesting(indname, indcode, tag1), tag2) %>% # generate all iterations
+  add_count() %>% # add count of n in each group as col
+  mutate(same = if_else((tag1 == tag2) & (n > 1), # if tag is same in tag1 and tag2 and more than 1 pergroup
+                        true = TRUE, false = FALSE)) %>%  #generate same variable
+  filter(same == FALSE) %>%  # remove duplicate tags in tag1 and tag2
+  left_join(filter_table, by = "tag1", na_matches = "never") %>% # merge to names for tag1
+  rename(tag1_name = desc) %>% # rename desc col
+  left_join(filter_table, by = c("tag2"="tag1"), na_matches = "never") %>% # for tag2
+  rename(tag2_name = desc) %>% # rename desc col
+  select(-c(n, same)) # remove n and same cols
+  
+# check to make sure we didn't lose indicators 
+assert_that(n_distinct(tag_grid$indcode) + 1
+            == n_distinct(names_all$indcode)) # All but 1 indicator kept (TOTL)
+  
 
 
 
@@ -189,10 +252,6 @@ names <- names_all[names_all$indcode %in% codes, ]
 
 ## filter/subset
 wwbi2 <- wwbi_raw[wwbi_raw$indcode %in% codes, ]
-
-
-
-
 
 
 

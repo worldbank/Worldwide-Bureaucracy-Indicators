@@ -9,7 +9,7 @@ library(shiny)
 
 # Paths
 
-cafe <- file.path(repo, "shiny/coffee/wwbi-coffee")
+cafe <- file.path(repo, "Dashboards/wwbiV2")
 
 worldjson <-
   file.path(wwbi_dat, "WB_Boundaries_GeoJSON_lowres/WB_countries_Admin0_lowres.geojson")
@@ -22,10 +22,10 @@ run         = 0
 
 
 if (coffee.tidy == 1 ) {
-  source(file.path(cafe, "coffee-tidy.R"))
+  source(file.path(cafe, "wwbiV2-tidy.R"))
 }
 
 # Run app 
 if (run == 1) {
-shiny::runApp('jsVisualizations/scripts/shiny/coffee/wwbi-coffee')
+shiny::runApp('Visuals/Dashboards/wwbiV2')
 }

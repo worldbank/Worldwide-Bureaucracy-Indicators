@@ -1,7 +1,15 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 # main.R
-# runs all disparate scripts for bl-data-vis graphs
+# runs all scripts for data wrangling, graph objects, shiny data, etc
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+
+
+          # Description:
+# This main script runs all post-processing for the WWBI after the construction of the
+# main dataset, including:
+#   - joining the WWBI with WDI information, and WB polygon info
+#   - generating the graph objects for the static visuals in Visuals/jsVisualzations
+#   - generating the data objects that feed into the WWBI shiny app in Visuals/Dashboards 
 
 
 library(tidyverse)
@@ -25,22 +33,27 @@ user <- 1
 
 # for Tom
 if (user == 1) {
+  
 # scripts
 code_top <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators"
-repo <- file.path(code_top, "jsVisualizations/scripts")
+repo     <- file.path(code_top, "Visuals")
 # data 
-wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi" # points eventually to wwbi version 2.0
 wwbi_out <- file.path(wwbi_dat, "output")
+crxcountry<- file.path(wwbi_dat, "Cross-country wage comparison data.xlsx") # points to cross comparison version 2.0
+
 }
 
-# for ??
+# for User 2
 if (user == 2) {
   # scripts
   code_top <- "C:/Users/WB551206/local/GitHub/Worldwide-Bureaucracy-Indicators"
-  repo <- file.path(code_top, "jsVisualizations/scripts")
+  repo     <- file.path(code_top, "Visuals")
   # data 
-  wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi"
+  wwbi_dat <- "C:/Users/WB551206/OneDrive - WBG/Documents/WB_data/wwbi" # points eventually to wwbi version 2.0
   wwbi_out <- file.path(wwbi_dat, "output")
+  crxcountry<- file.path(wwbi_dat, "Cross-country wage comparison data.xlsx") # points to cross comparison version 2.0
+
 }
 
 
@@ -60,18 +73,18 @@ coffee  = 1
 
 # tidyr 
 if (tidy == 1) {
-  source(file = file.path(repo, "tidy.R"))
+  source(file = file.path(repo, "Main-Code/tidy.R"))
 }
 
 # generate graphs
 if (graphs == 1) {
-  source(file = file.path(repo, "graphs.R"))
+  source(file = file.path(repo, "Main-Code/graphs.R"))
 }
 
 # knit rmd document to html 
 if (knit == 1) {
   rmarkdown::render(
-    input = file.path(repo, "sample-wwbi-v1_2.Rmd"),
+    input = file.path(repo, "jsVisualizations/sample-wwbi-v1_2.Rmd"),
     output_format = 'html_document',
     output_file = file.path(wwbi_out, "wwbi-v1-2.html"),
     quiet = FALSE
@@ -80,7 +93,7 @@ if (knit == 1) {
 
 # shiny 
 if (coffee == 1) {
-  source(file = file.path(repo, "shiny/coffee/wwbi-coffee/MAIN-coffee.R"))
+  source(file = file.path(repo, "Dashboards/wwbiV2/MAIN-wwbiV2.R"))
 }
 
 
@@ -100,4 +113,7 @@ if (coffee == 1) {
 # https://stackoverflow.com/questions/52288525/change-tick-mark-labels-to-specific-strings-in-plotly
 # https://stackoverflow.com/questions/36365897/r-leaflet-zoomcontrol-option
 # https://go.carto.com/hubfs/CARTO-Free-Basemaps-Terms-of-Service.pdf
+# https://stackoverflow.com/questions/30022732/shiny-all-sub-lists-in-choices-must-be-named
+# https://stackoverflow.com/questions/16074440/r-ggplot2-center-align-a-multi-line-title#16074618
+# https://stackoverflow.com/questions/28243514/ggplot2-change-title-size
 # 

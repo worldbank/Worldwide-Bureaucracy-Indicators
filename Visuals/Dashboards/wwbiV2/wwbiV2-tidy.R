@@ -129,7 +129,7 @@ ctynames <- unique(wwbi_geo$ctyname)
 
 
 
-
+# to Server
 save(
   # final wwbi files
   wwbi_geo,
@@ -139,15 +139,14 @@ save(
   world_geo,
   world_sf,
   world_sf_raw,
+  filter_table, filter_tags, tag_grid,
   file = file.path(cafe, "data/data.Rdata")
 )
 
-save(names_all,
+
+# to UI
+save(names_all, filter_table,
      ctynames,
-     wwbiMinYr, wwbiMaxYr,
+     wwbiMinYr, wwbiMaxYr, 
      file = file.path(cafe, "data/ui-data.Rdata"))
 
-
-cols <- c("wage", "employment")
-test <- names_all %>%
-  filter(across(all_of(cols), ~ .x == FALSE))
